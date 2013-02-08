@@ -15,16 +15,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <View
+        <LinearLayout
             android:id="@+id/digram"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content" />
+            android:layout_width="168dp"
+            android:layout_height="match_parent">
+            <!-- 
+            android:layout_marginBottom="10dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="5dip"
+            android:padding="3dip" >
+            -->
+        </LinearLayout>
 
         <View
             android:id="@+id/controlls"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
     </LinearLayout>
 
 </LinearLayout>
