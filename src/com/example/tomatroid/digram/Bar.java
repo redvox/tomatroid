@@ -30,7 +30,8 @@ public class Bar extends View {
 		
 		color = new Paint();
 		color.setColor(Color.GRAY);
-		color.setShadowLayer(2f, 1f, 1f, Color.BLACK);
+//		color.setShadowLayer(2f, 1f, 1f, Color.BLACK);
+//		color.setShadowLayer(10.0f, 0.0f, 2.0f, 0xFF000000);
 		
 		bar = new RectF();
 	}

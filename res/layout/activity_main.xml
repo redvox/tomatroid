@@ -28,10 +28,14 @@
             -->
         </LinearLayout>
 
-        <View
-            android:id="@+id/controlls"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/control"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
