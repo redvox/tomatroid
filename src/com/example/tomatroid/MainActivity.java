@@ -2,22 +2,18 @@ package com.example.tomatroid;
 
 import java.util.ArrayList;
 
+import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Bar;
-import com.example.tomatroid.util.StoredAnimation;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.graphics.Color;
-import android.util.Log;
+import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -29,87 +25,97 @@ public class MainActivity extends Activity {
 
 	LinearLayout digram;
 	LinearLayout control;
+	LinearLayout headline;
 
-	View bar1;
-	View bar2;
-	View bar3;
-	View bar4;
+	TextView timeText;
+	Counter counter;
+	ControlListener controlListener; 
 
-	Button[] bA;
+	ArrayList<View> bars = new ArrayList<View>();
 
-	ArrayList<String> commands = new ArrayList<String>();
+	int pomodoroTime = 25;
+	int shortBreakTime = 5;
+	int longBreakTime = 35;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		commands.add("Pomodoro!");
-		commands.add("Pause Kurz!");
-		commands.add("Pause Lang!");
-		commands.add("Pause Lang! (Gaming)");
-		commands.add("Thema?");
-		commands.add("Statistic?");
-		commands.add("Gaming!");
-		commands.add("Sleeping!");
-		commands.add("Stop for now!");
-
 		digram = (LinearLayout) findViewById(R.id.digram);
 		control = (LinearLayout) findViewById(R.id.control);
+		headline = (LinearLayout) findViewById(R.id.headline);
 
-		bar1 = new Bar(digram.getContext(), 60);
-		// bar1.setPadding(10, 0, 10 ,0);
-		bar2 = new Bar(digram.getContext(), 30);
-		// bar2.setPadding(10, 0, 10 ,0);
-		bar3 = new Bar(digram.getContext(), 15);
-		// bar3.setPadding(10, 0, 10 ,0);
-		bar4 = new Bar(digram.getContext(), 55);
-
-		digram.addView(bar1, barParams);
-		digram.addView(bar2, barParams);
-		digram.addView(bar3, barParams);
-		digram.addView(bar4, barParams);
-
-		// forward.setBackgroundResource(android.R.drawable.ic_media_play);
-
-		bA = new Button[commands.size()];
-		for (int i = 0; i < bA.length; i++) {
-			RelativeLayout rLL = new RelativeLayout(control.getContext());
-			ImageView iV = new ImageView(rLL.getContext());
-			iV.setBackgroundResource(android.R.drawable.ic_media_play);
-//			iV.setMaxWidth(50);
-			iV.setAlpha(0);
-			
-			bA[i] = new Button(this);
-			bA[i].setText(commands.get(i));
-			bA[i].setOnClickListener(new ControlListener(bA[i]));
-			// control.addView(bA[i]);
-			
-			RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
-					RelativeLayout.LayoutParams.WRAP_CONTENT,
-					RelativeLayout.LayoutParams.WRAP_CONTENT);
-			relativeParams.addRule(RelativeLayout.CENTER_VERTICAL);
-			
-			
-			rLL.addView(iV, relativeParams);
-//			rLL.addView(iV);
-			rLL.addView(bA[i]);
-
-			control.addView(rLL);
+		// Adding Bars
+		for (int i = 1; i < 4; i++) {
+			View bar = new Bar(digram.getContext(), i * 10);
+			bars.add(bar);
+			digram.addView(bar, barParams);
 		}
+
+		// Control Buttons
+		controlListener = new ControlListener(this, control);
+
+		timeText = new TextView(this);
+		timeText.setTextSize(50);
+		timeText.setText("00:00");
+		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
+		timeText.setTypeface(tf);
+		headline.addView(timeText);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if (bA.length != 0) {
-			for (int i = 0; i < bA.length; i++) {
-				// Log.e("1", "2");
-				// b.setText("Bwah");
-				bA[i].startAnimation(StoredAnimation.inFromRightAnimation(i));
-			}
-		}
+//		if (bA.length != 0) {
+//			for (int i = 0; i < bA.length; i++) {
+//				bA[i].startAnimation(StoredAnimation.inFromRightAnimation(i));
+//			}
+//		}
+//		for (int i = 0; i < bars.size(); i++) {
+//			bars.get(i)
+//					.startAnimation(StoredAnimation.inFromButtomAnimation(i));
+//		}
+	}
+	
+	public void startCounter(int minutes){
+		timeText.setText("00:00");
+		if (counter != null)
+			counter.cancel();
+		counter = new Counter(minutes, this, timeText);
+		counter.start();
+	}
+	
+	public int stopCounter(){
+		timeText.setText("00:00");
+		counter.cancel();
+		return counter.getMinutesPast();
+	}
+
+	public void startPomodoro() {
+		startCounter(pomodoroTime);
+	}
+	
+	public void stopPomodoro(){
+	}
+	
+	public void startShortBreak(){
+		startCounter(shortBreakTime);
+	}
+	
+	public void stopShortBreak(){
+	}
+	
+	public void startLongBreak(){
+		startCounter(longBreakTime);
+	}
+	
+	public void stopLongBreak(){
+		startCounter(longBreakTime);
+	}
+	
+	public void counterFinish() {
 	}
 
 	@Override
