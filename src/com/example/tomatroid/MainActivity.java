@@ -6,7 +6,9 @@ import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Bar;
 
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -29,7 +32,8 @@ public class MainActivity extends Activity {
 
 	TextView timeText;
 	Counter counter;
-	ControlListener controlListener; 
+	Chrono chrono;
+	ControlListener controlListener;
 
 	ArrayList<View> bars = new ArrayList<View>();
 
@@ -45,7 +49,8 @@ public class MainActivity extends Activity {
 		digram = (LinearLayout) findViewById(R.id.digram);
 		control = (LinearLayout) findViewById(R.id.control);
 		headline = (LinearLayout) findViewById(R.id.headline);
-
+		timeText = (TextView) findViewById(R.id.timetext);
+		
 		// Adding Bars
 		for (int i = 1; i < 4; i++) {
 			View bar = new Bar(digram.getContext(), i * 10);
@@ -56,66 +61,125 @@ public class MainActivity extends Activity {
 		// Control Buttons
 		controlListener = new ControlListener(this, control);
 
-		timeText = new TextView(this);
-		timeText.setTextSize(50);
+//		chrono = new ChronoCounter(this);
+
+//		timeText = new TextView(this);
+//		timeText.setTextSize(50);
 		timeText.setText("00:00");
 		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
 		timeText.setTypeface(tf);
-		headline.addView(timeText);
+		timeText.setTextColor(Color.parseColor("#6495ED"));
+
+//		headline.addView(timeText);
+//		headline.addView(chrono);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-//		if (bA.length != 0) {
-//			for (int i = 0; i < bA.length; i++) {
-//				bA[i].startAnimation(StoredAnimation.inFromRightAnimation(i));
-//			}
-//		}
-//		for (int i = 0; i < bars.size(); i++) {
-//			bars.get(i)
-//					.startAnimation(StoredAnimation.inFromButtomAnimation(i));
-//		}
+		// if (bA.length != 0) {
+		// for (int i = 0; i < bA.length; i++) {
+		// bA[i].startAnimation(StoredAnimation.inFromRightAnimation(i));
+		// }
+		// }
+		// for (int i = 0; i < bars.size(); i++) {
+		// bars.get(i)
+		// .startAnimation(StoredAnimation.inFromButtomAnimation(i));
+		// }
 	}
-	
-	public void startCounter(int minutes){
+
+	public void startCounter(int minutes, int type){
 		timeText.setText("00:00");
 		if (counter != null)
 			counter.cancel();
-		counter = new Counter(minutes, this, timeText);
+		counter = new Counter(minutes, this, timeText, type);
 		counter.start();
 	}
-	
-	public int stopCounter(){
+
+	public int stopCounter() {
 		timeText.setText("00:00");
 		counter.cancel();
 		return counter.getMinutesPast();
 	}
 
-	public void startPomodoro() {
-		startCounter(pomodoroTime);
+	public void counterFinish(int type) {
+		
+		int minutespast = counter.getMinutesPast()+1;
+		
+		// SOS
+		int dot = 200;      // Length of a Morse Code "dot" in milliseconds
+		int dash = 500;     // Length of a Morse Code "dash" in milliseconds
+		int short_gap = 200;    // Length of Gap Between dots/dashes
+		int medium_gap = 500;   // Length of Gap Between Letters
+		int long_gap = 1000;    // Length of Gap Between Words
+		long[] pattern = {
+		    0,  // Start immediately
+		    dot, short_gap, dot, short_gap, dot
+		};
+
+		
+		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		// Only perform this pattern one time (-1 means "do not repeat")
+		v.vibrate(pattern, -1);
+
+		counter = counter.renew();
+		
+		switch (type) {
+		// Pomodoro
+		case 0:
+			Toast.makeText(this, minutespast+"mins", Toast.LENGTH_SHORT).show();
+			break;
+		// Short Break
+		case 1:
+			break;
+		// Long Break
+		case 2:
+			break;
+		}
 	}
-	
-	public void stopPomodoro(){
+
+	public void start(int tag) {
+		switch (tag) {
+		// Pomodoro
+		case 0:
+			startCounter(1, tag);
+			break;
+		// Short Break
+		case 1:
+			startCounter(shortBreakTime, tag);
+			break;
+		// Long Break
+		case 2:
+			startCounter(longBreakTime, tag);
+			break;
+		// Tracking
+		case 3:
+			break;
+		// Sleeping
+		case 4:
+			break;
+		}
 	}
-	
-	public void startShortBreak(){
-		startCounter(shortBreakTime);
-	}
-	
-	public void stopShortBreak(){
-	}
-	
-	public void startLongBreak(){
-		startCounter(longBreakTime);
-	}
-	
-	public void stopLongBreak(){
-		startCounter(longBreakTime);
-	}
-	
-	public void counterFinish() {
+
+	public void stop(int tag) {
+
+		stopCounter();
+
+		switch (tag) {
+		// Pomodoro
+		case 0:
+			Toast.makeText(this, counter.getMinutesPast()+"", Toast.LENGTH_SHORT).show();
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		}
 	}
 
 	@Override
