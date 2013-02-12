@@ -59,23 +59,31 @@ public class ControlListener implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int tag = (Integer) v.getTag();
+		start(tag);
+	}
 
+	public void start(int tag) {
 		if (activeButton != -1) {
 			// Stop Other or Own
-			mA.stop(activeButton);
+			mA.end(activeButton);
 			bA[activeButton]
 					.startAnimation(StoredAnimation.slideHorizontal(50));
 			bA[activeButton].setTranslationX(0);
 		}
 
 		if (activeButton != tag) {
-			v.startAnimation(StoredAnimation.slideHorizontal(-50));
-			v.setTranslationX(50);
+			bA[tag].startAnimation(StoredAnimation.slideHorizontal(-50));
+			bA[tag].setTranslationX(50);
 			// Start Own
 			mA.start(tag);
 			activeButton = tag;
 		} else {
 			activeButton = -1;
 		}
+	}
+
+	public void stop() {
+		bA[activeButton].startAnimation(StoredAnimation.slideHorizontal(50));
+		bA[activeButton].setTranslationX(0);
 	}
 }

@@ -2,12 +2,15 @@ package com.example.tomatroid;
 
 import java.util.ArrayList;
 
+import com.example.tomatroid.chrono.Chrono;
 import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Bar;
+import com.example.tomatroid.util.StoredDialogs;
 
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Menu;
@@ -41,6 +44,10 @@ public class MainActivity extends Activity {
 	int shortBreakTime = 5;
 	int longBreakTime = 35;
 
+	AlertDialog pomodoroEndDialog;
+	AlertDialog shortBreakEndDialog;
+	AlertDialog longBreakEndDialog;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,7 +57,7 @@ public class MainActivity extends Activity {
 		control = (LinearLayout) findViewById(R.id.control);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (TextView) findViewById(R.id.timetext);
-		
+
 		// Adding Bars
 		for (int i = 1; i < 4; i++) {
 			View bar = new Bar(digram.getContext(), i * 10);
@@ -61,17 +68,19 @@ public class MainActivity extends Activity {
 		// Control Buttons
 		controlListener = new ControlListener(this, control);
 
-//		chrono = new ChronoCounter(this);
+		// chrono = new ChronoCounter(this);
 
-//		timeText = new TextView(this);
-//		timeText.setTextSize(50);
+		// timeText = new TextView(this);
+		// timeText.setTextSize(50);
 		timeText.setText("00:00");
 		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
 		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
 
-//		headline.addView(timeText);
-//		headline.addView(chrono);
+		// headline.addView(timeText);
+		// headline.addView(chrono);
+
+		pomodoroEndDialog = StoredDialogs.getBeforeLongBreakEndDialog(this);
 	}
 
 	@Override
@@ -89,7 +98,7 @@ public class MainActivity extends Activity {
 		// }
 	}
 
-	public void startCounter(int minutes, int type){
+	public void startCounter(int minutes, int type) {
 		timeText.setText("00:00");
 		if (counter != null)
 			counter.cancel();
@@ -104,36 +113,50 @@ public class MainActivity extends Activity {
 	}
 
 	public void counterFinish(int type) {
-		
-		int minutespast = counter.getMinutesPast()+1;
-		
+		timeText.setText("00:00");
+		int minutespast = counter.getMinutesPast() + 1;
+
 		// SOS
-		int dot = 200;      // Length of a Morse Code "dot" in milliseconds
-		int dash = 500;     // Length of a Morse Code "dash" in milliseconds
-		int short_gap = 200;    // Length of Gap Between dots/dashes
-		int medium_gap = 500;   // Length of Gap Between Letters
-		int long_gap = 1000;    // Length of Gap Between Words
+		int dot = 200; // Length of a Morse Code "dot" in milliseconds
+		int dash = 500; // Length of a Morse Code "dash" in milliseconds
+		int short_gap = 200; // Length of Gap Between dots/dashes
+		int medium_gap = 500; // Length of Gap Between Letters
+		int long_gap = 1000; // Length of Gap Between Words
 		long[] pattern = { 0, // Start immediately
 				dot, short_gap, dot, short_gap, dot };
-		
+
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		// Only perform this pattern one time (-1 means "do not repeat")
 		v.vibrate(pattern, -1);
 
+		counter.cancel();
 		counter = counter.renew();
-		
+
+		Toast.makeText(this, minutespast + "mins", Toast.LENGTH_SHORT).show();
+
 		switch (type) {
 		// Pomodoro
 		case 0:
-			Toast.makeText(this, minutespast+"mins", Toast.LENGTH_SHORT).show();
+			pomodoroEndDialog.cancel();
+			// dialog.setMessage("You are done with your Pomodoro, letz take a break.");
+			pomodoroEndDialog.show();
+			// pomodoroEndDialog.
 			break;
 		// Short Break
 		case 1:
+			// dialog.cancel();
+			// dialog.setMessage("You are done with your break, letz do some work.");
+			// dialog.show();
 			break;
 		// Long Break
 		case 2:
+			// dialog.cancel();
+			// dialog.setMessage("You are done with your break, letz so some work. ");
+			// dialog.show();
 			break;
 		}
+
+		//
 	}
 
 	public void start(int tag) {
@@ -159,14 +182,15 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void stop(int tag) {
+	public void end(int tag) {
 
 		stopCounter();
 
 		switch (tag) {
 		// Pomodoro
 		case 0:
-			Toast.makeText(this, counter.getMinutesPast()+"", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, counter.getMinutesPast() + "",
+					Toast.LENGTH_SHORT).show();
 			break;
 		case 1:
 			break;
@@ -177,6 +201,11 @@ public class MainActivity extends Activity {
 		case 4:
 			break;
 		}
+	}
+
+	public void cancel(int tag) {
+		stopCounter();
+		controlListener.stop();
 	}
 
 	@Override
