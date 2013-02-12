@@ -3,6 +3,7 @@ package com.example.tomatroid.chrono;
 import com.example.tomatroid.MainActivity;
 
 import android.R;
+import android.app.PendingIntent.CanceledException;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.CountDownTimer;
@@ -17,17 +18,18 @@ public class Counter extends CountDownTimer {
 	long timeFinal = 0;
 	long timeLeft = 0;
 	long timeBase = 0;
-	int type;
+	int tag;
 	MainActivity mA;
 	boolean countUp = false;
+	int rememberTime = 10;
 
-	public Counter(int minutes, MainActivity main, TextView timeText, int type) {
+	public Counter(int minutes, MainActivity main, TextView timeText, int tag) {
 		super((minutes * 60) * 1000, 1000);
 		this.timeFinal = (minutes * 60) * 1000;
 		this.timeText = timeText;
 		this.context = main;
 		this.mA = main;
-		this.type = type;
+		this.tag = tag;
 		// Set Time Blue
 		timeText.setTextColor(Color.parseColor("#6495ED"));
 	}
@@ -35,7 +37,7 @@ public class Counter extends CountDownTimer {
 	@Override
 	public void onFinish() {
 		timeText.setText("00:00");
-		mA.counterFinish(type);
+		mA.counterFinish(tag);
 	}
 
 	public int getMinutesPast() {
@@ -43,26 +45,22 @@ public class Counter extends CountDownTimer {
 	}
 
 	public long getMilliesPast() {
-//		Log.e("Counter", "timeLeft "+timeLeft);
-//		Log.e("Counter", "timeFinal "+timeFinal);
-//		Log.e("Counter", "timeBase "+timeBase);
-//		Log.e("Counter", "Gesamt "+(timeFinal - timeLeft) + timeBase);
 		return (timeFinal - timeLeft) + timeBase;
 	}
-	
+
 	public long getMilliesBase() {
 		return timeFinal + timeBase;
 	}
 
 	public Counter renew() {
-		Counter counter = new Counter(1, mA, timeText, type);
+		Counter counter = new Counter((rememberTime * 60) * 1000, mA, timeText, tag);
 		counter.toggleCountUp();
 		counter.setBaseTime(getMilliesBase());
 
 		timeText = null;
 		context = null;
 		mA = null;
-		Log.e("Counter", "###################");
+		// Log.e("Counter", "###################");
 		counter.start();
 		return counter;
 	}
@@ -82,7 +80,7 @@ public class Counter extends CountDownTimer {
 		StringBuffer stb = new StringBuffer();
 
 		long millies = 0;
-		
+
 		if (countUp) {
 			millies = getMilliesPast();
 
@@ -99,7 +97,7 @@ public class Counter extends CountDownTimer {
 		if (secs < 10)
 			stb.append("0");
 		stb.append(secs);
-		
+
 		timeText.setText(stb);
 	}
 }

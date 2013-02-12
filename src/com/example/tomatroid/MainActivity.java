@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import com.example.tomatroid.chrono.Chrono;
 import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Bar;
-import com.example.tomatroid.util.StoredDialogs;
 
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -37,6 +36,7 @@ public class MainActivity extends Activity {
 	Counter counter;
 	Chrono chrono;
 	ControlListener controlListener;
+	DialogManager dialogManager;
 
 	ArrayList<View> bars = new ArrayList<View>();
 
@@ -44,9 +44,8 @@ public class MainActivity extends Activity {
 	int shortBreakTime = 5;
 	int longBreakTime = 35;
 
-	AlertDialog pomodoroEndDialog;
-	AlertDialog shortBreakEndDialog;
-	AlertDialog longBreakEndDialog;
+	int pomodorosNum = 1;
+	int pomodorosUntilLongBreakNum = 2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +66,8 @@ public class MainActivity extends Activity {
 
 		// Control Buttons
 		controlListener = new ControlListener(this, control);
+		// Dialog Manager
+		dialogManager = new DialogManager(this);
 
 		// chrono = new ChronoCounter(this);
 
@@ -80,7 +81,6 @@ public class MainActivity extends Activity {
 		// headline.addView(timeText);
 		// headline.addView(chrono);
 
-		pomodoroEndDialog = StoredDialogs.getBeforeLongBreakEndDialog(this);
 	}
 
 	@Override
@@ -107,71 +107,57 @@ public class MainActivity extends Activity {
 	}
 
 	public int stopCounter() {
+		timeText.setTextColor(Color.parseColor("#6495ED"));
 		timeText.setText("00:00");
 		counter.cancel();
 		return counter.getMinutesPast();
 	}
 
-	public void counterFinish(int type) {
+	public void counterFinish(int tag) {
 		timeText.setText("00:00");
 		int minutespast = counter.getMinutesPast() + 1;
 
-		// SOS
-		int dot = 200; // Length of a Morse Code "dot" in milliseconds
-		int dash = 500; // Length of a Morse Code "dash" in milliseconds
-		int short_gap = 200; // Length of Gap Between dots/dashes
-		int medium_gap = 500; // Length of Gap Between Letters
-		int long_gap = 1000; // Length of Gap Between Words
-		long[] pattern = { 0, // Start immediately
-				dot, short_gap, dot, short_gap, dot };
+		// // SOS
+		// int dot = 200; // Length of a Morse Code "dot" in milliseconds
+		// // int dash = 500; // Length of a Morse Code "dash" in milliseconds
+		// int short_gap = 200; // Length of Gap Between dots/dashes
+		// // int medium_gap = 500; // Length of Gap Between Letters
+		// // int long_gap = 1000; // Length of Gap Between Words
+		// long[] pattern = { 0, // Start immediately
+		// dot, short_gap, dot, short_gap, dot };
 
-		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		// Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		// Only perform this pattern one time (-1 means "do not repeat")
-		v.vibrate(pattern, -1);
+		// v.vibrate(pattern, -1);
 
 		counter.cancel();
 		counter = counter.renew();
 
 		Toast.makeText(this, minutespast + "mins", Toast.LENGTH_SHORT).show();
-
-		switch (type) {
-		// Pomodoro
-		case 0:
-			pomodoroEndDialog.cancel();
-			// dialog.setMessage("You are done with your Pomodoro, letz take a break.");
-			pomodoroEndDialog.show();
-			// pomodoroEndDialog.
-			break;
-		// Short Break
-		case 1:
-			// dialog.cancel();
-			// dialog.setMessage("You are done with your break, letz do some work.");
-			// dialog.show();
-			break;
-		// Long Break
-		case 2:
-			// dialog.cancel();
-			// dialog.setMessage("You are done with your break, letz so some work. ");
-			// dialog.show();
-			break;
-		}
-
-		//
+		dialogManager.show(tag, checkOnLongBreak());
 	}
 
+	/**
+	 * Start the appropiate counter.
+	 * 
+	 * @param tag
+	 */
 	public void start(int tag) {
 		switch (tag) {
 		// Pomodoro
 		case 0:
 			startCounter(1, tag);
+			Toast.makeText(this, "Start Pomodoro", Toast.LENGTH_SHORT).show();
 			break;
 		// Short Break
 		case 1:
-			startCounter(shortBreakTime, tag);
+			startCounter(1, tag);
+			Toast.makeText(this, "Start ShortBreak", Toast.LENGTH_SHORT).show();
 			break;
 		// Long Break
 		case 2:
-			startCounter(longBreakTime, tag);
+			startCounter(1, tag);
+			Toast.makeText(this, "Start LongBreak", Toast.LENGTH_SHORT).show();
 			break;
 		// Tracking
 		case 3:
@@ -182,15 +168,19 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Cancel the counter. Write minutes past to database.
+	 * 
+	 * @param tag
+	 */
 	public void end(int tag) {
-
+		Log.e("MainActivity", "end " + tag + " :" + counter.getMinutesPast());
 		stopCounter();
+		timeText.setTextColor(Color.parseColor("#6495ED"));
 
 		switch (tag) {
-		// Pomodoro
 		case 0:
-			Toast.makeText(this, counter.getMinutesPast() + "",
-					Toast.LENGTH_SHORT).show();
+			pomodorosNum++;
 			break;
 		case 1:
 			break;
@@ -203,14 +193,24 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void cancel(int tag) {
+	/**
+	 * Cancel the current counter.
+	 * 
+	 * @param tag
+	 */
+	public void stop(int tag) {
 		stopCounter();
-		controlListener.stop();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+
+	public boolean checkOnLongBreak() {
+		if (pomodorosNum % pomodorosUntilLongBreakNum == 0)
+			return true;
+		return false;
 	}
 }
