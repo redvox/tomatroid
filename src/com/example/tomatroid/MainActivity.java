@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.example.tomatroid.chrono.Chrono;
 import com.example.tomatroid.chrono.Counter;
+import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
 
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +30,7 @@ public class MainActivity extends Activity {
 	LayoutParams barParams = new TableLayout.LayoutParams(
 			LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
 
-	LinearLayout digram;
+	RelativeLayout digram;
 	LinearLayout control;
 	LinearLayout headline;
 
@@ -48,26 +50,38 @@ public class MainActivity extends Activity {
 	int pomodorosNum = 1;
 	int pomodorosUntilLongBreakNum = 2;
 
+	Bar bar;
+	Axis axis;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		digram = (LinearLayout) findViewById(R.id.digram);
+		digram = (RelativeLayout) findViewById(R.id.digram);
 		control = (LinearLayout) findViewById(R.id.control);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (TextView) findViewById(R.id.timetext);
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
 
 		pomodorosNumText.setTextColor(Color.parseColor("#fdf700"));
-		pomodorosNumText.setText(""+pomodorosNum);
+		pomodorosNumText.setText("" + pomodorosNum);
 		
+		LinearLayout digramLayout = new LinearLayout(this);
+		digram.addView(digramLayout);
+		LinearLayout axisLayout = new LinearLayout(this);
+		digram.addView(axisLayout);
+		
+		axis = new Axis(digram.getContext(), 0);
+		axisLayout.addView(axis);
+
 		// Adding Bars
-		for (int i = 1; i < 4; i++) {
-			View bar = new Bar(digram.getContext(), i * 10);
-			bars.add(bar);
-			digram.addView(bar, barParams);
-		}
+		// for (int i = 1; i < 4; i++) {
+		bar = new Bar(digram.getContext(), 0);
+		bars.add(bar);
+		digramLayout.addView(bar, barParams);
+		digramLayout.addView(new Bar(digram.getContext(), 15), barParams);
+		// }
 
 		// Control Buttons
 		controlListener = new ControlListener(this, control);
@@ -185,7 +199,8 @@ public class MainActivity extends Activity {
 		switch (tag) {
 		case 0:
 			pomodorosNum++;
-			pomodorosNumText.setText(""+(pomodorosNum-1));
+			pomodorosNumText.setText("" + (pomodorosNum - 1));
+			bar.addValue(10);
 			break;
 		case 1:
 			break;
