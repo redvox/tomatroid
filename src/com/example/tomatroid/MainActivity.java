@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
 	LinearLayout headline;
 
 	TextView timeText;
+	TextView pomodorosNumText;
 	Counter counter;
 	Chrono chrono;
 	ControlListener controlListener;
@@ -56,7 +57,11 @@ public class MainActivity extends Activity {
 		control = (LinearLayout) findViewById(R.id.control);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (TextView) findViewById(R.id.timetext);
+		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
 
+		pomodorosNumText.setTextColor(Color.parseColor("#fdf700"));
+		pomodorosNumText.setText(""+pomodorosNum);
+		
 		// Adding Bars
 		for (int i = 1; i < 4; i++) {
 			View bar = new Bar(digram.getContext(), i * 10);
@@ -99,7 +104,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void startCounter(int minutes, int type) {
-		timeText.setText("00:00");
 		if (counter != null)
 			counter.cancel();
 		counter = new Counter(minutes, this, timeText, type);
@@ -181,6 +185,7 @@ public class MainActivity extends Activity {
 		switch (tag) {
 		case 0:
 			pomodorosNum++;
+			pomodorosNumText.setText(""+(pomodorosNum-1));
 			break;
 		case 1:
 			break;

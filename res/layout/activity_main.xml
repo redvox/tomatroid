@@ -5,8 +5,6 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +14,46 @@
             android:id="@+id/timetext"
             style="@style/BigText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="7dip"
+            android:layout_marginLeft="7dip"
+            android:layout_marginRight="7dip"
+            android:layout_marginTop="7dip"
+            android:padding="50dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/pomodorosNum"
+                style="@style/BigText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/line"
+                android:text="Pomodoros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="7dip"
+            android:layout_marginLeft="7dip"
+            android:layout_marginRight="7dip"
+            android:layout_marginTop="7dip"
+            android:background="@android:color/darker_gray" />
     </LinearLayout>
 
     <LinearLayout
