@@ -26,10 +26,10 @@ public class ControlListener implements OnClickListener {
 		commands.add("Pomodoro!");
 		commands.add("Pause Kurz!");
 		commands.add("Pause Lang!");
-		commands.add("Pause Lang! (Gaming)");
+		// commands.add("Pause Lang! (Gaming)");
 		// commands.add("Thema?");
 		// commands.add("Statistic?");
-		commands.add("Gaming!");
+		commands.add("Tracking!");
 		commands.add("Sleeping!");
 
 		RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
@@ -62,55 +62,20 @@ public class ControlListener implements OnClickListener {
 
 		if (activeButton != -1) {
 			// Stop Other or Own
-			stop(activeButton);
+			mA.stop(activeButton);
 			bA[activeButton]
 					.startAnimation(StoredAnimation.slideHorizontal(50));
 			bA[activeButton].setTranslationX(0);
-
 		}
 
 		if (activeButton != tag) {
 			v.startAnimation(StoredAnimation.slideHorizontal(-50));
 			v.setTranslationX(50);
 			// Start Own
-			start(tag);
+			mA.start(tag);
 			activeButton = tag;
 		} else {
 			activeButton = -1;
-		}
-	}
-
-	public void start(int tag) {
-		switch (tag) {
-		case 0:
-			mA.startPomodoro();
-			break;
-		case 1:
-			mA.startShortBreak();
-			break;
-		case 2:
-			mA.startLongBreak();
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		}
-	}
-
-	public void stop(int tag) {
-		switch (tag) {
-		case 0:
-			mA.stopPomodoro();
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
 		}
 	}
 }
