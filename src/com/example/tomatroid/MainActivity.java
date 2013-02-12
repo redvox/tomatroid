@@ -113,11 +113,8 @@ public class MainActivity extends Activity {
 		int short_gap = 200;    // Length of Gap Between dots/dashes
 		int medium_gap = 500;   // Length of Gap Between Letters
 		int long_gap = 1000;    // Length of Gap Between Words
-		long[] pattern = {
-		    0,  // Start immediately
-		    dot, short_gap, dot, short_gap, dot
-		};
-
+		long[] pattern = { 0, // Start immediately
+				dot, short_gap, dot, short_gap, dot };
 		
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		// Only perform this pattern one time (-1 means "do not repeat")
