@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
 		return counter.getMinutesPast();
 	}
 
-	public void counterFinish(int tag) {
+	public synchronized void counterFinish(int tag) {
 		timeText.setText("00:00");
 		int minutespast = counter.getMinutesPast() + 1;
 
@@ -148,7 +148,6 @@ public class MainActivity extends Activity {
 		// Only perform this pattern one time (-1 means "do not repeat")
 		// v.vibrate(pattern, -1);
 
-		counter.cancel();
 		counter = counter.renew();
 
 		Toast.makeText(this, minutespast + "mins", Toast.LENGTH_SHORT).show();
