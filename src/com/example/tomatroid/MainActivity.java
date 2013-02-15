@@ -6,14 +6,17 @@ import com.example.tomatroid.chrono.Chrono;
 import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
+import com.example.tomatroid.sql.SQHelper;
 
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -29,6 +32,8 @@ public class MainActivity extends Activity {
 
 	LayoutParams barParams = new TableLayout.LayoutParams(
 			LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
+
+	SQHelper sqhelper;
 
 	RelativeLayout digram;
 	LinearLayout control;
@@ -50,7 +55,8 @@ public class MainActivity extends Activity {
 	int pomodorosNum = 1;
 	int pomodorosUntilLongBreakNum = 2;
 
-	Bar bar;
+	Bar pomodoroBar;
+	Bar breakBar;
 	Axis axis;
 
 	@Override
@@ -58,30 +64,35 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		sqhelper = new SQHelper(this);
+
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		control = (LinearLayout) findViewById(R.id.control);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (TextView) findViewById(R.id.timetext);
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
 
+		pomodorosNum = sqhelper.getStartUpPomodoroCount();
 		pomodorosNumText.setTextColor(Color.parseColor("#fdf700"));
 		pomodorosNumText.setText("" + pomodorosNum);
-		
+
 		LinearLayout digramLayout = new LinearLayout(this);
 		digram.addView(digramLayout);
 		LinearLayout axisLayout = new LinearLayout(this);
 		digram.addView(axisLayout);
-		
+
 		axis = new Axis(digram.getContext(), 0);
 		axisLayout.addView(axis);
 
-		// Adding Bars
-		// for (int i = 1; i < 4; i++) {
-		bar = new Bar(digram.getContext(), 0);
-		bars.add(bar);
-		digramLayout.addView(bar, barParams);
-		digramLayout.addView(new Bar(digram.getContext(), 15), barParams);
-		// }
+		pomodoroBar = new Bar(digram.getContext(),
+				sqhelper.getStartUpPomodoroTime());
+		bars.add(pomodoroBar);
+		digramLayout.addView(pomodoroBar, barParams);
+
+		breakBar = new Bar(digram.getContext(),
+				sqhelper.getStartUpBreakTime());
+		bars.add(breakBar);
+		digramLayout.addView(breakBar, barParams);
 
 		// Control Buttons
 		controlListener = new ControlListener(this, control);
@@ -99,7 +110,12 @@ public class MainActivity extends Activity {
 
 		// headline.addView(timeText);
 		// headline.addView(chrono);
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.e("MainActivity", "onPause");
 	}
 
 	@Override
@@ -115,6 +131,7 @@ public class MainActivity extends Activity {
 		// bars.get(i)
 		// .startAnimation(StoredAnimation.inFromButtomAnimation(i));
 		// }
+		Log.e("MainActivity", "onResume");
 	}
 
 	public void startCounter(int minutes, int type) {
@@ -163,17 +180,17 @@ public class MainActivity extends Activity {
 		switch (tag) {
 		// Pomodoro
 		case 0:
-			startCounter(1, tag);
+			startCounter(pomodoroTime, tag);
 			Toast.makeText(this, "Start Pomodoro", Toast.LENGTH_SHORT).show();
 			break;
 		// Short Break
 		case 1:
-			startCounter(1, tag);
+			startCounter(shortBreakTime, tag);
 			Toast.makeText(this, "Start ShortBreak", Toast.LENGTH_SHORT).show();
 			break;
 		// Long Break
 		case 2:
-			startCounter(1, tag);
+			startCounter(longBreakTime, tag);
 			Toast.makeText(this, "Start LongBreak", Toast.LENGTH_SHORT).show();
 			break;
 		// Tracking
@@ -191,24 +208,23 @@ public class MainActivity extends Activity {
 	 * @param tag
 	 */
 	public void end(int tag) {
-		Log.e("MainActivity", "end " + tag + " :" + counter.getMinutesPast());
+		int minutes = counter.getMinutesPast();
+		//#######
+		minutes = 10;
+		//#######
+		Log.e("MainActivity", "end " + tag + " :" + minutes);
 		stopCounter();
 		timeText.setTextColor(Color.parseColor("#6495ED"));
 
-		switch (tag) {
-		case 0:
-			pomodorosNum++;
-			pomodorosNumText.setText("" + (pomodorosNum - 1));
-			bar.addValue(10);
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
+		if (minutes > 0) {
+			if (tag == 0) {
+				pomodorosNum++;
+				pomodorosNumText.setText("" + pomodorosNum);
+				pomodoroBar.addValue(minutes);
+			} else if (tag == 1 || tag == 2) {
+				breakBar.addValue(minutes);
+			}
+			sqhelper.insertDate(tag, minutes);
 		}
 	}
 
@@ -226,7 +242,7 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-
+	
 	public boolean checkOnLongBreak() {
 		if (pomodorosNum % pomodorosUntilLongBreakNum == 0)
 			return true;
