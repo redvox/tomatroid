@@ -81,22 +81,13 @@ public class Axis extends View {
 		position.clear();
 		values.clear();
 		
-		Log.e("Axis", "before calculation: " + position.size());
-		
 		int tenth = maxValue / 10;
 		for (float i = 0; i < 10; i++) {
 			position.add(height - (i * (tenth * pointPerMinute)));
-			values.add("" + (int) (i * tenth));
+			values.add(generateTimeText((int)(i * tenth)));
 		}
 		
-		Log.e("Axis", "after calculation: " + position.size());
-		
-		Log.e("Axis", "maxText1: " + maxText);
-		maxText = "" + maxValue;
-		Log.e("Axis", "maxText2: " + maxText + " == "+maxValue);
-
-		Log.e("Axis", "max: " + maxValue);
-		Log.e("Axis", "tenth: " + tenth);
+		maxText = generateTimeText(maxValue);
 	}
 
 	public void adjustToNewMaximum(int newMax) {
@@ -106,13 +97,25 @@ public class Axis extends View {
 		Animation b = new AlphaAnimation(0, 1);
 		b.setDuration(1000);
 		
-//		AnimationSet animationSet = new AnimationSet(true);
-//		animationSet.addAnimation(b);
-//		animationSet.addAnimation(a);
-		
 		calculate();
-//		startAnimation(animationSet);
 		startAnimation(b);
 		Log.e("Axis", "max after adjustment: " + maxValue + " == "+ newMax);
+	}
+	
+	protected String generateTimeText(int value) {
+		int hours = (int) value / 60;
+		int minutes = (int) value % 60;
+
+		StringBuffer stb = new StringBuffer();
+
+		if (hours > 0) {
+			stb.append(hours);
+			stb.append(":");
+			if (minutes < 10)
+				stb.append("0");
+		}
+		stb.append(minutes);
+
+		return stb.toString();
 	}
 }
