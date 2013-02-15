@@ -81,6 +81,11 @@ public class ControlListener implements OnClickListener {
 			activeButton = -1;
 		}
 	}
+	
+	public void restart(){
+		mA.end(activeButton);
+		mA.start(activeButton);
+	}
 
 	public void stop() {
 		bA[activeButton].startAnimation(StoredAnimation.slideHorizontal(50));

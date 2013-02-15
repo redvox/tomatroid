@@ -80,7 +80,7 @@ public class DialogManager implements OnClickListener {
 			switch (tag) {
 			// Is pomodoro, start pomodoro
 			case 0:
-				mA.controlListener.start(0);
+				mA.controlListener.restart();
 				break;
 			// On break, so nothing
 			default:
