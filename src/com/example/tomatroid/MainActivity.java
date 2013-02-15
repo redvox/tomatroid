@@ -243,6 +243,21 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.delete_history:
+//			deleteHistory();
+//			return true;
+//
+//		default:
+//			
+//		}
+		sqhelper.renewTables();
+		
+		return super.onOptionsItemSelected(item);
+	}
+
 	public boolean checkOnLongBreak() {
 		if (pomodorosNum % pomodorosUntilLongBreakNum == 0)
 			return true;
