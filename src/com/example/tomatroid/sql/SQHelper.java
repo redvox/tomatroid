@@ -2,7 +2,9 @@ package com.example.tomatroid.sql;
 
 import org.joda.time.DateTime;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -12,6 +14,7 @@ public class SQHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "pomodorodroid";
 	private static final int DATABASE_VERSION = 1;
 
+	// TABLE Dates
 	public static final String TABLE_DATES = "dates";
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_DATE_DAY = "day";
@@ -19,10 +22,12 @@ public class SQHelper extends SQLiteOpenHelper {
 	public static final String KEY_DATE_YEAR = "year";
 	public static final String KEY_DATE_WEEKDAY = "weekday";
 	public static final String KEY_DATE_WEEKNUM = "weeknum";
-	public static final String KEY_DATE_START_TIME = "starttime";
-	public static final String KEY_DATE_END_TIME = "endtime";
+	public static final String KEY_DATE_START_HOUR = "starttime_hour";
+	public static final String KEY_DATE_START_MINUTE = "starttime_minute";
+	public static final String KEY_DATE_END_HOUR = "endtime_hour";
+	public static final String KEY_DATE_END_MINUTE = "endtime_minute";
 	public static final String KEY_DURATION = "duration";
-	public static final String KEY_STARS = "stars";
+	public static final String KEY_TYPE = "type";
 	public static final String KEY_THEME = "theme";
 
 	static final String CREATE_DATES_TABLE = "create table " 
@@ -33,13 +38,16 @@ public class SQHelper extends SQLiteOpenHelper {
 			+ KEY_DATE_YEAR + " integer not null," 
 			+ KEY_DATE_WEEKDAY + " integer not null," 
 			+ KEY_DATE_WEEKNUM + " integer not null," 
-			+ KEY_DATE_START_TIME + " integer not null,"
-			+ KEY_DATE_END_TIME + " integer not null," 
+			+ KEY_DATE_START_HOUR + " integer not null,"
+			+ KEY_DATE_START_MINUTE + " integer not null,"
+			+ KEY_DATE_END_HOUR + " integer not null,"
+			+ KEY_DATE_END_MINUTE + " integer not null," 
 			+ KEY_DURATION + " integer not null," 
-			+ KEY_STARS + " integer," 
-			+ KEY_THEME + " integer,"  
+			+ KEY_TYPE + " integer not null," 
+			+ KEY_THEME + " integer"  
 			+ ");";
 
+	// TABLE Theme
 	public static final String TABLE_THEME = "themes";
 	// ROW ID
 	public static final String KEY_NAME = "name";
@@ -47,10 +55,15 @@ public class SQHelper extends SQLiteOpenHelper {
 	static final String CREATE_THEME_TABLE = "create table " 
 			+ TABLE_THEME + "("
 			+ KEY_ROWID + " integer primary key autoincrement, "
-			+ KEY_NAME + " text not null, " 
+			+ KEY_NAME + " text not null" 
 			+ ");";
 	
-	DateTime time = new DateTime();
+	
+	public static final int TYPE_POMODORO = 0;
+	public static final int TYPE_SHORTBREAK = 1;
+	public static final int TYPE_LONGBREAK = 2;
+	public static final int TYPE_TRACKING = 3;
+	public static final int TYPE_SLEEPING = 4;
 
 	public SQHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,8 +71,109 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
+		Log.e("SQHepler", "onCreate");
+		createTables(database);
+	}
+	
+	public void createTables(SQLiteDatabase database) {
 		database.execSQL(CREATE_DATES_TABLE);
 		database.execSQL(CREATE_THEME_TABLE);
+	}
+	
+//	public Cursor getStartUpInfo(){
+//		SQLiteDatabase db = getReadableDatabase();
+//		DateTime dt = new DateTime();
+//		int day = dt.getDayOfMonth();
+//		int month = dt.getMonthOfYear();
+//		int year = dt.getYear();
+//
+////		public Cursor query (String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy)
+//		return db.query(TABLE_DATES, null, 
+//				KEY_DATE_DAY +" = "+ day + " AND "+
+//				KEY_DATE_MONTH +" = "+ month + " AND "+
+//				KEY_DATE_YEAR +" = "+ year
+//						, null, null, null, null);
+//	}
+	
+	public int getStartUpPomodoroCount(){
+		SQLiteDatabase db = getReadableDatabase();
+		DateTime dt = new DateTime();
+		int day = dt.getDayOfMonth();
+		int month = dt.getMonthOfYear();
+		int year = dt.getYear();
+
+//		public Cursor query (String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy)
+		Cursor c =  db.query(TABLE_DATES, null, 
+						KEY_DATE_DAY +" = "+ day + " AND "+
+						KEY_DATE_MONTH +" = "+ month + " AND "+
+						KEY_DATE_YEAR +" = "+ year +" AND "+
+						KEY_TYPE +" = "+ TYPE_POMODORO
+							, null, null, null, null);
+		int count = c.getCount();
+		Log.e("SQHelper", "pomodoro count "+count);
+		c.close();
+		db.close();
+		return count;
+	}
+	
+	public int getStartUpPomodoroTime(){
+		SQLiteDatabase db = getReadableDatabase();
+		DateTime dt = new DateTime();
+		int day = dt.getDayOfMonth();
+		int month = dt.getMonthOfYear();
+		int year = dt.getYear();
+
+		Cursor c =  db.query(TABLE_DATES, new String[]{
+				KEY_DURATION, 
+		},
+						KEY_DATE_DAY +" = "+ day + " AND "+
+						KEY_DATE_MONTH +" = "+ month + " AND "+
+						KEY_DATE_YEAR +" = "+ year +" AND "+
+						KEY_TYPE +" = "+ TYPE_POMODORO
+							, null, null, null, null);
+		
+		
+		int duration = calculateDuration(c);
+		Log.e("SQHelper", "pomodoro Duration: "+ duration + " ::"+c.getCount());
+		c.close();
+		db.close();
+		return duration;
+	}
+	
+	public int getStartUpBreakTime(){
+		SQLiteDatabase db = getReadableDatabase();
+		DateTime dt = new DateTime();
+		int day = dt.getDayOfMonth();
+		int month = dt.getMonthOfYear();
+		int year = dt.getYear();
+
+		Cursor c =  db.query(TABLE_DATES, new String[]{
+				KEY_DURATION, 
+		},
+						KEY_DATE_DAY +" = "+ day + " AND "+
+						KEY_DATE_MONTH +" = "+ month + " AND "+
+						KEY_DATE_YEAR +" = "+ year +" AND ("+
+						KEY_TYPE +" = "+ TYPE_SHORTBREAK +" OR "+
+						KEY_TYPE +" = "+ TYPE_LONGBREAK +")"
+							, null, null, null, null);
+		
+		int duration = calculateDuration(c);
+		Log.e("SQHelper", "break Duration: "+ duration + " ::"+c.getCount());
+		c.close();
+		db.close();
+		return duration;
+	}
+	
+	public int calculateDuration(Cursor c){
+		int duration = 0;
+
+		if(c.moveToFirst()){
+			do {
+				duration += c.getInt(0);
+				c.moveToNext();
+			} while (c.moveToNext());
+		}
+		return duration;
 	}
 
 	@Override
@@ -70,6 +184,37 @@ public class SQHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATES);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THEME);
 		onCreate(db);
+	}
+	
+	public void renewTables() {
+		SQLiteDatabase db = getWritableDatabase();
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATES);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THEME);
+		createTables(db);
+	}
+	
+	public void insertDate(int tag, int minutesPast){		
+		SQLiteDatabase db = getWritableDatabase();
+		
+		DateTime endDate = new DateTime();
+		DateTime startDate = endDate.minusMinutes(minutesPast);
+		
+		ContentValues newContent = new ContentValues();
+		newContent.put(KEY_DATE_DAY, startDate.getDayOfMonth());
+		newContent.put(KEY_DATE_MONTH, startDate.getMonthOfYear());
+		newContent.put(KEY_DATE_YEAR, startDate.getYear());
+		newContent.put(KEY_DATE_WEEKDAY, startDate.getDayOfWeek());
+		newContent.put(KEY_DATE_WEEKNUM, startDate.getWeekOfWeekyear());
+		newContent.put(KEY_DATE_START_HOUR, startDate.getHourOfDay());
+		newContent.put(KEY_DATE_START_MINUTE, startDate.getMinuteOfHour());
+		newContent.put(KEY_DATE_END_HOUR, endDate.getHourOfDay());
+		newContent.put(KEY_DATE_END_MINUTE, endDate.getMinuteOfHour());
+		newContent.put(KEY_TYPE, tag);
+		newContent.put(KEY_DURATION, minutesPast);
+		newContent.put(KEY_THEME, "Test");
+		long l = db.insert(TABLE_DATES, null, newContent);
+		Log.e("SQHelper", "row affected "+l);
+		db.close();
 	}
 
 }
