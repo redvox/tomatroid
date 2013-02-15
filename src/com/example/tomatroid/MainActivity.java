@@ -85,12 +85,12 @@ public class MainActivity extends Activity {
 		axisLayout.addView(axis);
 
 		pomodoroBar = new Bar(digram.getContext(),
-				sqhelper.getStartUpPomodoroTime());
+				sqhelper.getStartUpPomodoroTime(), "#fdf700");
 		bars.add(pomodoroBar);
 		digramLayout.addView(pomodoroBar, barParams);
 
-		breakBar = new Bar(digram.getContext(),
-				sqhelper.getStartUpBreakTime());
+		breakBar = new Bar(digram.getContext(), sqhelper.getStartUpBreakTime(),
+				"#04B404");
 		bars.add(breakBar);
 		digramLayout.addView(breakBar, barParams);
 
@@ -209,9 +209,9 @@ public class MainActivity extends Activity {
 	 */
 	public void end(int tag) {
 		int minutes = counter.getMinutesPast();
-		//#######
+		// #######
 		minutes = 10;
-		//#######
+		// #######
 		Log.e("MainActivity", "end " + tag + " :" + minutes);
 		stopCounter();
 		timeText.setTextColor(Color.parseColor("#6495ED"));
@@ -242,19 +242,19 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case R.id.delete_history:
-//			deleteHistory();
-//			return true;
-//
-//		default:
-//			
-//		}
+		// switch (item.getItemId()) {
+		// case R.id.delete_history:
+		// deleteHistory();
+		// return true;
+		//
+		// default:
+		//
+		// }
 		sqhelper.renewTables();
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
