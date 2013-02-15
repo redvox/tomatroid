@@ -81,16 +81,22 @@ public class MainActivity extends Activity {
 		LinearLayout axisLayout = new LinearLayout(this);
 		digram.addView(axisLayout);
 
-		axis = new Axis(digram.getContext(), 0);
+		// Calculate for Bars
+		int startPomodoroTime = sqhelper.getStartUpPomodoroTime();
+		int startBreakTime = sqhelper.getStartUpBreakTime();
+		float maxStartTime = Math.max(startPomodoroTime, startBreakTime);
+		int maxValue = (int) Math.max(60, ((maxStartTime / 100) * 125));
+
+		axis = new Axis(digram.getContext(), maxValue);
 		axisLayout.addView(axis);
 
-		pomodoroBar = new Bar(digram.getContext(),
-				sqhelper.getStartUpPomodoroTime(), "#fdf700");
+		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime,
+				"#fdf700", maxValue);
 		bars.add(pomodoroBar);
 		digramLayout.addView(pomodoroBar, barParams);
 
-		breakBar = new Bar(digram.getContext(), sqhelper.getStartUpBreakTime(),
-				"#04B404");
+		breakBar = new Bar(this, digram.getContext(), startBreakTime,
+				"#04B404", maxValue);
 		bars.add(breakBar);
 		digramLayout.addView(breakBar, barParams);
 
@@ -101,8 +107,6 @@ public class MainActivity extends Activity {
 
 		// chrono = new ChronoCounter(this);
 
-		// timeText = new TextView(this);
-		// timeText.setTextSize(50);
 		timeText.setText("00:00");
 		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
 		timeText.setTypeface(tf);
@@ -262,5 +266,13 @@ public class MainActivity extends Activity {
 		if (pomodorosNum % pomodorosUntilLongBreakNum == 0)
 			return true;
 		return false;
+	}
+
+	public void barExceededLimit(int oldMax) {
+		float cal = ((float) oldMax / 100f) * 125f;
+		int newMax = (int) cal;
+		pomodoroBar.adjustToNewMaximum(newMax);
+		breakBar.adjustToNewMaximum(newMax);
+		axis.adjustToNewMaximum(newMax);
 	}
 }
