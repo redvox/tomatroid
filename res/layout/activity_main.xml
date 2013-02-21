@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <TextView
+        <Chronometer
             android:id="@+id/timetext"
             style="@style/BigText"
             android:layout_width="wrap_content"

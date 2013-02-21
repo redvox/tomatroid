@@ -2,8 +2,6 @@ package com.example.tomatroid.chrono;
 
 import com.example.tomatroid.MainActivity;
 
-import android.R;
-import android.app.PendingIntent.CanceledException;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.CountDownTimer;
@@ -22,6 +20,7 @@ public class Counter extends CountDownTimer {
 	MainActivity mA;
 	boolean countUp = false;
 	int rememberTime = 10;
+	int id = 0;
 
 	public Counter(int minutes, MainActivity main, TextView timeText, int tag) {
 		super((minutes * 60) * 1000, 1000);
@@ -30,12 +29,13 @@ public class Counter extends CountDownTimer {
 		this.context = main;
 		this.mA = main;
 		this.tag = tag;
-		// Set Time Blue
-		timeText.setTextColor(Color.parseColor("#6495ED"));
+		id = (int) (Math.random()*159353);
+//		Log.e("Counter", id+" konstruktor");
 	}
 
 	@Override
 	public void onFinish() {
+//		Log.e("Counter", id+" finished");
 		timeText.setText("00:00");
 		mA.counterFinish(tag);
 	}
@@ -60,7 +60,6 @@ public class Counter extends CountDownTimer {
 		timeText = null;
 		context = null;
 		mA = null;
-		// Log.e("Counter", "###################");
 		counter.start();
 		return counter;
 	}

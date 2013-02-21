@@ -39,10 +39,9 @@ public class MainActivity extends Activity {
 	LinearLayout control;
 	LinearLayout headline;
 
-	TextView timeText;
+	Chronometer timeText;
 	TextView pomodorosNumText;
 	Counter counter;
-	Chrono chrono;
 	ControlListener controlListener;
 	DialogManager dialogManager;
 
@@ -51,6 +50,8 @@ public class MainActivity extends Activity {
 	int pomodoroTime = 25;
 	int shortBreakTime = 5;
 	int longBreakTime = 35;
+	String trackingTheme = "";
+	boolean tracking = false;
 
 	int pomodorosNum = 1;
 	int pomodorosUntilLongBreakNum = 2;
@@ -69,7 +70,7 @@ public class MainActivity extends Activity {
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		control = (LinearLayout) findViewById(R.id.control);
 		headline = (LinearLayout) findViewById(R.id.headline);
-		timeText = (TextView) findViewById(R.id.timetext);
+		timeText = (Chronometer) findViewById(R.id.timetext);
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
 
 		pomodorosNum = sqhelper.getStartUpPomodoroCount();
@@ -105,37 +106,20 @@ public class MainActivity extends Activity {
 		// Dialog Manager
 		dialogManager = new DialogManager(this);
 
-		// chrono = new ChronoCounter(this);
-
 		timeText.setText("00:00");
-		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
-		timeText.setTypeface(tf);
+//		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
+//		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
-
-		// headline.addView(timeText);
-		// headline.addView(chrono);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.e("MainActivity", "onPause");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// if (bA.length != 0) {
-		// for (int i = 0; i < bA.length; i++) {
-		// bA[i].startAnimation(StoredAnimation.inFromRightAnimation(i));
-		// }
-		// }
-		// for (int i = 0; i < bars.size(); i++) {
-		// bars.get(i)
-		// .startAnimation(StoredAnimation.inFromButtomAnimation(i));
-		// }
-		Log.e("MainActivity", "onResume");
 	}
 
 	public void startCounter(int minutes, int type) {
@@ -197,9 +181,15 @@ public class MainActivity extends Activity {
 			break;
 		// Tracking
 		case 3:
+			timeText.setBase(SystemClock.elapsedRealtime());
+			timeText.start();
+			tracking = true;
 			break;
 		// Sleeping
 		case 4:
+			timeText.setBase(SystemClock.elapsedRealtime());
+			timeText.start();
+			tracking = true;
 			break;
 		}
 	}
