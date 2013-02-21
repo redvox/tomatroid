@@ -258,6 +258,7 @@ public class MainActivity extends Activity {
 		//
 		// }
 		sqhelper.renewTables();
+			onCreate(null);
 
 		return super.onOptionsItemSelected(item);
 	}
