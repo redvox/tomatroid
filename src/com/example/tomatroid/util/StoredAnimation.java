@@ -20,6 +20,16 @@ public class StoredAnimation {
 		return inFromRight;
 	}
 	
+	public static Animation slideVertical(float go) {
+		Animation slideVertical = new TranslateAnimation(
+				Animation.ABSOLUTE, 0.0f,
+				Animation.ABSOLUTE, 0.0f,
+				Animation.ABSOLUTE, go,
+				Animation.ABSOLUTE, 0.0f);
+		slideVertical.setDuration(Animationspeed);
+		return slideVertical;
+	}
+	
 	public static Animation slideLeft(float amount) {
 		Animation inFromRight = new TranslateAnimation(
 				Animation.ABSOLUTE, amount,
@@ -62,6 +72,17 @@ public class StoredAnimation {
 		inFromLeft.setDuration(Animationspeed);
 		inFromLeft.setInterpolator(new AccelerateInterpolator());
 		return inFromLeft;
+	}
+	
+	public static Animation inFromButtomAnimation(int rate) {
+		Animation inFromButtom = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, +1.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		inFromButtom.setDuration(Animationspeed + (rate*150));
+//		inFromLeft.setInterpolator(new AccelerateInterpolator());
+		return inFromButtom;
 	}
 
 	public static Animation outToRightAnimation() {

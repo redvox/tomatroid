@@ -67,13 +67,13 @@ public class ControlListener implements OnClickListener {
 			// Stop Other or Own
 			mA.end(activeButton);
 			bA[activeButton]
-					.startAnimation(StoredAnimation.slideHorizontal(50));
+					.startAnimation(StoredAnimation.slideHorizontal(55));
 			bA[activeButton].setTranslationX(0);
 		}
 
 		if (activeButton != tag) {
-			bA[tag].startAnimation(StoredAnimation.slideHorizontal(-50));
-			bA[tag].setTranslationX(50);
+			bA[tag].startAnimation(StoredAnimation.slideHorizontal(-55));
+			bA[tag].setTranslationX(55);
 			// Start Own
 			mA.start(tag);
 			activeButton = tag;
@@ -88,9 +88,12 @@ public class ControlListener implements OnClickListener {
 	}
 
 	public void stop() {
-		bA[activeButton].startAnimation(StoredAnimation.slideHorizontal(50));
+		if (activeButton != -1) {
+			bA[activeButton]
+					.startAnimation(StoredAnimation.slideHorizontal(50));
 		bA[activeButton].setTranslationX(0);
-		mA.stop(activeButton);
+			mA.stop();
 		activeButton = -1;
 	}
+}
 }

@@ -51,10 +51,12 @@ public class SQHelper extends SQLiteOpenHelper {
 	public static final String TABLE_THEME = "themes";
 	// ROW ID
 	public static final String KEY_NAME = "name";
+	public static final String KEY_ITEMOF = "itemof";
 
 	static final String CREATE_THEME_TABLE = "create table " 
 			+ TABLE_THEME + "("
 			+ KEY_ROWID + " integer primary key autoincrement, "
+			+ KEY_ITEMOF + " integer," 
 			+ KEY_NAME + " text not null" 
 			+ ");";
 	
@@ -79,21 +81,6 @@ public class SQHelper extends SQLiteOpenHelper {
 		database.execSQL(CREATE_DATES_TABLE);
 		database.execSQL(CREATE_THEME_TABLE);
 	}
-	
-//	public Cursor getStartUpInfo(){
-//		SQLiteDatabase db = getReadableDatabase();
-//		DateTime dt = new DateTime();
-//		int day = dt.getDayOfMonth();
-//		int month = dt.getMonthOfYear();
-//		int year = dt.getYear();
-//
-////		public Cursor query (String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy)
-//		return db.query(TABLE_DATES, null, 
-//				KEY_DATE_DAY +" = "+ day + " AND "+
-//				KEY_DATE_MONTH +" = "+ month + " AND "+
-//				KEY_DATE_YEAR +" = "+ year
-//						, null, null, null, null);
-//	}
 	
 	public int getStartUpPomodoroCount(){
 		SQLiteDatabase db = getReadableDatabase();
@@ -193,7 +180,7 @@ public class SQHelper extends SQLiteOpenHelper {
 		createTables(db);
 	}
 	
-	public void insertDate(int tag, int minutesPast){		
+	public void insertDate(int tag, int minutesPast, String tracking){		
 		SQLiteDatabase db = getWritableDatabase();
 		
 		DateTime endDate = new DateTime();
@@ -211,7 +198,7 @@ public class SQHelper extends SQLiteOpenHelper {
 		newContent.put(KEY_DATE_END_MINUTE, endDate.getMinuteOfHour());
 		newContent.put(KEY_TYPE, tag);
 		newContent.put(KEY_DURATION, minutesPast);
-		newContent.put(KEY_THEME, "Test");
+		newContent.put(KEY_THEME, tracking);
 		long l = db.insert(TABLE_DATES, null, newContent);
 		Log.e("SQHelper", "row affected "+l);
 		db.close();

@@ -145,16 +145,14 @@ public class MainActivity extends Activity {
 		counter.start();
 	}
 
-	public int stopCounter() {
-		timeText.setTextColor(Color.parseColor("#6495ED"));
-		timeText.setText("00:00");
+	public void stopCounter() {
+		if (counter != null)
 		counter.cancel();
-		return counter.getMinutesPast();
 	}
 
 	public synchronized void counterFinish(int tag) {
-		timeText.setText("00:00");
-		int minutespast = counter.getMinutesPast() + 1;
+		resetTimeText();
+		int minutespast = counter.getMinutesPast();
 
 		// // SOS
 		// int dot = 200; // Length of a Morse Code "dot" in milliseconds
@@ -212,13 +210,24 @@ public class MainActivity extends Activity {
 	 * @param tag
 	 */
 	public void end(int tag) {
-		int minutes = counter.getMinutesPast();
+		int minutes;
+		if (tracking) {
+			timeText.stop();
+			long myElapsedMillis = SystemClock.elapsedRealtime()
+					- timeText.getBase();
+			minutes = (int) (myElapsedMillis / 60000);
+			tracking = false;
+		} else {
+			stopCounter();
+			minutes = counter.getMinutesPast();
+		}
+
+		resetTimeText();
+
 		// #######
 		minutes = 10;
 		// #######
 		Log.e("MainActivity", "end " + tag + " :" + minutes);
-		stopCounter();
-		timeText.setTextColor(Color.parseColor("#6495ED"));
 
 		if (minutes > 0) {
 			if (tag == 0) {
@@ -228,7 +237,7 @@ public class MainActivity extends Activity {
 			} else if (tag == 1 || tag == 2) {
 				breakBar.addValue(minutes);
 			}
-			sqhelper.insertDate(tag, minutes);
+			sqhelper.insertDate(tag, minutes, trackingTheme);
 		}
 	}
 
@@ -237,8 +246,19 @@ public class MainActivity extends Activity {
 	 * 
 	 * @param tag
 	 */
-	public void stop(int tag) {
+	public void stop() {
+		if (tracking) {
+			timeText.stop();
+			tracking = false;
+		} else {
 		stopCounter();
+	}
+		resetTimeText();
+	}
+
+	public void resetTimeText() {
+		timeText.setTextColor(Color.parseColor("#6495ED"));
+		timeText.setText("00:00");
 	}
 
 	@Override
@@ -249,22 +269,25 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// switch (item.getItemId()) {
-		// case R.id.delete_history:
-		// deleteHistory();
-		// return true;
-		//
-		// default:
-		//
-		// }
+		switch (item.getItemId()) {
+		case R.id.delete_history:
 		sqhelper.renewTables();
 			onCreate(null);
+			break;
+		case R.id.menu_void:
+			stop();
+			controlListener.stop();
+		default:
+
+		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
 	public boolean checkOnLongBreak() {
-		if (pomodorosNum % pomodorosUntilLongBreakNum == 0)
+		if (pomodorosNum == 0)
+			return false;
+		if ((pomodorosNum + 1) % pomodorosUntilLongBreakNum == 0)
 			return true;
 		return false;
 	}
