@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import com.example.tomatroid.util.StoredAnimation;
 
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class ControlListener implements OnClickListener {
 
@@ -18,10 +21,35 @@ public class ControlListener implements OnClickListener {
 	LinearLayout linearLayout;
 	Button[] bA;
 	ArrayList<String> commands = new ArrayList<String>();
+	TextView themeText;
 
-	public ControlListener(MainActivity mA, LinearLayout linearLayout) {
+	public ControlListener(MainActivity mA) {
 		this.mA = mA;
-		this.linearLayout = linearLayout;
+		this.linearLayout = (LinearLayout) mA.findViewById(R.id.control);
+
+		TextView textview = new TextView(mA);
+		textview.setText("Theme:");
+		textview.setTextSize(10);
+		linearLayout.addView(textview);
+
+		LayoutInflater mInflater = (LayoutInflater) mA
+				.getSystemService(mA.LAYOUT_INFLATER_SERVICE);
+
+		View line1 = mInflater.inflate(R.layout.horizontal_line, linearLayout,
+				false);
+		linearLayout.addView(line1);
+
+		themeText = new TextView(mA);
+		themeText.setText("Kein Theme gewählt");
+		themeText.setClickable(true);
+		themeText.setOnClickListener(this);
+		themeText.setTextSize(20);
+		themeText.setTag(99);
+		linearLayout.addView(themeText);
+
+		View line2 = mInflater.inflate(R.layout.horizontal_line, linearLayout,
+				false);
+		linearLayout.addView(line2);
 
 		commands.add("Pomodoro!");
 		commands.add("Pause Kurz!");
@@ -59,7 +87,12 @@ public class ControlListener implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int tag = (Integer) v.getTag();
-		start(tag);
+		if(tag == 99){
+			Intent intent = new Intent(mA, ThemeList.class);
+			mA.startActivity(intent);
+		} else {
+			start(tag);
+		}
 	}
 
 	public void start(int tag) {
@@ -81,8 +114,8 @@ public class ControlListener implements OnClickListener {
 			activeButton = -1;
 		}
 	}
-	
-	public void restart(){
+
+	public void restart() {
 		mA.end(activeButton);
 		mA.start(activeButton);
 	}
@@ -91,9 +124,9 @@ public class ControlListener implements OnClickListener {
 		if (activeButton != -1) {
 			bA[activeButton]
 					.startAnimation(StoredAnimation.slideHorizontal(50));
-		bA[activeButton].setTranslationX(0);
+			bA[activeButton].setTranslationX(0);
 			mA.stop();
-		activeButton = -1;
+			activeButton = -1;
+		}
 	}
-}
 }

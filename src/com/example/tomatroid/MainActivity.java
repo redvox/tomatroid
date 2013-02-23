@@ -2,16 +2,15 @@ package com.example.tomatroid;
 
 import java.util.ArrayList;
 
-import com.example.tomatroid.chrono.Chrono;
 import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
 import com.example.tomatroid.sql.SQHelper;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.app.Activity;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -19,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -36,7 +36,6 @@ public class MainActivity extends Activity {
 	SQHelper sqhelper;
 
 	RelativeLayout digram;
-	LinearLayout control;
 	LinearLayout headline;
 
 	Chronometer timeText;
@@ -68,7 +67,6 @@ public class MainActivity extends Activity {
 		sqhelper = new SQHelper(this);
 
 		digram = (RelativeLayout) findViewById(R.id.digram);
-		control = (LinearLayout) findViewById(R.id.control);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (Chronometer) findViewById(R.id.timetext);
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
@@ -102,7 +100,7 @@ public class MainActivity extends Activity {
 		digramLayout.addView(breakBar, barParams);
 
 		// Control Buttons
-		controlListener = new ControlListener(this, control);
+		controlListener = new ControlListener(this);
 		// Dialog Manager
 		dialogManager = new DialogManager(this);
 
@@ -131,7 +129,7 @@ public class MainActivity extends Activity {
 
 	public void stopCounter() {
 		if (counter != null)
-		counter.cancel();
+			counter.cancel();
 	}
 
 	public synchronized void counterFinish(int tag) {
@@ -215,7 +213,7 @@ public class MainActivity extends Activity {
 		resetTimeText();
 
 		// #######
-		minutes = 10;
+		 minutes = 10;
 		// #######
 		Log.e("MainActivity", "end " + tag + " :" + minutes);
 
@@ -241,8 +239,8 @@ public class MainActivity extends Activity {
 			timeText.stop();
 			tracking = false;
 		} else {
-		stopCounter();
-	}
+			stopCounter();
+		}
 		resetTimeText();
 	}
 
@@ -261,7 +259,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.delete_history:
-		sqhelper.renewTables();
+			sqhelper.renewTables();
 			onCreate(null);
 			break;
 		case R.id.menu_void:
