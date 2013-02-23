@@ -60,6 +60,7 @@ public class Axis extends View {
 			canvas.drawText(values.get(i), 5, position.get(i) - 5, text);
 		}
 		canvas.drawLine(0, 1, width, 1, color);
+		canvas.drawLine(width, 0, width, height, color);
 		canvas.drawText(maxText, 5, 20, text);
 	}
 
