@@ -163,6 +163,22 @@ public class SQHelper extends SQLiteOpenHelper {
 		return duration;
 	}
 
+	public Cursor getAllThemes() {
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID, KEY_NAME }, null , null, null, null, null);
+//		Cursor c = db.query(TABLE_THEME, null, null, null, null, null, null);
+//		db.close();
+		return c;
+	}
+
+	public void addTheme(String name) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues newContent = new ContentValues();
+		newContent.put(KEY_NAME, name);
+		db.insert(TABLE_THEME, null, newContent);
+		db.close();
+	}
+
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(SQHelper.class.getName(), "Upgrading database from version "

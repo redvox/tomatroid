@@ -100,7 +100,7 @@ public class MainActivity extends Activity {
 		digramLayout.addView(breakBar, barParams);
 
 		// Control Buttons
-		controlListener = new ControlListener(this);
+		controlListener = new ControlListener(this, sqhelper);
 		// Dialog Manager
 		dialogManager = new DialogManager(this);
 

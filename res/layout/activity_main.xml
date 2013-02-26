@@ -16,15 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <View
-            android:layout_width="2dp"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="7dip"
-            android:layout_marginLeft="7dip"
-            android:layout_marginRight="7dip"
-            android:layout_marginTop="7dip"
-            android:background="@android:color/darker_gray"
-            android:padding="50dp" />
+        <include layout="@layout/vertical_line" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -39,21 +31,13 @@
                 android:gravity="center_horizontal" />
 
             <TextView
-                android:id="@+id/line"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="Pomodoros" />
         </LinearLayout>
 
-        <View
-            android:layout_width="2dp"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="7dip"
-            android:layout_marginLeft="7dip"
-            android:layout_marginRight="7dip"
-            android:layout_marginTop="7dip"
-            android:background="@android:color/darker_gray" />
+        <include layout="@layout/vertical_line" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,23 +47,27 @@
         <RelativeLayout
             android:id="@+id/digram"
             android:layout_width="180dp"
-            android:layout_height="match_parent" >
-
-            <!--
-            android:layout_marginBottom="10dip"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:layout_marginTop="5dip"
-            android:padding="3dip" >
-            -->
+            android:layout_height="match_parent"
+            android:padding="3dp" >
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/control"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-        </LinearLayout>
-    </LinearLayout>
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
+            <LinearLayout
+                android:id="@+id/control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/themeList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ListView>
+        </ViewFlipper>
+    </LinearLayout>
 </LinearLayout>
