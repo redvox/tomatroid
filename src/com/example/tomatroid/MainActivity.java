@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -91,12 +92,10 @@ public class MainActivity extends Activity {
 
 		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime,
 				"#fdf700", maxValue);
-		bars.add(pomodoroBar);
 		digramLayout.addView(pomodoroBar, barParams);
 
 		breakBar = new Bar(this, digram.getContext(), startBreakTime,
 				"#04B404", maxValue);
-		bars.add(breakBar);
 		digramLayout.addView(breakBar, barParams);
 
 		// Control Buttons
@@ -265,6 +264,9 @@ public class MainActivity extends Activity {
 		case R.id.menu_void:
 			stop();
 			controlListener.stop();
+		case R.id.menu_digram:
+			Intent i = new Intent(this, DigramActivity.class);
+			startActivity(i);
 		default:
 
 		}
@@ -286,5 +288,13 @@ public class MainActivity extends Activity {
 		pomodoroBar.adjustToNewMaximum(newMax);
 		breakBar.adjustToNewMaximum(newMax);
 		axis.adjustToNewMaximum(newMax);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+//		outState.putString("theme", (String) controlListener.themeText.getText());
+//		outState.putInt("activeButton", controlListener.activeButton);
+//		outState.putInt("counter", counter.getMinutesPast());
 	}
 }
