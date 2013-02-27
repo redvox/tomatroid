@@ -43,7 +43,7 @@ public class SQHelper extends SQLiteOpenHelper {
 			+ KEY_DURATION + " integer not null," + KEY_TYPE
 			+ " integer not null," + KEY_THEME + " integer,"
 			+ KEY_STARTTIMEMILLIES + " integer not null,"
-			+ KEY_ENDTIMEMILLIES + " integer not null," + ");";
+			+ KEY_ENDTIMEMILLIES + " integer not null);";
 
 	// TABLE Theme
 	public static final String TABLE_THEME = "themes";
@@ -53,7 +53,7 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	static final String CREATE_THEME_TABLE = "create table " + TABLE_THEME
 			+ "(" + KEY_ROWID + " integer primary key autoincrement, "
-			+ KEY_ITEMOF + " integer," + KEY_NAME + " text not null" + ");";
+			+ KEY_ITEMOF + " integer," + KEY_NAME + " text not null);";
 
 	public static final int TYPE_POMODORO = 0;
 	public static final int TYPE_SHORTBREAK = 1;
@@ -74,6 +74,9 @@ public class SQHelper extends SQLiteOpenHelper {
 	public void createTables(SQLiteDatabase database) {
 		database.execSQL(CREATE_DATES_TABLE);
 		database.execSQL(CREATE_THEME_TABLE);
+		addTheme("Kein Thema");
+		addTheme("Gaming");
+		addTheme("Pomodoro App");
 	}
 
 	public int getStartUpPomodoroCount() {
