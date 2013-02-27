@@ -106,6 +106,9 @@ public class MainActivity extends Activity {
 		timeText.setText("00:00");
 //		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
 //		timeText.setTypeface(tf);
+
+		Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
+		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
 	}
 
