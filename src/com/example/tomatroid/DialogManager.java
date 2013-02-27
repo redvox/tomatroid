@@ -62,7 +62,7 @@ public class DialogManager implements OnClickListener {
 		builder.setTitle("Pomodoro Time!");
 		builder.setMessage("Your break is over, lets do some work.");
 		builder.setNegativeButton("Void it & Stop!", this);
-		builder.setNeutralButton("Extend the break! (10min)", this);
+		builder.setNeutralButton("Extend the break! ("+mA.rememberTime+"min)", this);
 		builder.setPositiveButton("Do a pomodoro!", this);
 		return builder.create();
 	}

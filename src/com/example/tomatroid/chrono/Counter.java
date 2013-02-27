@@ -19,8 +19,6 @@ public class Counter extends CountDownTimer {
 	int tag;
 	MainActivity mA;
 	boolean countUp = false;
-	int rememberTime = 10;
-	int id = 0;
 
 	public Counter(int minutes, MainActivity main, TextView timeText, int tag) {
 		super((minutes * 60) * 1000, 1000);
@@ -29,13 +27,10 @@ public class Counter extends CountDownTimer {
 		this.context = main;
 		this.mA = main;
 		this.tag = tag;
-		id = (int) (Math.random()*159353);
-//		Log.e("Counter", id+" konstruktor");
 	}
 
 	@Override
-	public void onFinish() {
-//		Log.e("Counter", id+" finished");
+	public void onFinish() { 
 		timeText.setText("00:00");
 		mA.counterFinish(tag);
 	}
@@ -50,18 +45,6 @@ public class Counter extends CountDownTimer {
 
 	public long getMilliesBase() {
 		return timeFinal + timeBase;
-	}
-
-	public Counter renew() {
-		Counter counter = new Counter((rememberTime * 60) * 1000, mA, timeText, tag);
-		counter.toggleCountUp();
-		counter.setBaseTime(getMilliesBase());
-
-		timeText = null;
-		context = null;
-		mA = null;
-		counter.start();
-		return counter;
 	}
 
 	public void toggleCountUp() {

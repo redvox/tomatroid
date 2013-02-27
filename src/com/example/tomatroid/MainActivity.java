@@ -134,21 +134,35 @@ public class MainActivity extends Activity {
 	public synchronized void counterFinish(int tag) {
 		resetTimeText();
 		int minutespast = counter.getMinutesPast();
+		long milliesBase = counter.getMilliesBase();
+		
+		Counter newCounter = new Counter(rememberTime, this, timeText, tag);
+		newCounter.toggleCountUp();
+		newCounter.setBaseTime(milliesBase);
+
+		// timeText = null;
+		// context = null;
+		// mA = null;
+		newCounter.start();
+
+		
 
 		// // SOS
-		// int dot = 200; // Length of a Morse Code "dot" in milliseconds
-		// // int dash = 500; // Length of a Morse Code "dash" in milliseconds
-		// int short_gap = 200; // Length of Gap Between dots/dashes
-		// // int medium_gap = 500; // Length of Gap Between Letters
-		// // int long_gap = 1000; // Length of Gap Between Words
+		 int dot = 200; // Length of a Morse Code "dot" in milliseconds
+		 // int dash = 500; // Length of a Morse Code "dash" in milliseconds
+		 int short_gap = 200; // Length of Gap Between dots/dashes
+		 // int medium_gap = 500; // Length of Gap Between Letters
+		 // int long_gap = 1000; // Length of Gap Between Words
 		// long[] pattern = { 0, // Start immediately
 		// dot, short_gap, dot, short_gap, dot };
+		 long[] pattern = { 0, // Start immediately
+		 dot};
 
-		// Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		 Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		// Only perform this pattern one time (-1 means "do not repeat")
-		// v.vibrate(pattern, -1);
+		 v.vibrate(pattern, -1);
 
-		counter = counter.renew();
+		counter = newCounter;
 
 		Toast.makeText(this, minutespast + "mins", Toast.LENGTH_SHORT).show();
 		dialogManager.show(tag, checkOnLongBreak());
