@@ -2,9 +2,6 @@ package com.example.tomatroid;
 
 import java.util.ArrayList;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
-
 import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
 import com.example.tomatroid.sql.SQHelper;
@@ -15,9 +12,6 @@ import android.database.Cursor;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.TextureView;
-import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -60,68 +54,77 @@ public class DigramActivity extends Activity {
 
 		ArrayList<Integer> pomodoroTime = new ArrayList<Integer>();
 		ArrayList<Integer> breakTime = new ArrayList<Integer>();
+		ArrayList<Integer> gameTime = new ArrayList<Integer>();
 		ArrayList<Integer> weekdays = new ArrayList<Integer>();
 
 		int maxValue = 0;
 
 		if (c.moveToFirst()) {
 			int day = c.getInt(0);
-			int pomodoro = 0;
+			int pomodoroT = 0;
 			int breakT = 0;
+			int gameT = 0;
 			while (c.moveToNext()) {
 				if (day != c.getInt(0)) {
 					weekdays.add(c.getInt(0));
-					pomodoroTime.add(pomodoro);
+					pomodoroTime.add(pomodoroT);
 					breakTime.add(breakT);
-
-					if (pomodoro > maxValue)
-						maxValue = pomodoro;
-					if (breakT > maxValue)
-						maxValue = breakT;
+					gameTime.add(gameT);
 
 					day = c.getInt(0);
-					pomodoro = 0;
+					pomodoroT = 0;
 					breakT = 0;
-
+					gameT = 0;
 				}
 
 				switch (c.getInt(1)) {
 				case SQHelper.TYPE_POMODORO:
-					pomodoro += c.getInt(2);
+					pomodoroT += c.getInt(2);
 				case SQHelper.TYPE_LONGBREAK:
 					breakT += c.getInt(2);
 				case SQHelper.TYPE_SHORTBREAK:
 					breakT += c.getInt(2);
+				case SQHelper.TYPE_TRACKING:
+					gameT += c.getInt(2);
 				}
+				
+				if (pomodoroT > maxValue)
+					maxValue = pomodoroT;
+				if (breakT > maxValue)
+					maxValue = breakT;
+				if (gameT > maxValue)
+					maxValue = gameT;
 			}
 
 			weekdays.add(8);
-			pomodoroTime.add(pomodoro);
+			pomodoroTime.add(pomodoroT);
 			breakTime.add(breakT);
+			gameTime.add(gameT);
 		}
 
-//		if (weekdays.size() != howManyDays) {
-//			DateTime dt = DateTime.now().minusDays(howManyDays);
-//			int start_day = dt.getDayOfWeek();
-//			if (weekdays.get(0) != start_day) {
-//				for (int i1 = 0; i1 < getDayDistance(weekdays.get(0), start_day); i1++) {
-//					weekdays.add(0, weekdays.get(i1) + 1);
-//					pomodoroTime.add(0, 0);
-//					breakTime.add(0, 0);
-//				}
-//			}
-//
-//			for (int i2 = 0; i2 < howManyDays; i2++) {
-//				if (getDayDistance(weekdays.get(i2), weekdays.get(i2 + 1)) != 1) {
-//					for (int i3 = 0; i3 < getDayDistance(weekdays.get(i2),
-//							weekdays.get(i2 + 1)); i3++) {
-//						weekdays.add(i2, weekdays.get(i2) + 1);
-//						pomodoroTime.add(0, 0);
-//						breakTime.add(0, 0);
-//					}
-//				}
-//			}
-//		}
+		// if (weekdays.size() != howManyDays) {
+		// DateTime dt = DateTime.now().minusDays(howManyDays);
+		// int start_day = dt.getDayOfWeek();
+		// if (weekdays.get(0) != start_day) {
+		// for (int i1 = 0; i1 < getDayDistance(weekdays.get(0), start_day);
+		// i1++) {
+		// weekdays.add(0, weekdays.get(i1) + 1);
+		// pomodoroTime.add(0, 0);
+		// breakTime.add(0, 0);
+		// }
+		// }
+		//
+		// for (int i2 = 0; i2 < howManyDays; i2++) {
+		// if (getDayDistance(weekdays.get(i2), weekdays.get(i2 + 1)) != 1) {
+		// for (int i3 = 0; i3 < getDayDistance(weekdays.get(i2),
+		// weekdays.get(i2 + 1)); i3++) {
+		// weekdays.add(i2, weekdays.get(i2) + 1);
+		// pomodoroTime.add(0, 0);
+		// breakTime.add(0, 0);
+		// }
+		// }
+		// }
+		// }
 
 		for (int i = 0; i < weekdays.size(); i++) {
 			LinearLayout ll = new LinearLayout(this);
@@ -139,6 +142,9 @@ public class DigramActivity extends Activity {
 			Bar breakBar = new Bar(null, this, breakTime.get(i), "#04B404",
 					maxValue);
 			l1.addView(breakBar, barParams);
+			Bar gameBar = new Bar(null, this, gameTime.get(i), "#B452CD",
+					maxValue);
+			l1.addView(gameBar, barParams);
 
 			ll.addView(text);
 			ll.addView(l1);

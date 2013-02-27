@@ -7,4 +7,8 @@
         android:title="@string/menu_void"
         android:orderInCategory="90"
         android:showAsAction="never" />
+    <item android:id="@+id/menu_digram"
+        android:title="@string/menu_digram"
+        android:orderInCategory="90"
+        android:showAsAction="never" />
 </menu>
