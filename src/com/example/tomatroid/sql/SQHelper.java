@@ -141,11 +141,10 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	public int calculateDuration(Cursor c) {
 		int duration = 0;
-
+		int column = c.getColumnIndex(KEY_DURATION);
 		if (c.moveToFirst()) {
 			do {
-				duration += c.getInt(0);
-				c.moveToNext();
+				duration += c.getInt(column);
 			} while (c.moveToNext());
 		}
 		return duration;
