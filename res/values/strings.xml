@@ -9,5 +9,7 @@
     <string name="delete_history">Delete History</string>
     <string name="title_activity_theme_list">ThemeList</string>
     <string name="title_activity_digram">DigramActivity</string>
+    <string name="title_activity_statictic">StaticticActivity</string>
+    <string name="title_activity_database_list">DatabaseList</string>
 
 </resources>
