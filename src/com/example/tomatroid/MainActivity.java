@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
+import com.example.tomatroid.digram.PieChart;
 import com.example.tomatroid.sql.SQHelper;
 
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -34,7 +36,7 @@ public class MainActivity extends Activity {
 	LayoutParams barParams = new TableLayout.LayoutParams(
 			LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
 
-	SQHelper sqhelper;
+	SQHelper sqhelper = new SQHelper(this);
 
 	RelativeLayout digram;
 	LinearLayout headline;
@@ -47,10 +49,11 @@ public class MainActivity extends Activity {
 
 	ArrayList<View> bars = new ArrayList<View>();
 
-	int pomodoroTime = 25;
-	int shortBreakTime = 5;
-	int longBreakTime = 35;
-	String trackingTheme = "";
+	int pomodoroTime = 1;
+	int shortBreakTime = 1;
+	int longBreakTime = 1;
+	int rememberTime = 1;
+	String trackingTheme = "Kein Thema";
 	boolean tracking = false;
 
 	int pomodorosNum = 1;
@@ -64,9 +67,6 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		sqhelper = new SQHelper(this);
-
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (Chronometer) findViewById(R.id.timetext);
@@ -90,6 +90,10 @@ public class MainActivity extends Activity {
 		axis = new Axis(digram.getContext(), maxValue);
 		axisLayout.addView(axis);
 
+//		float values[]={3456,5734,5735,5477,9345,3477};
+//		PieChart pie = new PieChart(this, values);
+//		digramLayout.addView(pie);
+		
 		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime,
 				"#fdf700", maxValue);
 		digramLayout.addView(pomodoroBar, barParams);
@@ -97,7 +101,7 @@ public class MainActivity extends Activity {
 		breakBar = new Bar(this, digram.getContext(), startBreakTime,
 				"#04B404", maxValue);
 		digramLayout.addView(breakBar, barParams);
-
+		
 		// Control Buttons
 		controlListener = new ControlListener(this, sqhelper);
 		// Dialog Manager
@@ -138,7 +142,7 @@ public class MainActivity extends Activity {
 		resetTimeText();
 		int minutespast = counter.getMinutesPast();
 		long milliesBase = counter.getMilliesBase();
-		
+
 		Counter newCounter = new Counter(rememberTime, this, timeText, tag);
 		newCounter.toggleCountUp();
 		newCounter.setBaseTime(milliesBase);
@@ -148,22 +152,20 @@ public class MainActivity extends Activity {
 		// mA = null;
 		newCounter.start();
 
-		
-
 		// // SOS
-		 int dot = 200; // Length of a Morse Code "dot" in milliseconds
-		 // int dash = 500; // Length of a Morse Code "dash" in milliseconds
-		 int short_gap = 200; // Length of Gap Between dots/dashes
-		 // int medium_gap = 500; // Length of Gap Between Letters
-		 // int long_gap = 1000; // Length of Gap Between Words
+		int dot = 200; // Length of a Morse Code "dot" in milliseconds
+		// int dash = 500; // Length of a Morse Code "dash" in milliseconds
+		int short_gap = 200; // Length of Gap Between dots/dashes
+		// int medium_gap = 500; // Length of Gap Between Letters
+		// int long_gap = 1000; // Length of Gap Between Words
 		// long[] pattern = { 0, // Start immediately
 		// dot, short_gap, dot, short_gap, dot };
-		 long[] pattern = { 0, // Start immediately
-		 dot};
+		long[] pattern = { 0, // Start immediately
+				dot };
 
-		 Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		// Only perform this pattern one time (-1 means "do not repeat")
-		 v.vibrate(pattern, -1);
+		v.vibrate(pattern, -1);
 
 		counter = newCounter;
 
@@ -229,9 +231,9 @@ public class MainActivity extends Activity {
 		resetTimeText();
 
 		// #######
-		 minutes = 10;
+		minutes = 10;
 		// #######
-		Log.e("MainActivity", "end " + tag + " :" + minutes);
+		
 
 		if (minutes > 0) {
 			if (tag == 0) {
@@ -241,6 +243,7 @@ public class MainActivity extends Activity {
 			} else if (tag == 1 || tag == 2) {
 				breakBar.addValue(minutes);
 			}
+			Log.e("MainActivity", "end Tag: " + tag + " Duration: " + minutes + " Theme: "+trackingTheme);
 			sqhelper.insertDate(tag, minutes, trackingTheme);
 		}
 	}
@@ -306,12 +309,13 @@ public class MainActivity extends Activity {
 		breakBar.adjustToNewMaximum(newMax);
 		axis.adjustToNewMaximum(newMax);
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-//		outState.putString("theme", (String) controlListener.themeText.getText());
-//		outState.putInt("activeButton", controlListener.activeButton);
-//		outState.putInt("counter", counter.getMinutesPast());
+		// outState.putString("theme", (String)
+		// controlListener.themeText.getText());
+		// outState.putInt("activeButton", controlListener.activeButton);
+		// outState.putInt("counter", counter.getMinutesPast());
 	}
 }
