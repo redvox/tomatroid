@@ -29,7 +29,7 @@ public class StatisicActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_statisic);
+		setContentView(R.layout.activity_statictic);
 
 		overview = (LinearLayout) findViewById(R.id.statistic_overview);
 
@@ -100,11 +100,5 @@ public class StatisicActivity extends Activity {
 		} else {
 			return "Keine Informationen";
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_statictic, menu);
-		return true;
 	}
 }
