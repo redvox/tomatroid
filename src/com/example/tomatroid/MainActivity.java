@@ -63,10 +63,16 @@ public class MainActivity extends Activity {
 	Bar breakBar;
 	Axis axis;
 
+	final String KEY_THEME = "theme";
+	final String KEY_CHRONOSTATE = "chrono";
+	final String KEY_TRACKINGSTATE = "tracking";
+	final String KEY_ACTIVEBUTTON = "button";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (Chronometer) findViewById(R.id.timetext);
@@ -90,10 +96,10 @@ public class MainActivity extends Activity {
 		axis = new Axis(digram.getContext(), maxValue);
 		axisLayout.addView(axis);
 
-//		float values[]={3456,5734,5735,5477,9345,3477};
-//		PieChart pie = new PieChart(this, values);
-//		digramLayout.addView(pie);
-		
+		// float values[]={3456,5734,5735,5477,9345,3477};
+		// PieChart pie = new PieChart(this, values);
+		// digramLayout.addView(pie);
+
 		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime,
 				"#fdf700", maxValue);
 		digramLayout.addView(pomodoroBar, barParams);
@@ -101,19 +107,33 @@ public class MainActivity extends Activity {
 		breakBar = new Bar(this, digram.getContext(), startBreakTime,
 				"#04B404", maxValue);
 		digramLayout.addView(breakBar, barParams);
-		
+
 		// Control Buttons
 		controlListener = new ControlListener(this, sqhelper);
 		// Dialog Manager
 		dialogManager = new DialogManager(this);
 
 		timeText.setText("00:00");
-//		Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Black.ttf");
-//		timeText.setTypeface(tf);
+		// Typeface tf = Typeface.createFromAsset(getAssets(),
+		// "Roboto-Black.ttf");
+		// timeText.setTypeface(tf);
 
 		Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
+		
+		if (savedInstanceState != null) {
+			trackingTheme = savedInstanceState.getString(KEY_THEME);
+			
+			tracking = savedInstanceState.getBoolean(KEY_TRACKINGSTATE);
+			if (tracking) {
+				timeText.setBase(savedInstanceState.getLong(KEY_CHRONOSTATE));
+				controlListener.toogle(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
+//				controlListener.start(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
+				timeText.start();
+			}
+			Log.e("MainActivity", "Load: " + timeText.getBase());
+		}
 	}
 
 	@Override
@@ -124,6 +144,18 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(KEY_THEME, trackingTheme);
+//		long elapsedMillis = SystemClock.elapsedRealtime() - timeText.getBase();
+		long elapsedMillis = timeText.getBase();
+		outState.putLong(KEY_CHRONOSTATE, elapsedMillis);
+		outState.putBoolean(KEY_TRACKINGSTATE, tracking);
+		outState.putInt(KEY_ACTIVEBUTTON, controlListener.activeButton);
+		Log.e("MainActivity", "Save: " + elapsedMillis);
 	}
 
 	public void startCounter(int minutes, int type) {
@@ -233,7 +265,6 @@ public class MainActivity extends Activity {
 		// #######
 		minutes = 10;
 		// #######
-		
 
 		if (minutes > 0) {
 			if (tag == 0) {
@@ -243,7 +274,8 @@ public class MainActivity extends Activity {
 			} else if (tag == 1 || tag == 2) {
 				breakBar.addValue(minutes);
 			}
-			Log.e("MainActivity", "end Tag: " + tag + " Duration: " + minutes + " Theme: "+trackingTheme);
+			Log.e("MainActivity", "end Tag: " + tag + " Duration: " + minutes
+					+ " Theme: " + trackingTheme);
 			sqhelper.insertDate(tag, minutes, trackingTheme);
 		}
 	}
@@ -308,14 +340,5 @@ public class MainActivity extends Activity {
 		pomodoroBar.adjustToNewMaximum(newMax);
 		breakBar.adjustToNewMaximum(newMax);
 		axis.adjustToNewMaximum(newMax);
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		// outState.putString("theme", (String)
-		// controlListener.themeText.getText());
-		// outState.putInt("activeButton", controlListener.activeButton);
-		// outState.putInt("counter", counter.getMinutesPast());
 	}
 }
