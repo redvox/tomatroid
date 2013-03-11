@@ -177,4 +177,10 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 			activeButton = -1;
 		}
 	}
+
+	public void toogle(int i) {
+		activeButton = i;
+//		bA[tag].startAnimation(StoredAnimation.slideHorizontal(-55));
+		bA[activeButton].setTranslationX(55);
+	}
 }
