@@ -215,8 +215,11 @@ public class SQHelper extends SQLiteOpenHelper {
 		if (c.moveToFirst()) {
 			do {
 				if (c.getInt(day_column) != day_tmp
-						|| c.getInt(month_column) != month_tmp)
+						|| c.getInt(month_column) != month_tmp) {
+					day_tmp = c.getInt(day_column);
+					month_tmp = c.getInt(month_column);
 					days++;
+				}
 			} while (c.moveToNext());
 		}
 		return days;
