@@ -124,15 +124,16 @@ public class MainActivity extends Activity {
 		
 		if (savedInstanceState != null) {
 			trackingTheme = savedInstanceState.getString(KEY_THEME);
+			controlListener.themeText.setText(trackingTheme);
 			
 			tracking = savedInstanceState.getBoolean(KEY_TRACKINGSTATE);
 			if (tracking) {
 				timeText.setBase(savedInstanceState.getLong(KEY_CHRONOSTATE));
-				controlListener.toogle(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
+				controlListener.toogle(savedInstanceState
+						.getInt(KEY_ACTIVEBUTTON));
 //				controlListener.start(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
 				timeText.start();
 			}
-			Log.e("MainActivity", "Load: " + timeText.getBase());
 		}
 	}
 
@@ -150,7 +151,8 @@ public class MainActivity extends Activity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_THEME, trackingTheme);
-//		long elapsedMillis = SystemClock.elapsedRealtime() - timeText.getBase();
+		// long elapsedMillis = SystemClock.elapsedRealtime() -
+		// timeText.getBase();
 		long elapsedMillis = timeText.getBase();
 		outState.putLong(KEY_CHRONOSTATE, elapsedMillis);
 		outState.putBoolean(KEY_TRACKINGSTATE, tracking);
