@@ -5,17 +5,16 @@ import java.util.ArrayList;
 import com.example.tomatroid.sql.SQHelper;
 import com.example.tomatroid.util.StoredAnimation;
 
-import android.R.array;
-import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,7 +32,9 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 	Button[] bA;
 	ArrayList<String> commands = new ArrayList<String>();
-	TextView themeText;
+	TextView themePomodoroText;
+	TextView themeBreakText;
+	int chooseThemeSwitch;
 
 	ViewFlipper viewFlipper;
 	LinearLayout controlLayout;
@@ -47,10 +48,10 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 		controlLayout = (LinearLayout) mA.findViewById(R.id.control);
 
-		TextView textview = new TextView(mA);
-		textview.setText("Theme:");
-		textview.setTextSize(10);
-		controlLayout.addView(textview);
+//		TextView textview = new TextView(mA);
+//		textview.setText("Theme:");
+//		textview.setTextSize(10);
+//		controlLayout.addView(textview);
 
 		LayoutInflater mInflater = (LayoutInflater) mA
 				.getSystemService(mA.LAYOUT_INFLATER_SERVICE);
@@ -59,17 +60,42 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 				false);
 		controlLayout.addView(line1);
 
-		themeText = new TextView(mA);
-		themeText.setText("Hier Thema auswählen");
-		themeText.setClickable(true);
-		themeText.setOnClickListener(this);
-		themeText.setTextSize(20);
-		themeText.setTag(99);
-		controlLayout.addView(themeText);
+//		LinearLayout ll1 = new LinearLayout(mA);
+//		ll1.setOrientation(LinearLayout.VERTICAL);
+		
+		themePomodoroText = new TextView(mA);
+//		themePomodoroText.setText("Hier Thema auswählen");
+		themePomodoroText.setClickable(true);
+		themePomodoroText.setOnClickListener(this);
+		themePomodoroText.setTextSize(20);
+		themePomodoroText.setTag(90);
+		
+		controlLayout.addView(themePomodoroText);
+		
+//		ImageButton bb1 = new ImageButton(mA);
+//		bb1.setImageResource(android.R.drawable.ic_delete);
+//		bb1.setOnClickListener(this);
+//		bb1.setTag(100);
+		
+//		ll1.addView(bb1);
+//		ll1.addView(themePomodoroText);
+//		controlLayout.addView(ll1);
 
 		View line2 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
 				false);
 		controlLayout.addView(line2);
+
+		themeBreakText = new TextView(mA);
+//		themeBreakText.setText("Hier Thema auswählen");
+		themeBreakText.setClickable(true);
+		themeBreakText.setOnClickListener(this);
+		themeBreakText.setTextSize(20);
+		themeBreakText.setTag(91);
+		controlLayout.addView(themeBreakText);
+
+		View line3 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
+				false);
+		controlLayout.addView(line3);
 
 		// Controlls
 		commands.add("Pomodoro!");
@@ -114,17 +140,28 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		c.close();
 		// themeListView.setAdapter(new ArrayAdapter<String>(mA,
 		// R.layout.theme_list_row, themeList));
-		themeListView.setAdapter(new SimpleCursorAdapter(mA,
-				R.layout.theme_list_row, sqHelper.getAllThemes(),
-				new String[] { SQHelper.KEY_NAME }, new int[] { R.id.name }));
+		themeListView
+				.setAdapter(new SimpleCursorAdapter(mA,
+						R.layout.choose_theme_row, sqHelper.getAllThemes(),
+						new String[] { SQHelper.KEY_NAME },
+						new int[] { R.id.name }, 0));
 		themeListView.setOnItemClickListener(this);
 	}
 
 	@Override
 	public void onClick(View v) {
+		Log.e("ControlListener", "onClick");
 		int tag = (Integer) v.getTag();
-		if (tag == 99) {
+		if (tag == 90) {
+			chooseThemeSwitch = 0;
 			viewFlipper.showNext();
+		} else if (tag == 91) {
+			chooseThemeSwitch = 1;
+			viewFlipper.showNext();
+		} else if (tag == 100) {
+			Log.e("ControlListener", "onClick:: 100");
+			mA.pomodoroTheme = "Kein Thema";
+			themePomodoroText.setText("Kein Thema");
 		} else {
 			start(tag);
 		}
@@ -134,13 +171,17 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 	public void onItemClick(AdapterView adapterView, View view, int position,
 			long arg3) {
 		viewFlipper.showNext();
-		// Object o = view;
-		// Cursor cursor = ((SimpleCursorAdapter) o).getCursor();
-		// cursor.moveToPosition(position);
-		// String theme = cursor.getString(cursor
-		// .getColumnIndex(SQHelper.KEY_NAME));
 		String theme = (String) ((TextView) view).getText();
-		themeText.setText(theme);
+		switch (chooseThemeSwitch) {
+		case 0:
+			themePomodoroText.setText(theme);
+			mA.pomodoroTheme = theme;
+			break;
+		case 1:
+			themeBreakText.setText(theme);
+			mA.breakTheme = theme;
+			break;
+		}
 	}
 
 	public void start(int tag) {
@@ -180,7 +221,7 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 	public void toogle(int i) {
 		activeButton = i;
-//		bA[tag].startAnimation(StoredAnimation.slideHorizontal(-55));
+		// bA[tag].startAnimation(StoredAnimation.slideHorizontal(-55));
 		bA[activeButton].setTranslationX(55);
 	}
 }
