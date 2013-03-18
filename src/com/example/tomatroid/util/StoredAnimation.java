@@ -48,7 +48,7 @@ public class StoredAnimation {
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f);
 		inFromRight.setDuration(Animationspeed + (rate*50));
-		inFromRight.setInterpolator(new AccelerateInterpolator());
+//		inFromRight.setInterpolator(new AccelerateInterpolator());
 		return inFromRight;
 	}
 
