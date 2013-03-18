@@ -136,7 +136,8 @@ public class MainActivity extends Activity {
 				timeText.start();
 			}
 		} else {
-			controlListener.themePomodoroText.setText("Hier Pomodoro-Thema wählen");
+			controlListener.themePomodoroText
+					.setText("Hier Pomodoro-Thema wählen");
 			controlListener.themeBreakText.setText("Hier Pausen-Thema wählen");
 		}
 	}
@@ -326,11 +327,21 @@ public class MainActivity extends Activity {
 		case R.id.menu_void:
 			stop();
 			controlListener.stop();
+			break;
 		case R.id.menu_digram:
-			Intent i = new Intent(this, StatisicActivity.class);
-			startActivity(i);
+			Intent i1 = new Intent(this, StatisicActivity.class);
+			startActivity(i1);
+			break;
+		case R.id.menu_database:
+			Intent i2 = new Intent(this, DatabaseList.class);
+			startActivity(i2);
+			break;
+		case R.id.menu_theme:
+			Intent i3 = new Intent(this, ThemeList.class);
+			startActivity(i3);
+			break;
 		default:
-
+			break;
 		}
 
 		return super.onOptionsItemSelected(item);
