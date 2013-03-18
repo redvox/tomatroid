@@ -44,8 +44,8 @@ public class SQHelper extends SQLiteOpenHelper {
 			+ " integer not null," + KEY_DATE_END_MINUTE + " integer not null,"
 			+ KEY_DURATION + " integer not null," + KEY_TYPE
 			+ " integer not null," + KEY_THEME + " integer,"
-			+ KEY_STARTTIMEMILLIES + " integer not null," + KEY_ENDTIMEMILLIES
-			+ " integer not null);";
+			+ KEY_STARTTIMEMILLIES + " text not null," + KEY_ENDTIMEMILLIES
+			+ " text not null);";
 
 	// TABLE Theme
 	public static final String TABLE_THEME = "themes";
@@ -63,6 +63,8 @@ public class SQHelper extends SQLiteOpenHelper {
 	public static final int TYPE_TRACKING = 3;
 	public static final int TYPE_SLEEPING = 4;
 
+	SQLiteDatabase db;
+
 	public SQHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -71,11 +73,13 @@ public class SQHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase database) {
 		Log.e("SQHepler", "onCreate");
 		createTables(database);
+		db = database;
 	}
 
 	public void createTables(SQLiteDatabase database) {
 		database.execSQL(CREATE_DATES_TABLE);
 		database.execSQL(CREATE_THEME_TABLE);
+		db = database;
 		addTheme("Kein Thema");
 		addTheme("Gaming");
 		addTheme("Pomodoro App");
@@ -86,12 +90,17 @@ public class SQHelper extends SQLiteOpenHelper {
 		// SQHelper.KEY_DATE_DAY,
 		// SQHelper.KEY_DATE_MONTH, SQHelper.KEY_DATE_YEAR, SQHelper.KEY_TYPE,
 		// SQHelper.KEY_THEME };
-		SQLiteDatabase db = getReadableDatabase();
+		openDatabase();
 		return db.query(TABLE_DATES, null, null, null, null, null, null);
 	}
 
+	public Cursor getThemeCursor() {
+		openDatabase();
+		return db.query(TABLE_THEME, null, null, null, null, null, null);
+	}
+
 	public int getStartUpPomodoroCount() {
-		SQLiteDatabase db = getReadableDatabase();
+		openDatabase();
 		DateTime dt = new DateTime();
 		int day = dt.getDayOfMonth();
 		int month = dt.getMonthOfYear();
@@ -103,11 +112,14 @@ public class SQHelper extends SQLiteOpenHelper {
 				+ TYPE_POMODORO, null, null, null, null);
 		int count = c.getCount();
 		c.close();
-		db.close();
 		return count;
 	}
 
 	public int[] getTotalCountTimeDays(int[] types, int[] themes) {
+		return getTotalCountTimeDays(types, themes, new int[0]);
+	}
+
+	public int[] getTotalCountTimeDays(int[] types, int[] themes, int[] timespan) {
 		int[] info = new int[3];
 
 		StringBuffer where = new StringBuffer();
@@ -138,24 +150,20 @@ public class SQHelper extends SQLiteOpenHelper {
 			where.append(")");
 		}
 
-		Log.e("SQHelper", "WHERE " + where);
-
-		SQLiteDatabase db = getReadableDatabase();
+		openDatabase();
 		Cursor c;
 		c = db.query(TABLE_DATES, null, where.toString(), null, null, null,
 				null);
 
 		info[0] = c.getCount();
-		Log.e("SQHelper", "Count " + c.getCount());
 		info[1] = calculateDuration(c);
 		info[2] = calculateDays(c);
 		c.close();
-		db.close();
 		return info;
 	}
 
 	public int getStartUpPomodoroTime() {
-		SQLiteDatabase db = getReadableDatabase();
+		openDatabase();
 		DateTime dt = new DateTime();
 		int day = dt.getDayOfMonth();
 		int month = dt.getMonthOfYear();
@@ -170,12 +178,11 @@ public class SQHelper extends SQLiteOpenHelper {
 		int duration = calculateDuration(c);
 
 		c.close();
-		db.close();
 		return duration;
 	}
 
 	public int getStartUpBreakTime() {
-		SQLiteDatabase db = getReadableDatabase();
+		openDatabase();
 		DateTime dt = new DateTime();
 		int day = dt.getDayOfMonth();
 		int month = dt.getMonthOfYear();
@@ -190,7 +197,6 @@ public class SQHelper extends SQLiteOpenHelper {
 
 		int duration = calculateDuration(c);
 		c.close();
-		db.close();
 		return duration;
 	}
 
@@ -226,7 +232,7 @@ public class SQHelper extends SQLiteOpenHelper {
 	}
 
 	public Cursor getLastXDays(int x) {
-		SQLiteDatabase db = getReadableDatabase();
+		openDatabase();
 		DateTime dt = new DateTime();
 		int day = dt.getDayOfMonth();
 		int month = dt.getMonthOfYear();
@@ -250,17 +256,15 @@ public class SQHelper extends SQLiteOpenHelper {
 	}
 
 	public Cursor getAllThemes() {
-		SQLiteDatabase db = getReadableDatabase();
+		openDatabase();
 		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID, KEY_NAME },
 				null, null, null, null, null);
 		// Cursor c = db.query(TABLE_THEME, null, null, null, null, null, null);
-		// db.close();
 		return c;
 	}
 
 	public ArrayList<String> getThemeList() {
 		ArrayList<String> themeList = new ArrayList<String>();
-		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID, KEY_NAME },
 				null, null, null, null, null);
 
@@ -270,45 +274,39 @@ public class SQHelper extends SQLiteOpenHelper {
 			} while (c.moveToNext());
 		}
 		c.close();
-		db.close();
 		return themeList;
 	}
 
 	public void addTheme(String name) {
-		SQLiteDatabase db = getWritableDatabase();
+		openDatabase();
 		ContentValues newContent = new ContentValues();
 		newContent.put(KEY_NAME, name);
 		db.insert(TABLE_THEME, null, newContent);
-		db.close();
-	}
-
-	public Cursor getThemeCursor() {
-		SQLiteDatabase db = getReadableDatabase();
-		return db.query(TABLE_THEME, new String[] { KEY_ROWID, KEY_NAME },
-				null, null, null, null, null);
 	}
 
 	public String getTheme(int id) {
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID, KEY_NAME },
-				KEY_ROWID + " = " + id, null, null, null, null);
-		String name = c.getString(1);
-		c.close();
-		db.close();
+		openDatabase();
+		Cursor c = db.query(TABLE_THEME, new String[] { KEY_NAME }, KEY_ROWID
+				+ " = ?", new String[] { id + "" }, null, null, null);
+		String name = "error";
+		if (c.moveToFirst()) {
+			name = c.getString(0);
+		}
+		// c.close();
+
 		return name;
 	}
 
 	public int getTheme(String name) {
-		SQLiteDatabase db = getWritableDatabase();
+		openDatabase();
+		Log.e("SQHelper", "Name "+name);
 		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID }, KEY_NAME
 				+ " = ?", new String[] { name }, null, null, null);
 		int id = -99;
 		if (c.moveToFirst()) {
 			id = c.getInt(0);
 		}
-		Log.e("SQHelper", "getTheme String: "+ name +" count: " + c.getCount() + " id: "+id);
-//		c.close();
-//		db.close();
+		// c.close();
 		return id;
 	}
 
@@ -323,18 +321,17 @@ public class SQHelper extends SQLiteOpenHelper {
 	}
 
 	public void renewTables() {
-		SQLiteDatabase db = getWritableDatabase();
+		openDatabase();
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATES);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THEME);
 		createTables(db);
 	}
 
 	public void insertDate(int tag, int minutesPast, String theme) {
-		SQLiteDatabase db = getWritableDatabase();
+		openDatabase();
 
 		DateTime endDate = new DateTime();
 		DateTime startDate = endDate.minusMinutes(minutesPast);
-
 		ContentValues newContent = new ContentValues();
 		newContent.put(KEY_DATE_DAY, startDate.getDayOfMonth());
 		newContent.put(KEY_DATE_MONTH, startDate.getMonthOfYear());
@@ -348,12 +345,14 @@ public class SQHelper extends SQLiteOpenHelper {
 		newContent.put(KEY_TYPE, tag);
 		newContent.put(KEY_DURATION, minutesPast);
 		newContent.put(KEY_THEME, getTheme(theme));
-		Log.e("SQHelper", "insert theme: " + theme + " id: "+getTheme(theme) );
 		newContent.put(KEY_STARTTIMEMILLIES, startDate.getMillis());
 		newContent.put(KEY_ENDTIMEMILLIES, endDate.getMillis());
-		long l = db.insert(TABLE_DATES, null, newContent);
-		Log.e("SQHelper", "insert row affected " + l);
-		db.close();
+		db.insert(TABLE_DATES, null, newContent);
+	}
+
+	private void openDatabase() {
+		if (db == null)
+			db = getWritableDatabase();
 	}
 
 }

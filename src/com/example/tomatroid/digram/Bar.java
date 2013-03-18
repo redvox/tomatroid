@@ -78,7 +78,7 @@ public class Bar extends View {
 		maxValue = newMax;
 		pointPerMinute = height / maxValue;
 		
-		float old_barPixelHeight = barPixelHeight;
+//		float old_barPixelHeight = barPixelHeight;
 		float new_barPixelHeight = value * pointPerMinute;
 		
 		startAnimation(StoredAnimation.slideVertical(new_barPixelHeight));

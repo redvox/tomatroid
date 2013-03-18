@@ -25,7 +25,7 @@ public class Axis extends View {
 	float width = 0;
 	float height = 0;
 
-	int maxValue;
+	float maxValue;
 	float pointPerMinute = 0;
 
 	Paint color;
@@ -36,7 +36,7 @@ public class Axis extends View {
 	ArrayList<String> values = new ArrayList<String>();
 	String maxText;
 
-	public Axis(Context context, int maxValue) {
+	public Axis(Context context, float maxValue) {
 		super(context);
 		this.context = context;
 		this.maxValue = maxValue;
@@ -79,31 +79,40 @@ public class Axis extends View {
 
 	private void calculate() {
 		pointPerMinute = height / maxValue;
+		Log.e("Axis", "pixelPerMinute: "+ pointPerMinute);
 		position.clear();
 		values.clear();
 		
-		int tenth = maxValue / 10;
+		float tenth = maxValue / 10f;
 		for (float i = 0; i < 10; i++) {
 			position.add(height - (i * (tenth * pointPerMinute)));
 			values.add(generateTimeText((int)(i * tenth)));
 		}
+		
+//		float tenth = height / 10f;
+//		for (float i = 0; i < 10; i++) {
+//			position.add(height - tenth);
+//			values.add(generateTimeText(tenth/pointPerMinute));
+//			tenth += tenth;
+//		}
+		
+		Log.e("Axis", "tenth: "+tenth +" height: "+height);
 		
 		maxText = generateTimeText(maxValue);
 	}
 
 	public void adjustToNewMaximum(int newMax) {
 		maxValue = newMax;
-//		Animation a = new AlphaAnimation(1, 0);
-//		a.setDuration(1000);
+		// Animation a = new AlphaAnimation(1, 0);
+		// a.setDuration(1000);
 		Animation b = new AlphaAnimation(0, 1);
 		b.setDuration(1000);
-		
+
 		calculate();
 		startAnimation(b);
-		Log.e("Axis", "max after adjustment: " + maxValue + " == "+ newMax);
 	}
-	
-	protected String generateTimeText(int value) {
+
+	protected String generateTimeText(float value) {
 		int hours = (int) value / 60;
 		int minutes = (int) value % 60;
 

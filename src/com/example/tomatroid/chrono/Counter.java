@@ -3,6 +3,7 @@ package com.example.tomatroid.chrono;
 import com.example.tomatroid.MainActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.os.Vibrator;

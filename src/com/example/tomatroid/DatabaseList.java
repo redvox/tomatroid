@@ -103,8 +103,6 @@ public class DatabaseList extends ListActivity {
 
 			long startVal = Long.parseLong(c.getString(timeStart));
 			DateTime start = new DateTime(startVal);
-
-			Log.e("DatabaseAdapter", "Milliseconds: "+startVal);
 			tv1.setText(start.toString(fmt));
 			tv1.append("   (" + c.getInt(duration) +") min");
 			tv2.setText(sqHelper.getTheme(c.getInt(theme)));
