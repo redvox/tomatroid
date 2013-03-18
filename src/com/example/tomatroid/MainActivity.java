@@ -49,11 +49,12 @@ public class MainActivity extends Activity {
 
 	ArrayList<View> bars = new ArrayList<View>();
 
-	int pomodoroTime = 1;
-	int shortBreakTime = 1;
-	int longBreakTime = 1;
-	int rememberTime = 1;
-	String trackingTheme = "Kein Thema";
+	int pomodoroTime = 25;
+	int shortBreakTime = 5;
+	int longBreakTime = 35;
+	int rememberTime = 10;
+	String pomodoroTheme = "Kein Thema";
+	String breakTheme = "Kein Thema";
 	boolean tracking = false;
 
 	int pomodorosNum = 1;
@@ -67,6 +68,8 @@ public class MainActivity extends Activity {
 	final String KEY_CHRONOSTATE = "chrono";
 	final String KEY_TRACKINGSTATE = "tracking";
 	final String KEY_ACTIVEBUTTON = "button";
+	final String KEY_POMODOROTHEME = "pomodoroTheme";
+	final String KEY_BREAKTHEME = "breakTheme";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,10 +99,6 @@ public class MainActivity extends Activity {
 		axis = new Axis(digram.getContext(), maxValue);
 		axisLayout.addView(axis);
 
-		// float values[]={3456,5734,5735,5477,9345,3477};
-		// PieChart pie = new PieChart(this, values);
-		// digramLayout.addView(pie);
-
 		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime,
 				"#fdf700", maxValue);
 		digramLayout.addView(pomodoroBar, barParams);
@@ -121,19 +120,24 @@ public class MainActivity extends Activity {
 		Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
-		
+
 		if (savedInstanceState != null) {
-			trackingTheme = savedInstanceState.getString(KEY_THEME);
-			controlListener.themeText.setText(trackingTheme);
-			
+			pomodoroTheme = savedInstanceState.getString(KEY_POMODOROTHEME);
+			breakTheme = savedInstanceState.getString(KEY_BREAKTHEME);
+			controlListener.themePomodoroText.setText(pomodoroTheme);
+			controlListener.themeBreakText.setText(breakTheme);
+
 			tracking = savedInstanceState.getBoolean(KEY_TRACKINGSTATE);
 			if (tracking) {
 				timeText.setBase(savedInstanceState.getLong(KEY_CHRONOSTATE));
 				controlListener.toogle(savedInstanceState
 						.getInt(KEY_ACTIVEBUTTON));
-//				controlListener.start(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
+				// controlListener.start(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
 				timeText.start();
 			}
+		} else {
+			controlListener.themePomodoroText.setText("Hier Pomodoro-Thema wŠhlen");
+			controlListener.themeBreakText.setText("Hier Pausen-Thema wŠhlen");
 		}
 	}
 
@@ -150,14 +154,13 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(KEY_THEME, trackingTheme);
-		// long elapsedMillis = SystemClock.elapsedRealtime() -
-		// timeText.getBase();
+		outState.putString(KEY_POMODOROTHEME, pomodoroTheme);
+		outState.putString(KEY_BREAKTHEME, breakTheme);
+
 		long elapsedMillis = timeText.getBase();
 		outState.putLong(KEY_CHRONOSTATE, elapsedMillis);
 		outState.putBoolean(KEY_TRACKINGSTATE, tracking);
 		outState.putInt(KEY_ACTIVEBUTTON, controlListener.activeButton);
-		Log.e("MainActivity", "Save: " + elapsedMillis);
 	}
 
 	public void startCounter(int minutes, int type) {
@@ -265,7 +268,7 @@ public class MainActivity extends Activity {
 		resetTimeText();
 
 		// #######
-		minutes = 10;
+		// minutes = 10;
 		// #######
 
 		if (minutes > 0) {
@@ -273,12 +276,17 @@ public class MainActivity extends Activity {
 				pomodorosNum++;
 				pomodorosNumText.setText("" + pomodorosNum);
 				pomodoroBar.addValue(minutes);
+
+				Log.e("MainActivity", "end Tag: " + tag + " Duration: "
+						+ minutes + " Theme: " + pomodoroTheme);
+				sqhelper.insertDate(tag, minutes, pomodoroTheme);
 			} else if (tag == 1 || tag == 2) {
 				breakBar.addValue(minutes);
+
+				Log.e("MainActivity", "end Tag: " + tag + " Duration: "
+						+ minutes + " Theme: " + breakTheme);
+				sqhelper.insertDate(tag, minutes, breakTheme);
 			}
-			Log.e("MainActivity", "end Tag: " + tag + " Duration: " + minutes
-					+ " Theme: " + trackingTheme);
-			sqhelper.insertDate(tag, minutes, trackingTheme);
 		}
 	}
 
@@ -319,7 +327,7 @@ public class MainActivity extends Activity {
 			stop();
 			controlListener.stop();
 		case R.id.menu_digram:
-			Intent i = new Intent(this, DigramActivity.class);
+			Intent i = new Intent(this, StatisicActivity.class);
 			startActivity(i);
 		default:
 
