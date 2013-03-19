@@ -48,11 +48,6 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 		controlLayout = (LinearLayout) mA.findViewById(R.id.control);
 
-//		TextView textview = new TextView(mA);
-//		textview.setText("Theme:");
-//		textview.setTextSize(10);
-//		controlLayout.addView(textview);
-
 		LayoutInflater mInflater = (LayoutInflater) mA
 				.getSystemService(mA.LAYOUT_INFLATER_SERVICE);
 
@@ -69,18 +64,8 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		themePomodoroText.setOnClickListener(this);
 		themePomodoroText.setTextSize(20);
 		themePomodoroText.setTag(90);
-		
 		controlLayout.addView(themePomodoroText);
 		
-//		ImageButton bb1 = new ImageButton(mA);
-//		bb1.setImageResource(android.R.drawable.ic_delete);
-//		bb1.setOnClickListener(this);
-//		bb1.setTag(100);
-		
-//		ll1.addView(bb1);
-//		ll1.addView(themePomodoroText);
-//		controlLayout.addView(ll1);
-
 		View line2 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
 				false);
 		controlLayout.addView(line2);
@@ -129,20 +114,9 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 		// Theme List
 		themeListView = (ListView) mA.findViewById(R.id.themeList);
-		themeList = new ArrayList<String>();
-		Cursor c = sqHelper.getAllThemes();
-		if (c.moveToFirst()) {
-			do {
-				themeList.add(c.getString(0));
-				c.moveToNext();
-			} while (c.moveToNext());
-		}
-		c.close();
-		// themeListView.setAdapter(new ArrayAdapter<String>(mA,
-		// R.layout.theme_list_row, themeList));
 		themeListView
 				.setAdapter(new SimpleCursorAdapter(mA,
-						R.layout.choose_theme_row, sqHelper.getAllThemes(),
+						R.layout.choose_theme_row, sqHelper.getThemeCursor(),
 						new String[] { SQHelper.KEY_NAME },
 						new int[] { R.id.name }, 0));
 		themeListView.setOnItemClickListener(this);
@@ -150,7 +124,6 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 	@Override
 	public void onClick(View v) {
-		Log.e("ControlListener", "onClick");
 		int tag = (Integer) v.getTag();
 		if (tag == 90) {
 			chooseThemeSwitch = 0;
@@ -158,10 +131,6 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		} else if (tag == 91) {
 			chooseThemeSwitch = 1;
 			viewFlipper.showNext();
-		} else if (tag == 100) {
-			Log.e("ControlListener", "onClick:: 100");
-			mA.pomodoroTheme = "Kein Thema";
-			themePomodoroText.setText("Kein Thema");
 		} else {
 			start(tag);
 		}
