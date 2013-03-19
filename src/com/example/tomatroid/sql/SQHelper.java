@@ -52,10 +52,12 @@ public class SQHelper extends SQLiteOpenHelper {
 	// ROW ID
 	public static final String KEY_NAME = "name";
 	public static final String KEY_ITEMOF = "itemof";
+	public static final String KEY_OVERALLTIME = "overalltime";
 
 	static final String CREATE_THEME_TABLE = "create table " + TABLE_THEME
 			+ "(" + KEY_ROWID + " integer primary key autoincrement, "
-			+ KEY_ITEMOF + " integer," + KEY_NAME + " text not null);";
+			+ KEY_ITEMOF + " integer," + KEY_NAME + " text not null, "
+			+ KEY_OVERALLTIME + " integer not null " + ");";
 
 	public static final int TYPE_POMODORO = 0;
 	public static final int TYPE_SHORTBREAK = 1;
@@ -96,7 +98,8 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	public Cursor getThemeCursor() {
 		openDatabase();
-		return db.query(TABLE_THEME, null, null, null, null, null, null);
+		return db.query(TABLE_THEME, null, null, null, null, null,
+				KEY_OVERALLTIME+ " DESC");
 	}
 
 	public int getStartUpPomodoroCount() {
@@ -255,32 +258,11 @@ public class SQHelper extends SQLiteOpenHelper {
 				+ ")", null, null, null, null);
 	}
 
-	public Cursor getAllThemes() {
-		openDatabase();
-		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID, KEY_NAME },
-				null, null, null, null, null);
-		// Cursor c = db.query(TABLE_THEME, null, null, null, null, null, null);
-		return c;
-	}
-
-	public ArrayList<String> getThemeList() {
-		ArrayList<String> themeList = new ArrayList<String>();
-		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID, KEY_NAME },
-				null, null, null, null, null);
-
-		if (c.moveToFirst()) {
-			do {
-				themeList.add(c.getString(1));
-			} while (c.moveToNext());
-		}
-		c.close();
-		return themeList;
-	}
-
 	public void addTheme(String name) {
 		openDatabase();
 		ContentValues newContent = new ContentValues();
 		newContent.put(KEY_NAME, name);
+		newContent.put(KEY_OVERALLTIME, 0);
 		db.insert(TABLE_THEME, null, newContent);
 	}
 
@@ -299,7 +281,7 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	public int getTheme(String name) {
 		openDatabase();
-		Log.e("SQHelper", "Name "+name);
+		Log.e("SQHelper", "Name " + name);
 		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID }, KEY_NAME
 				+ " = ?", new String[] { name }, null, null, null);
 		int id = -99;
@@ -348,6 +330,15 @@ public class SQHelper extends SQLiteOpenHelper {
 		newContent.put(KEY_STARTTIMEMILLIES, startDate.getMillis());
 		newContent.put(KEY_ENDTIMEMILLIES, endDate.getMillis());
 		db.insert(TABLE_DATES, null, newContent);
+		Cursor c = db.rawQuery("UPDATE " + TABLE_THEME + " SET " + KEY_OVERALLTIME + " = "
+				+ KEY_OVERALLTIME + " + " + minutesPast + " WHERE " + KEY_ROWID
+				+ "=" + getTheme(theme), null);
+		
+		if(c.moveToFirst()){
+			Log.e("SQHelper", "Update " + c.getInt(c.getColumnIndex(KEY_OVERALLTIME)));
+		} else {
+			Log.e("SQHelper", "Update cursor empty");
+		}
 	}
 
 	private void openDatabase() {
