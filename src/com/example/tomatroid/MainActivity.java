@@ -12,11 +12,15 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -361,5 +365,32 @@ public class MainActivity extends Activity {
 		pomodoroBar.adjustToNewMaximum(newMax);
 		breakBar.adjustToNewMaximum(newMax);
 		axis.adjustToNewMaximum(newMax);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	        builder.setMessage("This will end the activity");
+	        builder.setCancelable(true);
+	        builder.setPositiveButton("I agree", new OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					MainActivity.this.finish();
+				}
+	        });
+	        builder.setNegativeButton("No, no", new OnClickListener(){
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+	        	
+	        });
+	        AlertDialog dialog = builder.create();
+	        dialog.show();
+	        return true;
+	    } else {
+	    	return super.onKeyDown(keyCode, event);
+	    }
 	}
 }
