@@ -82,9 +82,9 @@ public class SQHelper extends SQLiteOpenHelper {
 		database.execSQL(CREATE_DATES_TABLE);
 		database.execSQL(CREATE_THEME_TABLE);
 		db = database;
-		addTheme("Kein Thema");
-		addTheme("Gaming");
-		addTheme("Pomodoro App");
+		addTheme("Kein Thema", -1);
+		addTheme("Gaming", -1);
+		addTheme("Pomodoro App", -1);
 	}
 
 	public Cursor getDatesCursor() {
@@ -258,15 +258,18 @@ public class SQHelper extends SQLiteOpenHelper {
 				+ ")", null, null, null, null);
 	}
 
-	public void addTheme(String name) {
+	public void addTheme(String name, int parentId) {
 		openDatabase();
 		ContentValues newContent = new ContentValues();
 		newContent.put(KEY_NAME, name);
+		newContent.put(KEY_ITEMOF, parentId);
 		newContent.put(KEY_OVERALLTIME, 0);
 		db.insert(TABLE_THEME, null, newContent);
 	}
 
 	public String getTheme(int id) {
+		if(id == -1) 
+			return "";
 		openDatabase();
 		Cursor c = db.query(TABLE_THEME, new String[] { KEY_NAME }, KEY_ROWID
 				+ " = ?", new String[] { id + "" }, null, null, null);
