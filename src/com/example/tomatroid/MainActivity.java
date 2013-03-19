@@ -325,8 +325,26 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.delete_history:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("This will erase all data");
+			builder.setCancelable(true);
+			builder.setPositiveButton("I agree", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 			sqhelper.renewTables();
 			onCreate(null);
+				}
+			});
+			builder.setNegativeButton("No, no", new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+
+			});
+			AlertDialog dialog = builder.create();
+			dialog.show();
+
 			break;
 		case R.id.menu_void:
 			stop();
