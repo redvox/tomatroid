@@ -119,7 +119,7 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 		// Theme List
 		themeListAdapter = new SimpleCursorAdapter(mA,
-				R.layout.choose_theme_row, sqHelper.getThemeCursor(),
+				R.layout.choose_theme_row, sqHelper.getThemeCursor(0),
 				new String[] { SQHelper.KEY_NAME }, new int[] { R.id.name }, 0);
 		themeListView = (ListView) mA.findViewById(R.id.themeList);
 		themeListView.setAdapter(themeListAdapter);
