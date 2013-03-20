@@ -85,7 +85,7 @@ public class SQHelper extends SQLiteOpenHelper {
 		database.execSQL(CREATE_DATES_TABLE);
 		database.execSQL(CREATE_THEME_TABLE);
 		db = database;
-		addTheme("Kein Thema", -1);
+		addTheme("Default", -1);
 		addTheme("Gaming", -1);
 		addTheme("Pomodoro App", -1);
 	}
