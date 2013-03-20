@@ -10,27 +10,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Übergeordnetes Thema"
+        android:text="Soll die Zeit einem anderen Thema zugeordnet werden?\n(Standard ist übergeordnetes Thema)"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <Spinner
         android:id="@+id/parentspinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thema Name:"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
- 
-    <EditText
-        android:id="@+id/editTextDialogUserInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
- 
-        <requestFocus />
- 
-    </EditText>
  
 </LinearLayout>
