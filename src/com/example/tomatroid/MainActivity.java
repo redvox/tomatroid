@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 	boolean tracking = false;
 
 	int pomodorosNum = 1;
-	int pomodorosUntilLongBreakNum = 2;
+	int pomodorosUntilLongBreakNum = 4;
 
 	Bar pomodoroBar;
 	Bar breakBar;
@@ -154,6 +154,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		controlListener.themeListAdapter.getCursor().requery();
+		controlListener.themeListAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -272,9 +274,9 @@ public class MainActivity extends Activity {
 
 		resetTimeText();
 
-		// #######
-		// minutes = 10;
-		// #######
+//		 #######
+//		 minutes = 10;
+//		 #######
 
 		if (minutes > 0) {
 			if (tag == 0) {
@@ -331,8 +333,8 @@ public class MainActivity extends Activity {
 			builder.setPositiveButton("I agree", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-			sqhelper.renewTables();
-			onCreate(null);
+					sqhelper.renewTables();
+					onCreate(null);
 				}
 			});
 			builder.setNegativeButton("No, no", new OnClickListener() {
@@ -387,28 +389,28 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	        builder.setMessage("This will end the activity");
-	        builder.setCancelable(true);
-	        builder.setPositiveButton("I agree", new OnClickListener(){
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("This will end the activity");
+			builder.setCancelable(true);
+			builder.setPositiveButton("I agree", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					MainActivity.this.finish();
 				}
-	        });
-	        builder.setNegativeButton("No, no", new OnClickListener(){
+			});
+			builder.setNegativeButton("No, no", new OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 				}
-	        	
-	        });
-	        AlertDialog dialog = builder.create();
-	        dialog.show();
-	        return true;
-	    } else {
-	    	return super.onKeyDown(keyCode, event);
-	    }
+
+			});
+			AlertDialog dialog = builder.create();
+			dialog.show();
+			return true;
+		} else {
+			return super.onKeyDown(keyCode, event);
+		}
 	}
 }
