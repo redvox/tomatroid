@@ -203,7 +203,7 @@ public class ThemeList extends Activity {
 						Cursor cc = (Cursor) parentSpinner.getSelectedItem();
 						int parentId = cc.getInt(cc
 								.getColumnIndex(SQHelper.KEY_ROWID));
-						if(parentId != 1){
+						if(id != 1){
 							sqHelper.deleteTheme(id, name, parentId);
 							showAdapter.getCursor().requery();
 							showAdapter.notifyDataSetChanged();
