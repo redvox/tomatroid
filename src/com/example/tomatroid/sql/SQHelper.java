@@ -53,11 +53,14 @@ public class SQHelper extends SQLiteOpenHelper {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_ITEMOF = "itemof";
 	public static final String KEY_OVERALLTIME = "overalltime";
+	public static final String KEY_HIDE = "hide";
 
 	static final String CREATE_THEME_TABLE = "create table " + TABLE_THEME
 			+ "(" + KEY_ROWID + " integer primary key autoincrement, "
 			+ KEY_ITEMOF + " integer," + KEY_NAME + " text not null, "
-			+ KEY_OVERALLTIME + " integer not null " + ");";
+			+ KEY_OVERALLTIME + " integer not null, "
+			+ KEY_HIDE + " integer not null "
+			+ ");";
 
 	public static final int TYPE_POMODORO = 0;
 	public static final int TYPE_SHORTBREAK = 1;
@@ -99,6 +102,12 @@ public class SQHelper extends SQLiteOpenHelper {
 	public Cursor getThemeCursor() {
 		openDatabase();
 		return db.query(TABLE_THEME, null, null, null, null, null,
+				KEY_OVERALLTIME+ " DESC");
+	}
+	
+	public Cursor getThemeCursor(int hideStatus) {
+		openDatabase();
+		return db.query(TABLE_THEME, null, KEY_HIDE +" = "+hideStatus, null, null, null,
 				KEY_OVERALLTIME+ " DESC");
 	}
 
@@ -264,9 +273,33 @@ public class SQHelper extends SQLiteOpenHelper {
 		newContent.put(KEY_NAME, name);
 		newContent.put(KEY_ITEMOF, parentId);
 		newContent.put(KEY_OVERALLTIME, 0);
+		newContent.put(KEY_HIDE, 0);
 		db.insert(TABLE_THEME, null, newContent);
 	}
-
+	
+	public void changeTheme(int id, String name, int parentId){
+		openDatabase();
+		ContentValues newContent = new ContentValues();
+		newContent.put(KEY_NAME, name);
+		newContent.put(KEY_ITEMOF, parentId);
+		db.update(TABLE_THEME, newContent, KEY_ROWID+" = "+id, null);
+	}
+	
+	public void deleteTheme(int id, String name, int newId){
+		openDatabase();
+		ContentValues newContent = new ContentValues();
+		newContent.put(KEY_THEME, newId);
+		db.update(TABLE_DATES, newContent, KEY_THEME+" = "+id, null);		
+		db.delete(TABLE_THEME, KEY_ROWID+" = "+id, null);
+	}
+	
+	public void changeThemeStatus(int id, int hide){
+		openDatabase();
+		ContentValues newContent = new ContentValues();
+		newContent.put(KEY_HIDE, hide);		
+		db.update(TABLE_THEME, newContent, KEY_ROWID+" = "+id, null);
+	}
+	
 	public String getTheme(int id) {
 		if(id == -1) 
 			return "";
@@ -284,7 +317,6 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	public int getTheme(String name) {
 		openDatabase();
-		Log.e("SQHelper", "Name " + name);
 		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID }, KEY_NAME
 				+ " = ?", new String[] { name }, null, null, null);
 		int id = -99;
