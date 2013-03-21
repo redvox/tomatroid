@@ -283,16 +283,14 @@ public class MainActivity extends Activity {
 				pomodorosNum++;
 				pomodorosNumText.setText("" + pomodorosNum);
 				pomodoroBar.addValue(minutes);
-
-				Log.e("MainActivity", "end Tag: " + tag + " Duration: "
-						+ minutes + " Theme: " + pomodoroTheme);
 				sqhelper.insertDate(tag, minutes, pomodoroTheme);
 			} else if (tag == 1 || tag == 2) {
 				breakBar.addValue(minutes);
-
-				Log.e("MainActivity", "end Tag: " + tag + " Duration: "
-						+ minutes + " Theme: " + breakTheme);
 				sqhelper.insertDate(tag, minutes, breakTheme);
+			} else if(tag == 3){
+				sqhelper.insertDate(tag, minutes, breakTheme);
+			} else if(tag == 4){
+				sqhelper.insertDate(tag, minutes, "");
 			}
 		}
 	}
