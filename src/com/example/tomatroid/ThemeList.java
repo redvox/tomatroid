@@ -1,29 +1,21 @@
 package com.example.tomatroid;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import com.example.tomatroid.sql.SQHelper;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -84,7 +76,6 @@ public class ThemeList extends Activity {
 
 		@Override
 		public void bindView(View view, Context context, Cursor c) {
-
 			final int id = c.getInt(this.rowid);
 			final String name = c.getString(this.name);
 			final int parentid = c.getInt(itemof);
