@@ -7,30 +7,36 @@ import org.joda.time.format.DateTimeFormatter;
 import com.example.tomatroid.sql.SQHelper;
 
 import android.os.Bundle;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class DatabaseList extends ListActivity {
 
 	SQHelper sqHelper = new SQHelper(this);
+	LayoutInflater mInflater;
+	DatabaseCursorAdapter databaseCursorAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_database_list);
-
-		// ListView list = (ListView) findViewById(R.id.databaselist);
+		mInflater = LayoutInflater.from(this);
 
 		// THE DESIRED COLUMNS TO BE BOUND
 		// String[] columns = new String[] { SQHelper.KEY_DATE_DAY,
@@ -48,7 +54,8 @@ public class DatabaseList extends ListActivity {
 		// getApplicationContext(), R.layout.database_list_row, c,
 		// columns, to, SimpleCursorAdapter.NO_SELECTION);
 		// setListAdapter(adapter);
-		setListAdapter(new DatabaseCursorAdapter(this, c, 0));
+		databaseCursorAdapter = new DatabaseCursorAdapter(this, c, 0);
+		setListAdapter(databaseCursorAdapter);
 	}
 
 	@Override
@@ -59,7 +66,6 @@ public class DatabaseList extends ListActivity {
 
 	class DatabaseCursorAdapter extends CursorAdapter {
 
-		LayoutInflater inflater;
 		int timeStart;
 		int timeEnd;
 		int theme;
@@ -69,7 +75,6 @@ public class DatabaseList extends ListActivity {
 
 		public DatabaseCursorAdapter(Context context, Cursor c, int flags) {
 			super(context, c, flags);
-			inflater = LayoutInflater.from(context);
 			timeStart = c.getColumnIndex(SQHelper.KEY_STARTTIMEMILLIES);
 			timeEnd = c.getColumnIndex(SQHelper.KEY_ENDTIMEMILLIES);
 			theme = c.getColumnIndex(SQHelper.KEY_THEME);
@@ -79,6 +84,15 @@ public class DatabaseList extends ListActivity {
 
 		@Override
 		public void bindView(View view, Context context, Cursor c) {
+			final int rowId = c.getInt(c.getColumnIndex(SQHelper.KEY_ROWID));
+			
+			view.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					showDeleteDialog(rowId);
+				}
+			});
+			
 			ImageView image = (ImageView) view.findViewById(R.id.typeIcon);
 			switch (c.getInt(type)) {
 			case SQHelper.TYPE_POMODORO:
@@ -110,8 +124,28 @@ public class DatabaseList extends ListActivity {
 
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			return inflater.inflate(R.layout.database_list_row, parent, false);
+			return mInflater.inflate(R.layout.database_list_row, parent, false);
+		}
 		}
 
+	private void showDeleteDialog(final int rowId){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Do you want to delete this entry?");
+		builder.setCancelable(true);
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				sqHelper.deleteEntry(rowId);
+				databaseCursorAdapter.getCursor().requery();
+				databaseCursorAdapter.notifyDataSetChanged();
+			}
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+	}
+		});
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 }
