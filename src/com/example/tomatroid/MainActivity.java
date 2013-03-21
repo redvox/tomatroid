@@ -98,6 +98,7 @@ public class MainActivity extends Activity {
 		// Calculate for Bars
 		int startPomodoroTime = sqhelper.getStartUpPomodoroTime();
 		int startBreakTime = sqhelper.getStartUpBreakTime();
+		int startTrackingTime = sqhelper.getStartUpTrackingCount();
 		float maxStartTime = Math.max(startPomodoroTime, startBreakTime);
 		int maxValue = (int) Math.max(60, ((maxStartTime / 100) * 125));
 
@@ -112,7 +113,7 @@ public class MainActivity extends Activity {
 				"#04B404", maxValue);
 		digramLayout.addView(breakBar, barParams);
 
-		trackBar = new Bar(this, digram.getContext(), 0,
+		trackBar = new Bar(this, digram.getContext(), startTrackingTime,
 				"#800080", maxValue);
 		digramLayout.addView(trackBar, barParams);
 		

@@ -211,6 +211,24 @@ public class SQHelper extends SQLiteOpenHelper {
 		c.close();
 		return duration;
 	}
+	
+	public int getStartUpTrackingCount() {
+		openDatabase();
+		DateTime dt = new DateTime();
+		int day = dt.getDayOfMonth();
+		int month = dt.getMonthOfYear();
+		int year = dt.getYear();
+
+		Cursor c = db.query(TABLE_DATES, new String[] { KEY_DURATION, },
+				KEY_DATE_DAY + " = " + day + " AND " + KEY_DATE_MONTH + " = "
+						+ month + " AND " + KEY_DATE_YEAR + " = " + year
+						+ " AND " + KEY_TYPE + " = " + TYPE_TRACKING,
+				null, null, null, null);
+
+		int duration = calculateDuration(c);
+		c.close();
+		return duration;
+	}
 
 	public int calculateDuration(Cursor c) {
 		int duration = 0;
