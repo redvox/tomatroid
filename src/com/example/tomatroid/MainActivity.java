@@ -57,15 +57,13 @@ public class MainActivity extends Activity {
 	int shortBreakTime = 5;
 	int longBreakTime = 35;
 	int rememberTime = 10;
-	String pomodoroTheme = "Kein Thema";
-	String breakTheme = "Kein Thema";
+	String pomodoroTheme, breakTheme;
 	boolean tracking = false;
 
 	int pomodorosNum = 1;
 	int pomodorosUntilLongBreakNum = 4;
 
-	Bar pomodoroBar;
-	Bar breakBar;
+	Bar pomodoroBar, breakBar, trackBar;
 	Axis axis;
 
 	final String KEY_THEME = "theme";
@@ -79,7 +77,7 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		pomodoroTheme = sqhelper.getTheme(1);
 		breakTheme = sqhelper.getTheme(1);
 		
@@ -114,6 +112,10 @@ public class MainActivity extends Activity {
 				"#04B404", maxValue);
 		digramLayout.addView(breakBar, barParams);
 
+		trackBar = new Bar(this, digram.getContext(), 0,
+				"#800080", maxValue);
+		digramLayout.addView(trackBar, barParams);
+		
 		// Control Buttons
 		controlListener = new ControlListener(this, sqhelper);
 		// Dialog Manager
@@ -293,6 +295,7 @@ public class MainActivity extends Activity {
 				breakBar.addValue(minutes);
 				sqhelper.insertDate(tag, minutes, breakTheme);
 			} else if(tag == 3){
+				trackBar.addValue(minutes);
 				sqhelper.insertDate(tag, minutes, breakTheme);
 			} else if(tag == 4){
 				sqhelper.insertDate(tag, minutes, "");
