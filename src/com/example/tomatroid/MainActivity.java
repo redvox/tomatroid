@@ -124,7 +124,9 @@ public class MainActivity extends Activity {
 		// "Roboto-Black.ttf");
 		// timeText.setTypeface(tf);
 
-		Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
+		
+		Typeface tf = Typeface.createFromAsset(getAssets(), "telegrama.otf");
+//		Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
 
