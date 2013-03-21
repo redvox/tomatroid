@@ -326,6 +326,10 @@ public class SQHelper extends SQLiteOpenHelper {
 		// c.close();
 		return id;
 	}
+	
+	public void deleteEntry(int id){
+		db.delete(TABLE_DATES, KEY_ROWID+" = "+id, null);
+	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
