@@ -7,17 +7,5 @@
         android:title="@string/menu_void"
         android:orderInCategory="90"
         android:showAsAction="never" />
-    <item android:id="@+id/menu_digram"
-        android:title="@string/menu_digram"
-        android:orderInCategory="90"
-        android:showAsAction="never" />
-    <item android:id="@+id/menu_database"
-        android:title="@string/menu_database"
-        android:orderInCategory="90"
-        android:showAsAction="never" />
-    <item android:id="@+id/menu_theme"
-        android:title="@string/menu_theme"
-        android:orderInCategory="90"
-        android:showAsAction="never" />
 </menu>
 

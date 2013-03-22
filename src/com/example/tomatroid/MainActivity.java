@@ -376,18 +376,6 @@ public class MainActivity extends Activity {
 			stop();
 			controlListener.stop();
 			break;
-		case R.id.menu_digram:
-			Intent i1 = new Intent(this, StatisicActivity.class);
-			startActivity(i1);
-			break;
-		case R.id.menu_database:
-			Intent i2 = new Intent(this, DatabaseList.class);
-			startActivity(i2);
-			break;
-		case R.id.menu_theme:
-			Intent i3 = new Intent(this, ThemeList.class);
-			startActivity(i3);
-			break;
 		default:
 			break;
 		}

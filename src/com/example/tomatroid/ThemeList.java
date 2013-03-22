@@ -64,11 +64,11 @@ public class ThemeList extends Activity {
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_theme_list, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.activity_theme_list, menu);
+//		return true;
+//	}
 
 	class ThemeCursorAdapter extends CursorAdapter {
 

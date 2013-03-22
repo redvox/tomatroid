@@ -69,11 +69,11 @@ public class DatabaseList extends ListActivity {
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_database_list, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.activity_database_list, menu);
+//		return true;
+//	}
 
 	class DatabaseCursorAdapter extends CursorAdapter {
 
