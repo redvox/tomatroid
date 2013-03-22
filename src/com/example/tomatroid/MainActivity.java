@@ -17,6 +17,7 @@ import android.app.Application;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -72,14 +73,26 @@ public class MainActivity extends Activity {
 	final String KEY_ACTIVEBUTTON = "button";
 	final String KEY_POMODOROTHEME = "pomodoroTheme";
 	final String KEY_BREAKTHEME = "breakTheme";
+	
+	final String KEY_POMODOROTIME = "pomodorotime";
+	final String KEY_SHORTBREAKTIME = "shortbreaktime";
+	final String KEY_LONGBREAKTIME = "longbreaktime";
+	final String KEY_REMEMBERTIME = "remembertime";
+	
+	public static final String PREFS_NAME = "MyPrefsFile";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		pomodoroTheme = sqhelper.getTheme(1);
-		breakTheme = sqhelper.getTheme(1);
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		pomodoroTheme = settings.getString(KEY_POMODOROTHEME, sqhelper.getTheme(1));
+		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
+		pomodoroTime = settings.getInt(KEY_POMODOROTIME, 25);
+		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
+		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
+		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
 		
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
@@ -117,46 +130,31 @@ public class MainActivity extends Activity {
 				"#800080", maxValue);
 		digramLayout.addView(trackBar, barParams);
 		
-		// Control Buttons
 		controlListener = new ControlListener(this, sqhelper);
-		// Dialog Manager
 		dialogManager = new DialogManager(this);
 
 		timeText.setText("00:00");
-		// Typeface tf = Typeface.createFromAsset(getAssets(),
-		// "Roboto-Black.ttf");
-		// timeText.setTypeface(tf);
-
-		
 		Typeface tf = Typeface.createFromAsset(getAssets(), "telegrama.otf");
 //		Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
-
-		if (savedInstanceState != null) {
-			pomodoroTheme = savedInstanceState.getString(KEY_POMODOROTHEME);
-			breakTheme = savedInstanceState.getString(KEY_BREAKTHEME);
-			controlListener.themePomodoroText.setText(pomodoroTheme);
-			controlListener.themeBreakText.setText(breakTheme);
-
-			tracking = savedInstanceState.getBoolean(KEY_TRACKINGSTATE);
-			if (tracking) {
-				timeText.setBase(savedInstanceState.getLong(KEY_CHRONOSTATE));
-				controlListener.toogle(savedInstanceState
-						.getInt(KEY_ACTIVEBUTTON));
-				// controlListener.start(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
-				timeText.start();
-			}
-		} else {
-			controlListener.themePomodoroText
-					.setText("Hier Pomodoro-Thema wählen");
-			controlListener.themeBreakText.setText("Hier Pausen-Thema wählen");
-		}
+		
+		controlListener.themePomodoroText.setText(pomodoroTheme);
+		controlListener.themeBreakText.setText(breakTheme);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(KEY_POMODOROTHEME, pomodoroTheme);
+		editor.putString(KEY_BREAKTHEME, breakTheme);
+		editor.putInt(KEY_POMODOROTIME, pomodoroTime);
+		editor.putInt(KEY_SHORTBREAKTIME, shortBreakTime);
+		editor.putInt(KEY_LONGBREAKTIME, longBreakTime);
+		editor.putInt(KEY_REMEMBERTIME, rememberTime);
+		editor.commit();
 	}
 
 	@Override
@@ -176,6 +174,22 @@ public class MainActivity extends Activity {
 		outState.putLong(KEY_CHRONOSTATE, elapsedMillis);
 		outState.putBoolean(KEY_TRACKINGSTATE, tracking);
 		outState.putInt(KEY_ACTIVEBUTTON, controlListener.activeButton);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		pomodoroTheme = savedInstanceState.getString(KEY_POMODOROTHEME);
+		breakTheme = savedInstanceState.getString(KEY_BREAKTHEME);
+		controlListener.themePomodoroText.setText(pomodoroTheme);
+		controlListener.themeBreakText.setText(breakTheme);
+
+		tracking = savedInstanceState.getBoolean(KEY_TRACKINGSTATE);
+		if (tracking) {
+			timeText.setBase(savedInstanceState.getLong(KEY_CHRONOSTATE));
+			controlListener.toogle(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
+			timeText.start();
+		}
 	}
 
 	public void startCounter(int minutes, int type) {
@@ -403,6 +417,8 @@ public class MainActivity extends Activity {
 			builder.setPositiveButton("I agree", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
+					if (counter != null)
+						counter.cancel();
 					MainActivity.this.finish();
 				}
 			});
@@ -419,5 +435,12 @@ public class MainActivity extends Activity {
 		} else {
 			return super.onKeyDown(keyCode, event);
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		if (counter != null)
+			counter.cancel();
+		super.onDestroy();
 	}
 }
