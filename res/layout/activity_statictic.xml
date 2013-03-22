@@ -12,7 +12,7 @@
         android:gravity="center"
         android:scaleType="centerInside"
         android:src="@android:drawable/ic_media_rew" />
-    
+
     <!--
     <RelativeLayout
         android:id="@+id/statistic_main"
@@ -23,7 +23,7 @@
     <ViewFlipper
         android:id="@+id/statistic_flipper"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent" >
 
         <LinearLayout
             android:id="@+id/statistic_overview"
@@ -40,69 +40,101 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:gravity="left"
                     android:text="Pomodoros" />
 
-                <TextView
-                    android:id="@+id/statistic_pomodoroCount"
-                    style="@style/BigText"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="40dp" />
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/statistic_pomodoroInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="right" />
+                    <TextView
+                        android:id="@+id/statistic_pomodoroCount"
+                        style="@style/BigText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:gravity="center_horizontal" />
+
+                    <TextView
+                        android:id="@+id/statistic_pomodoroInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/statistic_pomodoroCount"
+                        android:layout_centerHorizontal="true" />
+                </RelativeLayout>
 
                 <include layout="@layout/horizontal_line" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:gravity="left"
-                    android:text="Long Breaks" />
+                    android:text="Breaks" />
 
-                <TextView
-                    android:id="@+id/statistic_breakCount"
-                    style="@style/BigText"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="40dp" />
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/statistic_breakInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="right" />
+                    <TextView
+                        android:id="@+id/statistic_breakCount"
+                        style="@style/BigText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:gravity="center_horizontal" />
+
+                    <TextView
+                        android:id="@+id/statistic_breakInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/statistic_pomodoroCount"
+                        android:layout_centerHorizontal="true" />
+                </RelativeLayout>
 
                 <include layout="@layout/horizontal_line" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:gravity="left"
                     android:text="Sleep" />
 
-                <TextView
-                    android:id="@+id/statistic_sleepCount"
-                    style="@style/BigText"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="40dp" />
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/statistic_sleepInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="right" />
+                    <TextView
+                        android:id="@+id/statistic_sleepCount"
+                        style="@style/BigText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:gravity="center_horizontal" />
+
+                    <TextView
+                        android:id="@+id/statistic_sleepInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/statistic_pomodoroCount"
+                        android:layout_centerHorizontal="true" />
+                </RelativeLayout>                
 
                 <include layout="@layout/horizontal_line" />
             </LinearLayout>
+
+            <include layout="@layout/vertical_line" />
 
             <ListView
                 android:id="@+id/statistic_themelist"

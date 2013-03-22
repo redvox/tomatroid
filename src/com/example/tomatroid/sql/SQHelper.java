@@ -127,11 +127,11 @@ public class SQHelper extends SQLiteOpenHelper {
 		return count;
 	}
 
-	public int[] getTotalCountTimeDays(int[] types, int[] themes) {
-		return getTotalCountTimeDays(types, themes, new int[0]);
-	}
+//	public int[] getTotalCountTimeDays(int[] types, int[] themes) {
+//		return getTotalCountTimeDays(types, themes, new int[0]);
+//	}
 
-	public int[] getTotalCountTimeDays(int[] types, int[] themes, int[] timespan) {
+	public int[] getTotalCountTimeDays(int[] types, int[] themes) {
 		int[] info = new int[3];
 
 		StringBuffer where = new StringBuffer();
@@ -170,6 +170,92 @@ public class SQHelper extends SQLiteOpenHelper {
 		info[0] = c.getCount();
 		info[1] = calculateDuration(c);
 		info[2] = calculateDays(c);
+		c.close();
+		return info;
+	}
+	
+	public int[] getTotalCountTimeDays(int[] types, int[] themes, int[] date) {
+		int[] info = new int[3];
+
+		StringBuffer finalwhere = new StringBuffer();
+		StringBuffer where1 = null;
+		StringBuffer where2 = null;
+		StringBuffer where3 = null;
+
+		// TYPE HERE
+		if (types.length > 0) {
+			where1 = new StringBuffer();
+			where1.append("(");
+			for (int i = 0; i < types.length - 1; i++) {
+				where1.append(KEY_TYPE + " = " + types[i] + " OR ");
+			}
+			where1.append(KEY_TYPE + " = " + types[types.length - 1]);
+			where1.append(")");
+		}
+
+		// THEME WHERE
+		if (themes.length > 0) {
+			where2 = new StringBuffer();
+			where2.append("(");
+			for (int i = 0; i < themes.length - 1; i++) {
+				where2.append(KEY_THEME + " = " + themes[i] + " OR ");
+			}
+			where2.append(KEY_THEME + " = " + themes[themes.length - 1]);
+			where2.append(")");
+		}
+
+		// DATE WHERE
+		
+		if (date.length > 0) {
+			where3 = new StringBuffer();
+			where3.append("(");
+			where3.append(KEY_DATE_DAY + " = " + date[0] + " AND ");
+			where3.append(KEY_DATE_MONTH + " = " + date[1] + " AND ");
+			where3.append(KEY_DATE_YEAR + " = " + date[2]);
+			where3.append(")");
+		}
+		
+//		if(where1 != null && where2 != null && where3 != null){
+//			finalwhere.append("(");
+//			finalwhere.append(where1.toString());
+//			finalwhere.append(") AND (");
+//			finalwhere.append(where2.toString());
+//			finalwhere.append(") AND (");
+//			finalwhere.append(where3.toString());
+//			finalwhere.append(")");
+//		}
+		
+		if(where1 != null){
+			finalwhere.append(where1.toString());
+		}
+		
+		if(where1 != null && where2 != null){
+			finalwhere.append(" AND ");
+		}
+		
+		if(where2 != null){
+			finalwhere.append(where2.toString());
+		}
+		
+		if(where3 != null && (where1 != null || where2 != null)){
+			finalwhere.append(" AND ");
+		}
+		
+		if(where3 != null){
+			finalwhere.append(where3.toString());
+		}
+		
+		openDatabase();
+		Cursor c;
+		c = db.query(TABLE_DATES, null, finalwhere.toString(), null, null, null,
+				null);
+
+		info[0] = c.getCount();
+		info[1] = calculateDuration(c);
+		info[2] = calculateDays(c);
+		
+		Log.e("SQHelper", "query " + finalwhere.toString() +" duration "+ info[1]);
+		
 		c.close();
 		return info;
 	}

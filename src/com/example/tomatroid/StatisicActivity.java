@@ -109,7 +109,7 @@ public class StatisicActivity extends Activity {
 		
 		
 		int[][] barValues1 = new int[][] { new int[] { 3, 10, 4, 5, 6, 7, 8 },
-				new int[] { 5, 6, 7, 8, 9, 10, 12 },
+				new int[] { 3, 3, 3, 3, 3, 3, 3 },
 				new int[] { 1, 1, 1, 1, 1, 1, 1 }, };
 		String[] axisLables = new String[]{ "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"};
 		String[] lineNames = new String[]{ "Pomodoro", "Breaks", "Sleep"};
@@ -155,9 +155,9 @@ public class StatisicActivity extends Activity {
 			LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.theme_statistic_list_row, null);
 			
-			Log.e("Statistic Theme Adapter", "getCalled");
-			Log.e("Statistic Theme Adapter", "position " +position);
-			Log.e("Statistic Theme Adapter", "value " +values.get(position));
+//			Log.e("Statistic Theme Adapter", "getCalled");
+//			Log.e("Statistic Theme Adapter", "position " +position);
+//			Log.e("Statistic Theme Adapter", "value " +values.get(position));
 			
 			int themeId = sqHelper.getTheme(values.get(position));
 
@@ -170,7 +170,23 @@ public class StatisicActivity extends Activity {
 			TextView infoText = (TextView) v.findViewById(R.id.infoText);
 			infoText.setText(prepareInfoText(themeInfo));
 
-			int[] barValues = new int[] { 3, 10, 4, 5, 6, 7, 8 };
+//			getTotalCountTimeDays(int[] types, int[] themes, int[] date)
+			
+			
+//			int[] barValues = new int[] { 3, 10, 4, 5, 6, 7, 8 };
+			DateTime dt = new DateTime();
+			dt = dt.minusDays(6);
+			int[] barValues = new int[7]; 
+			for(int i=0; i<7;i++){
+				dt = dt.plusDays(i);
+				int[] date = new int[3];
+				date[0] = dt.getDayOfMonth();
+				date[1] = dt.getMonthOfYear();
+				date[2] = dt.getYear();
+				int[] answer = sqHelper.getTotalCountTimeDays(new int[]{}, new int[]{themeId}, date);
+				barValues[i] = answer[1];
+//				Log.e("Statistic Theme Adapter", "theme " +themeId+ " barvalue " +answer[1]);
+			}
 			BarChart bars = new BarChart(getContext(), barValues);
 
 			// LinearLayout ll = (LinearLayout) v.findViewById(R.id.infoLayout);

@@ -16,7 +16,7 @@ public class BarChart extends View {
 	float width = 1;
 	float bar_width = 1;
 	float pixelPerMinute = 0;
-	float maxValue = 0;
+	float maxValue = 60;
 
 	// final int x = 0;
 	// final int y = 1;
