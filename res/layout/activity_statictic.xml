@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="left"
-                    android:text="Pomodoros" />
+                    android:text="@string/pomodoros" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="left"
-                    android:text="Breaks" />
+                    android:text="@string/breaks" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="left"
-                    android:text="Sleep" />
+                    android:text="@string/sleep" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"

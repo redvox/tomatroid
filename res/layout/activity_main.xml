@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Pomodoros" />
+                android:text="@string/pomodoros" />
         </LinearLayout>
 
         <include layout="@layout/vertical_line" />
@@ -76,7 +76,7 @@
                     android:id="@+id/newtheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="neues Thema" />
+                    android:text="@string/new_theme" />
 
                 <ListView
                     android:id="@+id/themeList"

@@ -54,10 +54,10 @@ public class MainActivity extends Activity {
 
 	ArrayList<View> bars = new ArrayList<View>();
 
-	int pomodoroTime = 25;
-	int shortBreakTime = 5;
-	int longBreakTime = 35;
-	int rememberTime = 10;
+	int pomodoroTime;
+	int shortBreakTime;
+	int longBreakTime;
+	int rememberTime;
 	String pomodoroTheme, breakTheme;
 	boolean tracking = false;
 

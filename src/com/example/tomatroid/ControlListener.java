@@ -213,20 +213,19 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		
 		// set dialog message
 		alertDialogBuilder
-				.setPositiveButton("Einfügen", new DialogInterface.OnClickListener() {
+				.setPositiveButton("Insert", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						Cursor cc = (Cursor) parentSpinner.getSelectedItem();
 						int parentId = cc.getInt(cc.getColumnIndex(SQHelper.KEY_ROWID));
 						if(parentId == 1) 
 							parentId = -1;
-						Log.e("ControlListener", "add Theme"+userInput.getText().toString() +" parent: "+ parentId);
 						sqHelper.addTheme(userInput.getText().toString(), parentId);
 						themeListAdapter.getCursor().requery();
 						themeListAdapter.notifyDataSetChanged();
 					}
 				})
-				.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
