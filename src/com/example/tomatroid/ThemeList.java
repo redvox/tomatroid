@@ -1,6 +1,7 @@
 package com.example.tomatroid;
 
 import com.example.tomatroid.sql.SQHelper;
+import com.example.tomatroid.util.NavigationBarManager;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -24,6 +25,8 @@ import android.widget.Toast;
 
 public class ThemeList extends Activity {
 
+	final int ACTIVITYNUMBER = 2; 
+	
 	SQHelper sqHelper = new SQHelper(this);
 	ListView shown, hide;
 	LayoutInflater mInflater;
@@ -36,6 +39,8 @@ public class ThemeList extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_theme_list);
 		mInflater = LayoutInflater.from(this);
+		
+		NavigationBarManager navi = new NavigationBarManager(this, ACTIVITYNUMBER);
 
 		Cursor c1 = sqHelper.getThemeCursor(0);
 		Cursor c2 = sqHelper.getThemeCursor(1);
@@ -51,6 +56,12 @@ public class ThemeList extends Activity {
 		themeListAdapter = new SimpleCursorAdapter(this,
 				R.layout.choose_theme_row, sqHelper.getThemeCursor(),
 				new String[] { SQHelper.KEY_NAME }, new int[] { R.id.name }, 0);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 	}
 
 	@Override

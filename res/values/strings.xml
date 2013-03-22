@@ -14,4 +14,11 @@
     <string name="title_activity_statictic">StaticticActivity</string>
     <string name="title_activity_database_list">DatabaseList</string>
 
+
+    <string-array name="action_list">
+        <item>Today\'s Summary</item>
+        <item>Statistics</item>
+        <item>Theme Manager</item>
+        <item>Database Entrys</item>
+    </string-array>
 </resources>

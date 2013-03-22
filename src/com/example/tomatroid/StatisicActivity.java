@@ -10,6 +10,7 @@ import com.example.tomatroid.digram.BarChart;
 import com.example.tomatroid.digram.LineChart;
 import com.example.tomatroid.digram.PieChart;
 import com.example.tomatroid.sql.SQHelper;
+import com.example.tomatroid.util.NavigationBarManager;
 import com.example.tomatroid.util.StoredAnimation;
 
 import android.os.Bundle;
@@ -35,6 +36,8 @@ import android.widget.ViewFlipper;
 
 public class StatisicActivity extends Activity {
 
+	final int ACTIVITYNUMBER = 1; 
+	
 	LinearLayout overview;
 	ViewFlipper statistic_flipper;
 	ImageButton prev;
@@ -49,6 +52,8 @@ public class StatisicActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_statictic);
 
+		NavigationBarManager navi = new NavigationBarManager(this, ACTIVITYNUMBER);
+		
 		overview = (LinearLayout) findViewById(R.id.statistic_overview);
 		statistic_flipper = (ViewFlipper) findViewById(R.id.statistic_flipper);
 		statistic_flipper.setAnimateFirstView(false);
@@ -127,6 +132,12 @@ public class StatisicActivity extends Activity {
 		// t1.setText("Total Pomodoro");
 		// overview.addView(t1, params);
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 	}
 
 	public String prepareInfoText(int[] array) {

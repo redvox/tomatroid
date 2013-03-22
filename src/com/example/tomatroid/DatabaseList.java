@@ -5,6 +5,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.example.tomatroid.sql.SQHelper;
+import com.example.tomatroid.util.NavigationBarManager;
 
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -28,6 +29,8 @@ import android.widget.TextView;
 
 public class DatabaseList extends ListActivity {
 
+	final int ACTIVITYNUMBER = 3; 
+	
 	SQHelper sqHelper = new SQHelper(this);
 	LayoutInflater mInflater;
 	DatabaseCursorAdapter databaseCursorAdapter;
@@ -38,6 +41,8 @@ public class DatabaseList extends ListActivity {
 		setContentView(R.layout.activity_database_list);
 		mInflater = LayoutInflater.from(this);
 
+		NavigationBarManager navi = new NavigationBarManager(this, ACTIVITYNUMBER);
+		
 		// THE DESIRED COLUMNS TO BE BOUND
 		// String[] columns = new String[] { SQHelper.KEY_DATE_DAY,
 		// SQHelper.KEY_DATE_MONTH, SQHelper.KEY_DATE_YEAR,
@@ -56,6 +61,12 @@ public class DatabaseList extends ListActivity {
 		// setListAdapter(adapter);
 		databaseCursorAdapter = new DatabaseCursorAdapter(this, c, 0);
 		setListAdapter(databaseCursorAdapter);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 	}
 
 	@Override

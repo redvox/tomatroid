@@ -5,22 +5,20 @@ import java.util.ArrayList;
 import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
-import com.example.tomatroid.digram.PieChart;
 import com.example.tomatroid.sql.SQHelper;
+import com.example.tomatroid.util.NavigationBarManager;
 
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +33,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+	final int ACTIVITYNUMBER = 0; 
+	
 	LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT);
 
@@ -86,6 +86,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		NavigationBarManager navi = new NavigationBarManager(this, ACTIVITYNUMBER);
+		
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		pomodoroTheme = settings.getString(KEY_POMODOROTHEME, sqhelper.getTheme(1));
 		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
@@ -93,7 +95,7 @@ public class MainActivity extends Activity {
 		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
 		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
-		
+
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (Chronometer) findViewById(R.id.timetext);
@@ -162,6 +164,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 		controlListener.themeListAdapter.getCursor().requery();
 		controlListener.themeListAdapter.notifyDataSetChanged();
+		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 	}
 
 	@Override
