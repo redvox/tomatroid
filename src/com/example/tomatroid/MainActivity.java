@@ -31,6 +31,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -224,6 +225,45 @@ public class MainActivity extends Activity {
 		// context = null;
 		// mA = null;
 		newCounter.start();
+		
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.ic_launcher);
+		
+		switch(tag){
+		case SQHelper.TYPE_POMODORO:
+			mBuilder.setContentTitle("Pomodoro over");
+	        mBuilder.setContentText("Lets take a break");
+			break;
+		case SQHelper.TYPE_LONGBREAK:
+			mBuilder.setContentTitle("Break over");
+	        mBuilder.setContentText("Lets do some work!");
+			break;
+		case SQHelper.TYPE_SHORTBREAK:
+			mBuilder.setContentTitle("Break over");
+	        mBuilder.setContentText("Lets do some work!");
+			break;
+		}
+		
+		Intent resultIntent = new Intent(this, MainActivity.class);
+		
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
+		mBuilder.addAction(android.R.drawable.btn_dialog, "Rest", pendingIntent);
+		
+		mBuilder.setAutoCancel(true);
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		stackBuilder.addParentStack(MainActivity.class);
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+		mBuilder.setContentIntent(resultPendingIntent);
+		NotificationManager mNotificationManager =
+		    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(0, mBuilder.build());
 
 		// // SOS
 		int dot = 200; // Length of a Morse Code "dot" in milliseconds
@@ -302,26 +342,7 @@ public class MainActivity extends Activity {
 		}
 
 		resetTimeText();
-
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(R.drawable.ic_launcher)
-		        .setContentTitle("My notification")
-		        .setContentText("Hello World!");
-		Intent resultIntent = new Intent(this, MainActivity.class);
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		stackBuilder.addParentStack(MainActivity.class);
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent =
-		        stackBuilder.getPendingIntent(
-		            0,
-		            PendingIntent.FLAG_UPDATE_CURRENT
-		        );
-		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager =
-		    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
-		mNotificationManager.notify(0, mBuilder.build());
+		
 //		 #######
 //		 minutes = 10;
 //		 #######
