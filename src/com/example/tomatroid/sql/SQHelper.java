@@ -254,8 +254,6 @@ public class SQHelper extends SQLiteOpenHelper {
 		info[1] = calculateDuration(c);
 		info[2] = calculateDays(c);
 		
-		Log.e("SQHelper", "query " + finalwhere.toString() +" duration "+ info[1]);
-		
 		c.close();
 		return info;
 	}

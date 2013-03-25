@@ -2,6 +2,7 @@ package com.example.tomatroid;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -182,24 +183,22 @@ public class StatisicActivity extends Activity {
 			infoText.setText(prepareInfoText(themeInfo));
 
 //			getTotalCountTimeDays(int[] types, int[] themes, int[] date)
-			
-			
 //			int[] barValues = new int[] { 3, 10, 4, 5, 6, 7, 8 };
-			DateTime dt = new DateTime();
-			dt = dt.minusDays(6);
+			DateMidnight dm = new DateMidnight();
+			dm = dm.minusDays(7);
 			int[] barValues = new int[7]; 
 			for(int i=0; i<7;i++){
-				dt = dt.plusDays(i);
+				dm = dm.plusDays(1);
 				int[] date = new int[3];
-				date[0] = dt.getDayOfMonth();
-				date[1] = dt.getMonthOfYear();
-				date[2] = dt.getYear();
+				date[0] = dm.getDayOfMonth();
+				date[1] = dm.getMonthOfYear();
+				date[2] = dm.getYear();
 				int[] answer = sqHelper.getTotalCountTimeDays(new int[]{}, new int[]{themeId}, date);
 				barValues[i] = answer[1];
 //				Log.e("Statistic Theme Adapter", "theme " +themeId+ " barvalue " +answer[1]);
 			}
 			BarChart bars = new BarChart(getContext(), barValues);
-
+			
 			// LinearLayout ll = (LinearLayout) v.findViewById(R.id.infoLayout);
 			// ll.addView(bars, 100, 100);
 
