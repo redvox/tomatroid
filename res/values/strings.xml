@@ -13,12 +13,22 @@
     <string name="title_activity_digram">DigramActivity</string>
     <string name="title_activity_statictic">StaticticActivity</string>
     <string name="title_activity_database_list">DatabaseList</string>
-
-
+    <string name="theme_name">Theme Name</string>
+    <string name="new_theme">New Theme</string>
+    <string name="theme_parent">Parent Theme</string>
+	<string name="breaks">Breaks</string>
+	<string name="pomodoros">Pomodoros</string>
+	<string name="sleep">Sleep</string>
+	<string name="hide">Hide</string>
+	<string name="show">Shown</string>
+	<string name="name">Name</string>
+	<string name="parent">Parent</string>	
+    
     <string-array name="action_list">
         <item>Today\'s Summary</item>
         <item>Statistics</item>
         <item>Theme Manager</item>
         <item>Database Entrys</item>
     </string-array>
+
 </resources>
