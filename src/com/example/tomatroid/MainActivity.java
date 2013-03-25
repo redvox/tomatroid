@@ -419,6 +419,7 @@ public class MainActivity extends Activity {
 		int newMax = (int) cal;
 		pomodoroBar.adjustToNewMaximum(newMax);
 		breakBar.adjustToNewMaximum(newMax);
+		trackBar.adjustToNewMaximum(newMax);
 		axis.adjustToNewMaximum(newMax);
 	}
 
