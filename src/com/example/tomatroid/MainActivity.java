@@ -133,7 +133,7 @@ public class MainActivity extends Activity {
 		int startPomodoroTime = sqhelper.getStartUpPomodoroTime();
 		int startBreakTime = sqhelper.getStartUpBreakTime();
 		int startTrackingTime = sqhelper.getStartUpTrackingCount();
-		float maxStartTime = Math.max(startPomodoroTime, startBreakTime);
+		float maxStartTime = Math.max(startTrackingTime, Math.max(startPomodoroTime, startBreakTime));
 		int maxValue = (int) Math.max(60, ((maxStartTime / 100) * 125));
 
 		axis = new Axis(digram.getContext(), maxValue);
