@@ -40,18 +40,22 @@ public class NavigationBarManager implements OnNavigationListener {
 			switch (itemPosition) {
 			case 0:
 				Intent i1 = new Intent(activity, MainActivity.class);
+				i1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				activity.startActivity(i1);
 				break;
 			case 1:
 				Intent i2 = new Intent(activity, StatisicActivity.class);
+				i2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				activity.startActivity(i2);
 				break;
 			case 2:
 				Intent i3 = new Intent(activity, ThemeList.class);
+				i3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				activity.startActivity(i3);
 				break;
 			case 3:
 				Intent i4 = new Intent(activity, DatabaseList.class);
+				i4.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				activity.startActivity(i4);
 				break;
 			}
