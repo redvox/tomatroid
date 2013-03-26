@@ -234,8 +234,8 @@ public class MainActivity extends Activity {
 		long milliesSincePause = SystemClock.elapsedRealtime() - settings.getLong(KEY_COUNTERPAUSETIME, SystemClock.elapsedRealtime());
 		
 		Counter counter = new Counter(settings.getLong(KEY_COUNTERTIMELEFT, 10000)-milliesSincePause, this, timeText, settings.getInt(KEY_TAG, 0));
-		
 		counter.setBaseTime(settings.getLong(KEY_COUNTERTIMEBASE, 0)+milliesSincePause);
+
 		if(settings.getBoolean(KEY_COUNTERCOUNTUP, false)){
 			counter.toggleCountUp();
 		}
@@ -306,14 +306,9 @@ public class MainActivity extends Activity {
 	public void counterFinish(int tag) {
 //		resetTimeText();
 		long milliesBase = counter.getMilliesBase();
-		
 		Counter newCounter = new Counter(rememberTime, this, timeText, tag);
 		newCounter.toggleCountUp();
 		newCounter.setBaseTime(milliesBase);
-
-		// timeText = null;
-		// context = null;
-		// mA = null;
 		newCounter.start();
 
 //		fireNotification(tag);

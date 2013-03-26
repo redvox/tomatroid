@@ -5,6 +5,7 @@ import com.example.tomatroid.MainActivity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.TextView;
 
 public class Counter extends CountDownTimer {
@@ -54,10 +55,27 @@ public class Counter extends CountDownTimer {
 		return timeLeft;
 	}
 
+	/**
+	 * There is a difference between getMilliesBase() and getMilliesRawBase() because this method is used 
+	 * to instantiate a new Counter.
+	 * There are two options:
+	 * 1. The Phone is awake and the new Counter needs the estimate runtime of the old counter.
+	 * 2. The Phone was on sleep and there is overtime. RunTime has then a negative value and only timeBase is needed
+	 * because its include the overtime.
+	 * @return
+	 */
 	public long getMilliesBase() {
-		return runTime + timeBase;
+		if(runTime > 0){
+			return runTime + timeBase;
+		} else {
+			return timeBase;
+		}
 	}
 
+	/**
+	 * This method is used to save the base onPause.
+	 * @return
+	 */
 	public long getMilliesRawBase() {
 		return timeBase;
 	}
