@@ -3,18 +3,15 @@ package com.example.tomatroid.chrono;
 import com.example.tomatroid.MainActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
-import android.os.Vibrator;
-import android.util.Log;
 import android.widget.TextView;
 
 public class Counter extends CountDownTimer {
 
 	TextView timeText;
 	Context context;
-	long timeFinal = 0;
+	long runTime = 0;
 	long timeLeft = 0;
 	long timeBase = 0;
 	int tag;
@@ -23,16 +20,16 @@ public class Counter extends CountDownTimer {
 
 	public Counter(int minutes, MainActivity main, TextView timeText, int tag) {
 		super((minutes * 60) * 1000, 1000);
-		this.timeFinal = (minutes * 60) * 1000;
+		this.runTime = (minutes * 60) * 1000;
 		this.timeText = timeText;
 		this.context = main;
 		this.mA = main;
 		this.tag = tag;
 	}
-	
-	public Counter(long time, MainActivity main, TextView timeText, int tag) {
-		super(time, 1000);
-		this.timeFinal = time;
+
+	public Counter(long millies, MainActivity main, TextView timeText, int tag) {
+		super(millies, 1000);
+		this.runTime = millies;
 		this.timeText = timeText;
 		this.context = main;
 		this.mA = main;
@@ -40,26 +37,38 @@ public class Counter extends CountDownTimer {
 	}
 
 	@Override
-	public void onFinish() { 
+	public void onFinish() {
 		timeText.setText("00:00");
 		mA.counterFinish(tag);
 	}
 
 	public int getMinutesPast() {
-		return (int) Math.round((((timeFinal - timeLeft) + timeBase) / 60000));
+		return (int) Math.round((((runTime - timeLeft) + timeBase) / 60000));
 	}
 
-	public long getMilliesPast() {
-		return (timeFinal - timeLeft) + timeBase;
+	public long getMilliesPast(){
+		return (runTime - timeLeft) ;
+	}
+
+	public long getMilliesLeft() {
+		return timeLeft;
 	}
 
 	public long getMilliesBase() {
-		return timeFinal + timeBase;
+		return runTime + timeBase;
+	}
+
+	public long getMilliesRawBase() {
+		return timeBase;
 	}
 
 	public void toggleCountUp() {
-		countUp = !countUp;
+		countUp = true;
 		timeText.setTextColor(Color.parseColor("#DC143C"));
+	}
+
+	public boolean isCountUp() {
+		return countUp;
 	}
 
 	public void setBaseTime(long millies) {
@@ -68,15 +77,13 @@ public class Counter extends CountDownTimer {
 
 	@Override
 	public void onTick(long millisUntilFinished) {
-		Log.e("counter", "");
 		timeLeft = millisUntilFinished;
 		StringBuffer stb = new StringBuffer();
 
 		long millies = 0;
 
 		if (countUp) {
-			millies = getMilliesPast();
-
+			millies = getMilliesPast() + timeBase;
 		} else {
 			millies = millisUntilFinished;
 		}
@@ -93,4 +100,5 @@ public class Counter extends CountDownTimer {
 
 		timeText.setText(stb);
 	}
+
 }

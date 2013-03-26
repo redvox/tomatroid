@@ -46,7 +46,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name="com.example.tomatroid.util.AlarmReceiver" />
     </application>
 
 </manifest>

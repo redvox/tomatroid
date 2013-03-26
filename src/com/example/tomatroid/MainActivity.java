@@ -6,6 +6,7 @@ import com.example.tomatroid.chrono.Counter;
 import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
 import com.example.tomatroid.sql.SQHelper;
+import com.example.tomatroid.util.AlarmReceiver;
 import com.example.tomatroid.util.NavigationBarManager;
 
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class MainActivity extends Activity {
 	DialogManager dialogManager;
 
 	AlarmManager alarmmanager;
+	AlarmReceiver alarmreceiver;
 	
 	ArrayList<View> bars = new ArrayList<View>();
 
@@ -88,7 +90,11 @@ public class MainActivity extends Activity {
 	final String KEY_LONGBREAKTIME = "longbreaktime";
 	final String KEY_REMEMBERTIME = "remembertime";
 	final String KEY_TAG = "tag";
-	final String KEY_COUNTERTIME = "countertime";
+	final String KEY_COUNTER = "counter";
+	final String KEY_COUNTERPAUSETIME= "counterpausetime";
+	final String KEY_COUNTERTIMEBASE = "countertimebase";
+	final String KEY_COUNTERTIMELEFT = "countertimeleft";
+	final String KEY_COUNTERCOUNTUP= "countercountup";
 
 	public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -108,8 +114,6 @@ public class MainActivity extends Activity {
 		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
 		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
-		long countertime = settings.getLong(KEY_COUNTERTIME, -1);
-		int tag = settings.getInt(KEY_TAG, -1);
 		
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
@@ -158,13 +162,6 @@ public class MainActivity extends Activity {
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
-		
-		if(countertime > 0){
-			Log.e("MainActivity", "create Counter with "+countertime);
-			counter = new Counter(countertime, this, timeText, tag);
-			counter.start();
-		}
-		
 	}
 
 	@Override
@@ -174,21 +171,26 @@ public class MainActivity extends Activity {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(KEY_POMODOROTHEME, pomodoroTheme);
 		editor.putString(KEY_BREAKTHEME, breakTheme);
-		editor.putInt(KEY_POMODOROTIME, pomodoroTime);
-		editor.putInt(KEY_SHORTBREAKTIME, shortBreakTime);
-		editor.putInt(KEY_LONGBREAKTIME, longBreakTime);
-		editor.putInt(KEY_REMEMBERTIME, rememberTime);
+		
+		editor.putInt(KEY_TAG, controlListener.activeButton);
+		
+//		editor.putInt(KEY_POMODOROTIME, pomodoroTime);
+//		editor.putInt(KEY_SHORTBREAKTIME, shortBreakTime);
+//		editor.putInt(KEY_LONGBREAKTIME, longBreakTime);
+//		editor.putInt(KEY_REMEMBERTIME, rememberTime);
+		
+		if(tracking){
+			long elapsedMillis = timeText.getBase();
+			editor.putLong(KEY_CHRONOSTATE, elapsedMillis);
+		}
+		editor.putBoolean(KEY_TRACKINGSTATE, tracking);
 		
 		if(counter != null){
-			editor.putLong(KEY_COUNTERTIME, 10*1000);
 			counter.cancel();
-			Log.e("MainActivity", "AlarmManagerStarted");
-			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-			Intent AlarmIndent2 = new Intent(getApplicationContext(), MainActivity.class);
-			PendingIntent AlarmPendIndent2 = PendingIntent.getBroadcast(getApplicationContext(), 192837, AlarmIndent2, PendingIntent.FLAG_UPDATE_CURRENT);
-			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+(10*1000), AlarmPendIndent2);
+			saveCounterState(editor);
+//			startAlarmManager(System.currentTimeMillis()+(10*1000));
 		} else {
-			editor.putLong(KEY_COUNTERTIME, -1);
+			editor.putBoolean(KEY_COUNTER, false);
 		}
 		
 		editor.commit();
@@ -200,38 +202,55 @@ public class MainActivity extends Activity {
 		controlListener.themeListAdapter.getCursor().requery();
 		controlListener.themeListAdapter.notifyDataSetChanged();
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
+		controlListener.themePomodoroText.setText(pomodoroTheme);
+		controlListener.themeBreakText.setText(breakTheme);
 		
-		if(counter != null){
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		controlListener.toogle(settings.getInt(KEY_TAG, -1));
+		
+		tracking = settings.getBoolean(KEY_TRACKINGSTATE, false);
+		if (tracking) {
+			timeText.setBase(settings.getLong(KEY_CHRONOSTATE, 0));
+			controlListener.toogle(settings.getInt(KEY_ACTIVEBUTTON, -1));
+			timeText.start();
+		}
+		
+		if(settings.getBoolean(KEY_COUNTER, false)){
+//			stopAlarmManager();
+			counter = loadCounterState(settings);
 			counter.start();
 		}
 	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(KEY_POMODOROTHEME, pomodoroTheme);
-		outState.putString(KEY_BREAKTHEME, breakTheme);
-
-		long elapsedMillis = timeText.getBase();
-		outState.putLong(KEY_CHRONOSTATE, elapsedMillis);
-		outState.putBoolean(KEY_TRACKINGSTATE, tracking);
-		outState.putInt(KEY_ACTIVEBUTTON, controlListener.activeButton);
+	
+	public void saveCounterState(SharedPreferences.Editor editor){
+		editor.putBoolean(KEY_COUNTER, true);
+		editor.putLong(KEY_COUNTERPAUSETIME, SystemClock.elapsedRealtime());
+		editor.putLong(KEY_COUNTERTIMELEFT, counter.getMilliesLeft());
+		editor.putLong(KEY_COUNTERTIMEBASE, counter.getMilliesRawBase()+counter.getMilliesPast());
+		editor.putBoolean(KEY_COUNTERCOUNTUP, counter.isCountUp());
 	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		pomodoroTheme = savedInstanceState.getString(KEY_POMODOROTHEME);
-		breakTheme = savedInstanceState.getString(KEY_BREAKTHEME);
-		controlListener.themePomodoroText.setText(pomodoroTheme);
-		controlListener.themeBreakText.setText(breakTheme);
-
-		tracking = savedInstanceState.getBoolean(KEY_TRACKINGSTATE);
-		if (tracking) {
-			timeText.setBase(savedInstanceState.getLong(KEY_CHRONOSTATE));
-			controlListener.toogle(savedInstanceState.getInt(KEY_ACTIVEBUTTON));
-			timeText.start();
+	
+	public Counter loadCounterState(SharedPreferences settings){
+		long milliesSincePause = SystemClock.elapsedRealtime() - settings.getLong(KEY_COUNTERPAUSETIME, SystemClock.elapsedRealtime());
+		
+		Counter counter = new Counter(settings.getLong(KEY_COUNTERTIMELEFT, 10000)-milliesSincePause, this, timeText, settings.getInt(KEY_TAG, 0));
+		
+		counter.setBaseTime(settings.getLong(KEY_COUNTERTIMEBASE, 0)+milliesSincePause);
+		if(settings.getBoolean(KEY_COUNTERCOUNTUP, false)){
+			counter.toggleCountUp();
 		}
+		return counter;
+	}	
+	
+	public void startAlarmManager(long timeinmilliesinthefuture){
+		Log.e("MainActivity", "AlarmManagerStarted");
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		am.set(AlarmManager.RTC_WAKEUP, timeinmilliesinthefuture, AlarmReceiver.getPendingIntent(this));
+	}
+	
+	public void stopAlarmManager(){
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		am.cancel(AlarmReceiver.getPendingIntent(this));
 	}
 
 	public void startCounter(int minutes, int type) {
@@ -244,22 +263,10 @@ public class MainActivity extends Activity {
 	public void stopCounter() {
 		if (counter != null)
 			counter.cancel();
+		counter = null;
 	}
 
-	public synchronized void counterFinish(int tag) {
-		resetTimeText();
-		int minutespast = counter.getMinutesPast();
-		long milliesBase = counter.getMilliesBase();
-
-		Counter newCounter = new Counter(rememberTime, this, timeText, tag);
-		newCounter.toggleCountUp();
-		newCounter.setBaseTime(milliesBase);
-
-		// timeText = null;
-		// context = null;
-		// mA = null;
-		newCounter.start();
-
+	public void fireNotification(int tag){
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this).setSmallIcon(R.drawable.ic_launcher);
 
@@ -294,7 +301,23 @@ public class MainActivity extends Activity {
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(0, mBuilder.build());
+	}
+	
+	public void counterFinish(int tag) {
+//		resetTimeText();
+		long milliesBase = counter.getMilliesBase();
+		
+		Counter newCounter = new Counter(rememberTime, this, timeText, tag);
+		newCounter.toggleCountUp();
+		newCounter.setBaseTime(milliesBase);
 
+		// timeText = null;
+		// context = null;
+		// mA = null;
+		newCounter.start();
+
+//		fireNotification(tag);
+		
 		// // SOS
 		int dot = 200; // Length of a Morse Code "dot" in milliseconds
 		// int dash = 500; // Length of a Morse Code "dash" in milliseconds
@@ -311,8 +334,6 @@ public class MainActivity extends Activity {
 		v.vibrate(pattern, -1);
 
 		counter = newCounter;
-
-		Toast.makeText(this, minutespast + "mins", Toast.LENGTH_SHORT).show();
 		dialogManager.show(tag, checkOnLongBreak());
 	}
 
@@ -367,8 +388,8 @@ public class MainActivity extends Activity {
 			minutes = (int) (myElapsedMillis / 60000);
 			tracking = false;
 		} else {
-			stopCounter();
 			minutes = counter.getMinutesPast();
+			stopCounter();
 		}
 
 		resetTimeText();
