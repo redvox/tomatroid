@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,8 +40,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	final int ACTIVITYNUMBER = 0; 
-	
+	final int ACTIVITYNUMBER = 0;
+
 	LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT);
 
@@ -57,6 +59,8 @@ public class MainActivity extends Activity {
 	ControlListener controlListener;
 	DialogManager dialogManager;
 
+	AlarmManager alarmmanager;
+	
 	ArrayList<View> bars = new ArrayList<View>();
 
 	int pomodoroTime;
@@ -78,29 +82,35 @@ public class MainActivity extends Activity {
 	final String KEY_ACTIVEBUTTON = "button";
 	final String KEY_POMODOROTHEME = "pomodoroTheme";
 	final String KEY_BREAKTHEME = "breakTheme";
-	
+
 	final String KEY_POMODOROTIME = "pomodorotime";
 	final String KEY_SHORTBREAKTIME = "shortbreaktime";
 	final String KEY_LONGBREAKTIME = "longbreaktime";
 	final String KEY_REMEMBERTIME = "remembertime";
-	
+	final String KEY_TAG = "tag";
+	final String KEY_COUNTERTIME = "countertime";
+
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		NavigationBarManager navi = new NavigationBarManager(this, ACTIVITYNUMBER);
-		
+
+		NavigationBarManager navi = new NavigationBarManager(this,
+				ACTIVITYNUMBER);
+
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		pomodoroTheme = settings.getString(KEY_POMODOROTHEME, sqhelper.getTheme(1));
+		pomodoroTheme = settings.getString(KEY_POMODOROTHEME,
+				sqhelper.getTheme(1));
 		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
 		pomodoroTime = settings.getInt(KEY_POMODOROTIME, 25);
 		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
 		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
-
+		long countertime = settings.getLong(KEY_COUNTERTIME, -1);
+		int tag = settings.getInt(KEY_TAG, -1);
+		
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (Chronometer) findViewById(R.id.timetext);
@@ -136,18 +146,25 @@ public class MainActivity extends Activity {
 		trackBar = new Bar(this, digram.getContext(), startTrackingTime,
 				"#800080", maxValue);
 		digramLayout.addView(trackBar, barParams);
-		
+
 		controlListener = new ControlListener(this, sqhelper);
 		dialogManager = new DialogManager(this);
 
 		timeText.setText("00:00");
 		Typeface tf = Typeface.createFromAsset(getAssets(), "telegrama.otf");
-//		Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
+		// Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
 		timeText.setTextColor(Color.parseColor("#6495ED"));
-		
+
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
+		
+		if(countertime > 0){
+			Log.e("MainActivity", "create Counter with "+countertime);
+			counter = new Counter(countertime, this, timeText, tag);
+			counter.start();
+		}
+		
 	}
 
 	@Override
@@ -161,6 +178,19 @@ public class MainActivity extends Activity {
 		editor.putInt(KEY_SHORTBREAKTIME, shortBreakTime);
 		editor.putInt(KEY_LONGBREAKTIME, longBreakTime);
 		editor.putInt(KEY_REMEMBERTIME, rememberTime);
+		
+		if(counter != null){
+			editor.putLong(KEY_COUNTERTIME, 10*1000);
+			counter.cancel();
+			Log.e("MainActivity", "AlarmManagerStarted");
+			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+			Intent AlarmIndent2 = new Intent(getApplicationContext(), MainActivity.class);
+			PendingIntent AlarmPendIndent2 = PendingIntent.getBroadcast(getApplicationContext(), 192837, AlarmIndent2, PendingIntent.FLAG_UPDATE_CURRENT);
+			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+(10*1000), AlarmPendIndent2);
+		} else {
+			editor.putLong(KEY_COUNTERTIME, -1);
+		}
+		
 		editor.commit();
 	}
 
@@ -170,6 +200,10 @@ public class MainActivity extends Activity {
 		controlListener.themeListAdapter.getCursor().requery();
 		controlListener.themeListAdapter.notifyDataSetChanged();
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
+		
+		if(counter != null){
+			counter.start();
+		}
 	}
 
 	@Override
@@ -183,7 +217,7 @@ public class MainActivity extends Activity {
 		outState.putBoolean(KEY_TRACKINGSTATE, tracking);
 		outState.putInt(KEY_ACTIVEBUTTON, controlListener.activeButton);
 	}
-	
+
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -225,43 +259,39 @@ public class MainActivity extends Activity {
 		// context = null;
 		// mA = null;
 		newCounter.start();
-		
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(R.drawable.ic_launcher);
-		
-		switch(tag){
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				this).setSmallIcon(R.drawable.ic_launcher);
+
+		switch (tag) {
 		case SQHelper.TYPE_POMODORO:
 			mBuilder.setContentTitle("Pomodoro over");
-	        mBuilder.setContentText("Lets take a break");
+			mBuilder.setContentText("Lets take a break");
 			break;
 		case SQHelper.TYPE_LONGBREAK:
 			mBuilder.setContentTitle("Break over");
-	        mBuilder.setContentText("Lets do some work!");
+			mBuilder.setContentText("Lets do some work!");
 			break;
 		case SQHelper.TYPE_SHORTBREAK:
 			mBuilder.setContentTitle("Break over");
-	        mBuilder.setContentText("Lets do some work!");
+			mBuilder.setContentText("Lets do some work!");
 			break;
 		}
-		
+
 		Intent resultIntent = new Intent(this, MainActivity.class);
-		
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+				new Intent(), 0);
 		mBuilder.addAction(android.R.drawable.btn_dialog, "Rest", pendingIntent);
-		
+
 		mBuilder.setAutoCancel(true);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent =
-		        stackBuilder.getPendingIntent(
-		            0,
-		            PendingIntent.FLAG_UPDATE_CURRENT
-		        );
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager =
-		    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(0, mBuilder.build());
 
@@ -342,10 +372,10 @@ public class MainActivity extends Activity {
 		}
 
 		resetTimeText();
-		
-//		 #######
-//		 minutes = 10;
-//		 #######
+
+		// #######
+		// minutes = 10;
+		// #######
 
 		if (minutes > 0) {
 			if (tag == 0) {
@@ -356,10 +386,10 @@ public class MainActivity extends Activity {
 			} else if (tag == 1 || tag == 2) {
 				breakBar.addValue(minutes);
 				sqhelper.insertDate(tag, minutes, breakTheme);
-			} else if(tag == 3){
+			} else if (tag == 3) {
 				trackBar.addValue(minutes);
 				sqhelper.insertDate(tag, minutes, breakTheme);
-			} else if(tag == 4){
+			} else if (tag == 4) {
 				sqhelper.insertDate(tag, minutes, "");
 			}
 		}
@@ -472,11 +502,11 @@ public class MainActivity extends Activity {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-		if (counter != null)
-			counter.cancel();
+		// if (counter != null)
+		// counter.cancel();
 		super.onDestroy();
 	}
 }

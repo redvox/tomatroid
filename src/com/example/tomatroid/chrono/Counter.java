@@ -29,6 +29,15 @@ public class Counter extends CountDownTimer {
 		this.mA = main;
 		this.tag = tag;
 	}
+	
+	public Counter(long time, MainActivity main, TextView timeText, int tag) {
+		super(time, 1000);
+		this.timeFinal = time;
+		this.timeText = timeText;
+		this.context = main;
+		this.mA = main;
+		this.tag = tag;
+	}
 
 	@Override
 	public void onFinish() { 
@@ -59,6 +68,7 @@ public class Counter extends CountDownTimer {
 
 	@Override
 	public void onTick(long millisUntilFinished) {
+		Log.e("counter", "");
 		timeLeft = millisUntilFinished;
 		StringBuffer stb = new StringBuffer();
 
