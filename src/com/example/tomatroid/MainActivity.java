@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 	public static final int TYPE_LONGBREAK = 2;
 	public static final int TYPE_TRACKING = 3;
 	public static final int TYPE_SLEEPING = 4;
-
+	
 	LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT);
 
@@ -77,6 +77,7 @@ public class MainActivity extends Activity {
 	int rememberTime;
 	String pomodoroTheme, breakTheme;
 	boolean tracking = false;
+	boolean vibrate;
 
 	int pomodorosNum = 1;
 	int pomodorosUntilLongBreakNum = 4;
@@ -168,6 +169,9 @@ public class MainActivity extends Activity {
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
+		
+		// If the Activity was startet over notification, the counterFinish should not vibrate.
+		vibrate = getIntent().getBooleanExtra(AlarmReceiver.KEY_VIBRATE, true);
 	}
 
 	@Override
@@ -190,15 +194,16 @@ public class MainActivity extends Activity {
 			editor.putLong(KEY_CHRONOSTATE, elapsedMillis);
 		}
 		editor.putBoolean(KEY_TRACKINGSTATE, tracking);
-		
-		if(counter != null){
+
+		if (counter != null) {
 			counter.cancel();
 			saveCounterState(editor);
-//			startAlarmManager(System.currentTimeMillis()+(10*1000));
+			if (!counter.isCountUp())
+				AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(), controlListener.activeButton);
 		} else {
 			editor.putBoolean(KEY_COUNTER, false);
 		}
-		
+
 		editor.commit();
 	}
 
@@ -222,7 +227,7 @@ public class MainActivity extends Activity {
 		}
 		
 		if(settings.getBoolean(KEY_COUNTER, false)){
-//			stopAlarmManager();
+			AlarmReceiver.stopAlarmManager(this);
 			counter = loadCounterState(settings);
 			counter.start();
 		}
@@ -248,16 +253,7 @@ public class MainActivity extends Activity {
 		return counter;
 	}	
 	
-	public void startAlarmManager(long timeinmilliesinthefuture){
-		Log.e("MainActivity", "AlarmManagerStarted");
-		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-		am.set(AlarmManager.RTC_WAKEUP, timeinmilliesinthefuture, AlarmReceiver.getPendingIntent(this));
-	}
-	
-	public void stopAlarmManager(){
-		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-		am.cancel(AlarmReceiver.getPendingIntent(this));
-	}
+
 
 	public void startCounter(int minutes, int type) {
 		if (counter != null)
@@ -272,43 +268,6 @@ public class MainActivity extends Activity {
 		counter = null;
 	}
 
-	public void fireNotification(int tag){
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				this).setSmallIcon(R.drawable.ic_launcher);
-
-		switch (tag) {
-		case SQHelper.TYPE_POMODORO:
-			mBuilder.setContentTitle("Pomodoro over");
-			mBuilder.setContentText("Lets take a break");
-			break;
-		case SQHelper.TYPE_LONGBREAK:
-			mBuilder.setContentTitle("Break over");
-			mBuilder.setContentText("Lets do some work!");
-			break;
-		case SQHelper.TYPE_SHORTBREAK:
-			mBuilder.setContentTitle("Break over");
-			mBuilder.setContentText("Lets do some work!");
-			break;
-		}
-
-		Intent resultIntent = new Intent(this, MainActivity.class);
-
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-				new Intent(), 0);
-		mBuilder.addAction(android.R.drawable.btn_dialog, "Rest", pendingIntent);
-
-		mBuilder.setAutoCancel(true);
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		stackBuilder.addParentStack(MainActivity.class);
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
-		mNotificationManager.notify(0, mBuilder.build());
-	}
-	
 	public void counterFinish(int tag) {
 //		resetTimeText();
 		long milliesBase = counter.getMilliesBase();
@@ -317,23 +276,10 @@ public class MainActivity extends Activity {
 		newCounter.setBaseTime(milliesBase);
 		newCounter.start();
 
-//		fireNotification(tag);
+		if(vibrate){
+			AlarmReceiver.fireVibration(this);
+		}
 		
-		// // SOS
-		int dot = 200; // Length of a Morse Code "dot" in milliseconds
-		// int dash = 500; // Length of a Morse Code "dash" in milliseconds
-		int short_gap = 200; // Length of Gap Between dots/dashes
-		// int medium_gap = 500; // Length of Gap Between Letters
-		// int long_gap = 1000; // Length of Gap Between Words
-		// long[] pattern = { 0, // Start immediately
-		// dot, short_gap, dot, short_gap, dot };
-		long[] pattern = { 0, // Start immediately
-				dot };
-
-		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		// Only perform this pattern one time (-1 means "do not repeat")
-		v.vibrate(pattern, -1);
-
 		counter = newCounter;
 		dialogManager.show(tag, checkOnLongBreak());
 	}
@@ -398,7 +344,7 @@ public class MainActivity extends Activity {
 		// #######
 		// minutes = 10;
 		// #######
-
+		
 		if (minutes > 0) {
 			if (tag == TYPE_POMODORO) {
 				pomodorosNum++;
