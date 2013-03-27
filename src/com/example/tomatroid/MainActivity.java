@@ -43,6 +43,12 @@ public class MainActivity extends Activity {
 
 	final int ACTIVITYNUMBER = 0;
 
+	public static final int TYPE_POMODORO = 0;
+	public static final int TYPE_SHORTBREAK = 1;
+	public static final int TYPE_LONGBREAK = 2;
+	public static final int TYPE_TRACKING = 3;
+	public static final int TYPE_SLEEPING = 4;
+
 	LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT);
 
@@ -394,18 +400,21 @@ public class MainActivity extends Activity {
 		// #######
 
 		if (minutes > 0) {
-			if (tag == 0) {
+			if (tag == TYPE_POMODORO) {
 				pomodorosNum++;
 				pomodorosNumText.setText("" + pomodorosNum);
 				pomodoroBar.addValue(minutes);
 				sqhelper.insertDate(tag, minutes, pomodoroTheme);
-			} else if (tag == 1 || tag == 2) {
+			} else if (tag == TYPE_SHORTBREAK) {
+				breakBar.addValue(minutes);
+				sqhelper.insertDate(tag, minutes, "");
+			} else if (tag == TYPE_LONGBREAK) {
 				breakBar.addValue(minutes);
 				sqhelper.insertDate(tag, minutes, breakTheme);
-			} else if (tag == 3) {
+			} else if (tag == TYPE_TRACKING) {
 				trackBar.addValue(minutes);
 				sqhelper.insertDate(tag, minutes, breakTheme);
-			} else if (tag == 4) {
+			} else if (tag == TYPE_SLEEPING) {
 				sqhelper.insertDate(tag, minutes, "");
 			}
 		}
