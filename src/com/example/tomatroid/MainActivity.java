@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -39,6 +40,14 @@ public class MainActivity extends Activity {
 	public static final int TYPE_LONGBREAK = 2;
 	public static final int TYPE_TRACKING = 3;
 	public static final int TYPE_SLEEPING = 4;
+	
+	public static final String COLOR_POMODORO = "#fdf700";
+	public static final String COLOR_BREAK = "#04B404";
+	public static final String COLOR_TRACKING = "#800080";
+	public static final String COLOR_SLEEP = "#fdf700";
+	public static final String COLOR_BLUE = "#6495ED";
+	public static final String COLOR_RED = "#DC143C";
+	
 	
 	LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT);
@@ -71,28 +80,29 @@ public class MainActivity extends Activity {
 	boolean vibrate;
 
 	int pomodorosNum = 1;
-	int pomodorosUntilLongBreakNum = 4;
+	int pomodorosUntilLongBreakNum;
 
 	Bar pomodoroBar, breakBar, trackBar;
 	Axis axis;
 
-	final String KEY_THEME = "theme";
-	final String KEY_CHRONOSTATE = "chrono";
-	final String KEY_TRACKINGSTATE = "tracking";
-	final String KEY_ACTIVEBUTTON = "button";
-	final String KEY_POMODOROTHEME = "pomodoroTheme";
-	final String KEY_BREAKTHEME = "breakTheme";
+	static final String KEY_THEME = "theme";
+	static final String KEY_CHRONOSTATE = "chrono";
+	static final String KEY_TRACKINGSTATE = "tracking";
+	static final String KEY_ACTIVEBUTTON = "button";
+	static final String KEY_POMODOROTHEME = "pomodoroTheme";
+	static final String KEY_BREAKTHEME = "breakTheme";
 
-	final String KEY_POMODOROTIME = "pomodorotime";
-	final String KEY_SHORTBREAKTIME = "shortbreaktime";
-	final String KEY_LONGBREAKTIME = "longbreaktime";
-	final String KEY_REMEMBERTIME = "remembertime";
-	final String KEY_TAG = "tag";
-	final String KEY_COUNTER = "counter";
-	final String KEY_COUNTERPAUSETIME= "counterpausetime";
-	final String KEY_COUNTERTIMEBASE = "countertimebase";
-	final String KEY_COUNTERTIMELEFT = "countertimeleft";
-	final String KEY_COUNTERCOUNTUP= "countercountup";
+	static final String KEY_POMODOROTIME = "pomodorotime";
+	static final String KEY_SHORTBREAKTIME = "shortbreaktime";
+	static final String KEY_LONGBREAKTIME = "longbreaktime";
+	static final String KEY_POMODORO_UNTIL_BREAK = "pomodorountilbreak";
+	static final String KEY_REMEMBERTIME = "remembertime";
+	static final String KEY_TAG = "tag";
+	static final String KEY_COUNTER = "counter";
+	static final String KEY_COUNTERPAUSETIME= "counterpausetime";
+	static final String KEY_COUNTERTIMEBASE = "countertimebase";
+	static final String KEY_COUNTERTIMELEFT = "countertimeleft";
+	static final String KEY_COUNTERCOUNTUP= "countercountup";
 
 	public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -103,15 +113,6 @@ public class MainActivity extends Activity {
 
 		NavigationBarManager navi = new NavigationBarManager(this,
 				ACTIVITYNUMBER);
-
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		pomodoroTheme = settings.getString(KEY_POMODOROTHEME,
-				sqhelper.getTheme(1));
-		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
-		pomodoroTime = settings.getInt(KEY_POMODOROTIME, 25);
-		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
-		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
-		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
 		
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
@@ -119,7 +120,7 @@ public class MainActivity extends Activity {
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
 
 		pomodorosNum = sqhelper.getStartUpPomodoroCount();
-		pomodorosNumText.setTextColor(Color.parseColor("#fdf700"));
+		pomodorosNumText.setTextColor(Color.parseColor(COLOR_POMODORO));
 		pomodorosNumText.setText("" + pomodorosNum);
 
 		LinearLayout digramLayout = new LinearLayout(this);
@@ -138,15 +139,15 @@ public class MainActivity extends Activity {
 		axisLayout.addView(axis);
 
 		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime,
-				"#fdf700", maxValue);
+				COLOR_POMODORO, maxValue);
 		digramLayout.addView(pomodoroBar, barParams);
 
 		breakBar = new Bar(this, digram.getContext(), startBreakTime,
-				"#04B404", maxValue);
+				COLOR_BREAK, maxValue);
 		digramLayout.addView(breakBar, barParams);
 
 		trackBar = new Bar(this, digram.getContext(), startTrackingTime,
-				"#800080", maxValue);
+				COLOR_TRACKING, maxValue);
 		digramLayout.addView(trackBar, barParams);
 
 		controlListener = new ControlListener(this, sqhelper);
@@ -156,7 +157,7 @@ public class MainActivity extends Activity {
 		Typeface tf = Typeface.createFromAsset(getAssets(), "telegrama.otf");
 		// Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
-		timeText.setTextColor(Color.parseColor("#6495ED"));
+		timeText.setTextColor(Color.parseColor(COLOR_BLUE));
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
@@ -201,10 +202,18 @@ public class MainActivity extends Activity {
 		controlListener.themeListAdapter.getCursor().requery();
 		controlListener.themeListAdapter.notifyDataSetChanged();
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
-		controlListener.themePomodoroText.setText(pomodoroTheme);
-		controlListener.themeBreakText.setText(breakTheme);
 		
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		pomodoroTheme = settings.getString(KEY_POMODOROTHEME, sqhelper.getTheme(1));
+		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
+		pomodoroTime = settings.getInt(KEY_POMODOROTIME, 25);
+		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
+		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
+		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK, 4);
+		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
+		
+		controlListener.themePomodoroText.setText(pomodoroTheme);
+		controlListener.themeBreakText.setText(breakTheme);
 		controlListener.toogle(settings.getInt(KEY_TAG, -1));
 		
 		tracking = settings.getBoolean(KEY_TRACKINGSTATE, false);
@@ -284,17 +293,14 @@ public class MainActivity extends Activity {
 		// Pomodoro
 		case 0:
 			startCounter(pomodoroTime, tag);
-			Toast.makeText(this, "Start Pomodoro", Toast.LENGTH_SHORT).show();
 			break;
 		// Short Break
 		case 1:
 			startCounter(shortBreakTime, tag);
-			Toast.makeText(this, "Start ShortBreak", Toast.LENGTH_SHORT).show();
 			break;
 		// Long Break
 		case 2:
 			startCounter(longBreakTime, tag);
-			Toast.makeText(this, "Start LongBreak", Toast.LENGTH_SHORT).show();
 			break;
 		// Tracking
 		case 3:
@@ -372,7 +378,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void resetTimeText() {
-		timeText.setTextColor(Color.parseColor("#6495ED"));
+		timeText.setTextColor(Color.parseColor(COLOR_BLUE));
 		timeText.setText("00:00");
 	}
 
@@ -385,6 +391,11 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			Intent i = new Intent(this, SettingsActivity.class);
+			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+			break;
 		case R.id.delete_history:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("This will erase all data");

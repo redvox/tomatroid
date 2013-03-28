@@ -22,8 +22,30 @@
 	<string name="hide">Hide</string>
 	<string name="show">Shown</string>
 	<string name="name">Name</string>
-	<string name="parent">Parent</string>	
+	<string name="parent">Parent</string>
+	<string name="save">Save</string>
+	<string name="back">Back</string>		
+	
+	<string name="pomodoro_length">Pomodoro Length</string>
+	<string name="pomodoro_length_description">Length of an Pomodoro (in minutes)</string>
     
+	<string name="longbreak_length">Long Break Length</string>
+	<string name="longbreak_length_description">Length of the long break (in minutes)</string>
+	
+	<string name="shortbreak_length">Short Break Length</string>
+	<string name="shortbreak_length_description">Length of the short break (in minutes)</string>
+	
+	<string name="pomodoro_until_break">Pomodoros until break</string>
+	<string name="pomodoro_until_break_description">How many pomodoros do you want to make until the long break</string>
+	
+	<string name="vibrate">Vibrate</string>
+	<string name="vibrate_description">Pomodoro</string>
+	
+	<string name="rememberTime_length">Remember interval</string>
+	<string name="rememberTime_length_description">After a Countdown ended, when do you want to be reminded that it ended?\n(To make a pomodoro or take a break)</string>
+	
+	<string name="could_not_save_description">Could not save your input.\nPlease be sure to enter only numbers.</string>
+	
     <string-array name="action_list">
         <item>Today\'s Summary</item>
         <item>Statistics</item>
