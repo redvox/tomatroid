@@ -160,9 +160,6 @@ public class MainActivity extends Activity {
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
-		
-		// If the Activity was startet over notification, the counterFinish should not vibrate.
-		vibrate = getIntent().getBooleanExtra(AlarmReceiver.KEY_VIBRATE, true);
 	}
 
 	@Override
@@ -222,6 +219,9 @@ public class MainActivity extends Activity {
 			counter = loadCounterState(settings);
 			counter.start();
 		}
+		
+		// If the Activity was startet over notification, the counterFinish should not vibrate.
+//		vibrate = settings.getBoolean(AlarmReceiver.KEY_VIBRATE, false);
 		AlarmReceiver.cancelNotification(this);
 	}
 	
@@ -243,9 +243,7 @@ public class MainActivity extends Activity {
 			counter.toggleCountUp();
 		}
 		return counter;
-	}	
-	
-
+	}
 
 	public void startCounter(int minutes, int type) {
 		if (counter != null)
@@ -261,16 +259,16 @@ public class MainActivity extends Activity {
 	}
 
 	public void counterFinish(int tag) {
-//		resetTimeText();
 		long milliesBase = counter.getMilliesBase();
 		Counter newCounter = new Counter(rememberTime, this, timeText, tag);
 		newCounter.toggleCountUp();
 		newCounter.setBaseTime(milliesBase);
 		newCounter.start();
 
-		if(vibrate){
-			AlarmReceiver.fireVibration(this);
-		}
+//		if(vibrate){
+//			AlarmReceiver.fireVibration(this);
+//		}
+//		AlarmReceiver.setVibration(this, true);
 		
 		counter = newCounter;
 		dialogManager.show(tag, checkOnLongBreak());

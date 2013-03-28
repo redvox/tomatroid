@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
@@ -31,6 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		int type = intent.getIntExtra(KEY_TYPE, -1);
 		if(type == TYPE_ONLY_NOTIFICATION){
+//			setVibration(context, false);
 			fireVibration(context);
 			fireNotification(context, intent.getIntExtra(KEY_TAG, -1));
 		} else {
@@ -81,7 +83,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 //		mBuilder.addAction(android.R.drawable.btn_star, "Taking", getPendingIntent(context, TYPE_BUTTON_TAKE));
 
 		Intent resultIntent = new Intent(context, MainActivity.class);
-		resultIntent.putExtra(KEY_VIBRATE, false);
+//		resultIntent.putExtra(KEY_VIBRATE, false);
 		
 		mBuilder.setAutoCancel(true);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
@@ -115,5 +117,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 		Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 		// Only perform this pattern one time (-1 means "do not repeat")
 		v.vibrate(pattern, -1);
+	}
+	
+	public static void setVibration(Context context, boolean bool){
+		SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(KEY_VIBRATE, bool);
+		editor.commit();
 	}
 }
