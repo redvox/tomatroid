@@ -231,6 +231,7 @@ public class MainActivity extends Activity {
 			counter = loadCounterState(settings);
 			counter.start();
 		}
+		AlarmReceiver.cancelNotification(this);
 	}
 	
 	public void saveCounterState(SharedPreferences.Editor editor){
