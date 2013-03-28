@@ -29,8 +29,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.e("AlarmReceiver","AAAAALAAAARM! type " + intent.getType() + " action "+ intent.getAction() + " KEY_TYPE " + intent.getIntExtra(KEY_TYPE, -1) + " KEY_TAG " + intent.getIntExtra(KEY_TAG, -1));
-		
 		int type = intent.getIntExtra(KEY_TYPE, -1);
 		if(type == TYPE_ONLY_NOTIFICATION){
 			fireVibration(context);
@@ -101,8 +99,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.cancelAll();
 	}
-	
-	
 	
 	public static void fireVibration(Context context){
 		// // SOS
