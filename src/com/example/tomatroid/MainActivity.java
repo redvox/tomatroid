@@ -447,35 +447,6 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("This will end the activity");
-			builder.setCancelable(true);
-			builder.setPositiveButton("I agree", new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					if (counter != null)
-						counter.cancel();
-					MainActivity.this.finish();
-				}
-			});
-			builder.setNegativeButton("No, no", new OnClickListener() {
-
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-
-			});
-			AlertDialog dialog = builder.create();
-			dialog.show();
-			return true;
-		} else {
-			return super.onKeyDown(keyCode, event);
-		}
-	}
-
-	@Override
 	protected void onDestroy() {
 		// if (counter != null)
 		// counter.cancel();
