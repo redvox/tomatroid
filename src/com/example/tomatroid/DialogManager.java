@@ -32,11 +32,11 @@ public class DialogManager implements OnClickListener {
 		case 0:
 			if (longBreak) {
 				dialog = getBeforePomodoroDialog(mA);
-				dialog.setTitle("Long Breake!");
+				dialog.setTitle(mA.getString(R.string.longbreak));
 				dialog.setMessage("You are done with your Pomodoro, lets take a long break.");
 			} else {
 				dialog = getBeforePomodoroDialog(mA);
-				dialog.setTitle("Short Break!");
+				dialog.setTitle(mA.getString(R.string.shortbreak));
 				dialog.setMessage("You are done with your Pomodoro, lets take a short break.");
 			}
 			break;

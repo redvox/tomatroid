@@ -18,13 +18,24 @@
     <string name="theme_parent">Parent Theme</string>
 	<string name="breaks">Breaks</string>
 	<string name="pomodoros">Pomodoros</string>
-	<string name="sleep">Sleep</string>
 	<string name="hide">Hide</string>
 	<string name="show">Shown</string>
 	<string name="name">Name</string>
 	<string name="parent">Parent</string>
 	<string name="save">Save</string>
-	<string name="back">Back</string>		
+	<string name="back">Back</string>
+	<string name="insert">Insert</string>
+	<string name="change">Change</string>		
+	<string name="cancel">Cancel</string>
+	<string name="delete">Delete</string>
+	<string name="delete_theme">Delete Theme</string>
+	<string name="change_theme">Change Theme</string>
+	
+	<string name="pomodoro">Pomodoro</string>
+	<string name="longbreak">Long Break</string>
+	<string name="shortbreak">Short Break</string>
+	<string name="tracking">Tracking</string>
+	<string name="sleep">Sleep</string>
 	
 	<string name="pomodoro_length">Pomodoro Length</string>
 	<string name="pomodoro_length_description">Length of an Pomodoro (in minutes)</string>
@@ -45,6 +56,8 @@
 	<string name="rememberTime_length_description">After a Countdown ended, when do you want to be reminded that it ended?\n(To make a pomodoro or take a break)</string>
 	
 	<string name="could_not_save_description">Could not save your input.\nPlease be sure to enter only numbers.</string>
+	
+	<string name="give_time_to_other_theme">Soll die Zeit einem anderen Thema zugeordnet werden?\n(Standard ist übergeordnetes Thema)</string>
 	
     <string-array name="action_list">
         <item>Today\'s Summary</item>

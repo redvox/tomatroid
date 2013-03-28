@@ -86,11 +86,11 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		controlLayout.addView(line3);
 
 		// Controlls
-		commands.add("Pomodoro!");
-		commands.add("Pause Kurz!");
-		commands.add("Pause Lang!");
-		commands.add("Tracking!");
-		commands.add("Sleeping!");
+		commands.add(mA.getString(R.string.pomodoro));
+		commands.add(mA.getString(R.string.shortbreak));
+		commands.add(mA.getString(R.string.longbreak));
+		commands.add(mA.getString(R.string.tracking));
+		commands.add(mA.getString(R.string.sleep));
 
 		RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -214,7 +214,7 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		
 		// set dialog message
 		alertDialogBuilder
-				.setPositiveButton("Insert", new DialogInterface.OnClickListener() {
+				.setPositiveButton(mA.getString(R.string.insert), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						Cursor cc = (Cursor) parentSpinner.getSelectedItem();
@@ -226,7 +226,7 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 						themeListAdapter.notifyDataSetChanged();
 					}
 				})
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				.setNegativeButton(mA.getString(R.string.cancel), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();

@@ -139,7 +139,7 @@ public class ThemeList extends Activity {
 		View dialogView = mInflater.inflate(R.layout.dialog_newtheme, null);
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(dialogView);
-		alertDialogBuilder.setTitle("Thema ändern");
+		alertDialogBuilder.setTitle(getString(R.string.change_theme));
 
 		final EditText userInput = (EditText) dialogView
 				.findViewById(R.id.editTextDialogUserInput);
@@ -151,7 +151,7 @@ public class ThemeList extends Activity {
 		parentSpinner.setSelection(getIndex(parentSpinner, parent));
 		
 		// set dialog message
-		alertDialogBuilder.setPositiveButton("Verändern",
+		alertDialogBuilder.setPositiveButton(getString(R.string.change),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -164,13 +164,13 @@ public class ThemeList extends Activity {
 						showAdapter.getCursor().requery();
 						showAdapter.notifyDataSetChanged();
 					}
-				}).setNegativeButton("Abbrechen",
+				}).setNegativeButton(getString(R.string.cancel),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
 					}
-				}).setNeutralButton("Löschen", 
+				}).setNeutralButton(getString(R.string.delete), 
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -190,7 +190,7 @@ public class ThemeList extends Activity {
 		View dialogView = mInflater.inflate(R.layout.dialog_deletetheme, null);
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setView(dialogView);
-		alertDialogBuilder.setTitle("Thema löschen");
+		alertDialogBuilder.setTitle(getString(R.string.delete_theme));
 		
 		final Spinner parentSpinner = (Spinner) dialogView
 				.findViewById(R.id.parentspinner);
@@ -198,7 +198,7 @@ public class ThemeList extends Activity {
 		parentSpinner.setSelection(getIndex(parentSpinner, parent));
 		
 		// set dialog message
-		alertDialogBuilder.setPositiveButton("Löschen",
+		alertDialogBuilder.setPositiveButton(getString(R.string.delete),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -213,7 +213,7 @@ public class ThemeList extends Activity {
 							hideAdapter.notifyDataSetChanged();
 						}
 					}
-				}).setNegativeButton("Abbrechen",
+				}).setNegativeButton(getString(R.string.cancel),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
