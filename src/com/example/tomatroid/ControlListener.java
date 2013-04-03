@@ -46,6 +46,8 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 	SimpleCursorAdapter themeListAdapter;
 	ArrayList<String> themeList;
 
+	int backgroundColor = Color.WHITE;
+	
 	public ControlListener(MainActivity mA, SQHelper sqHelper) {
 		this.mA = mA;
 		this.sqHelper = sqHelper;
@@ -58,7 +60,14 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 		mInflater = (LayoutInflater) mA
 				.getSystemService(mA.LAYOUT_INFLATER_SERVICE);
-
+		
+		
+		RelativeLayout.LayoutParams relativeLayoutForTheme = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		relativeLayoutForTheme.addRule(RelativeLayout.CENTER_VERTICAL);
+		relativeLayoutForTheme.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		//######################################
 		View line1 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
 				false);
 		controlLayout.addView(line1);
@@ -68,8 +77,17 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		themePomodoroText.setOnClickListener(this);
 		themePomodoroText.setTextSize(20);
 		themePomodoroText.setTag(90);
-		controlLayout.addView(themePomodoroText);
-
+		themePomodoroText.setBackgroundColor(backgroundColor);
+//		controlLayout.addView(themePomodoroText);
+		
+		RelativeLayout rL1 = new RelativeLayout(mA);
+		rL1.setBackgroundColor(backgroundColor);
+		ImageView iV1 = new ImageView(rL1.getContext());
+		iV1.setBackgroundResource(android.R.drawable.ic_media_play);
+		rL1.addView(iV1, relativeLayoutForTheme);
+		rL1.addView(themePomodoroText);
+		controlLayout.addView(rL1);
+		//######################################
 		View line2 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
 				false);
 		controlLayout.addView(line2);
@@ -79,23 +97,33 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		themeBreakText.setOnClickListener(this);
 		themeBreakText.setTextSize(20);
 		themeBreakText.setTag(91);
-		controlLayout.addView(themeBreakText);
+		themeBreakText.setBackgroundColor(backgroundColor);
+//		controlLayout.addView(themeBreakText);
 
+		RelativeLayout rL2 = new RelativeLayout(mA);
+		rL2.setBackgroundColor(backgroundColor);
+		ImageView iV2 = new ImageView(rL1.getContext());
+		iV2.setBackgroundResource(android.R.drawable.ic_media_play);
+		rL2.addView(iV2, relativeLayoutForTheme);
+		rL2.addView(themeBreakText);
+		controlLayout.addView(rL2);
+		
+		//######################################
 		View line3 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
 				false);
 		controlLayout.addView(line3);
 
+		RelativeLayout.LayoutParams relativeLayoutForButtons = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		relativeLayoutForButtons.addRule(RelativeLayout.CENTER_VERTICAL);
+		
 		// Controlls
 		commands.add(mA.getString(R.string.pomodoro));
 		commands.add(mA.getString(R.string.shortbreak));
 		commands.add(mA.getString(R.string.longbreak));
 		commands.add(mA.getString(R.string.tracking));
 		commands.add(mA.getString(R.string.sleep));
-
-		RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
-		relativeParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
 		bA = new Button[commands.size()];
 		for (int i = 0; i < bA.length; i++) {
@@ -108,9 +136,9 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 			bA[i].setText(commands.get(i));
 			bA[i].setTag(i);
 			bA[i].setOnClickListener(this);
-			bA[i].setBackgroundColor(Color.WHITE);
+			bA[i].setBackgroundColor(backgroundColor);
 
-			rL.addView(iV, relativeParams);
+			rL.addView(iV, relativeLayoutForButtons);
 			rL.addView(bA[i]);
 
 			controlLayout.addView(rL);
@@ -162,20 +190,39 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		if (activeButton != -1) {
 			// Stop Other or Own
 			mA.end(activeButton);
-			bA[activeButton]
-					.startAnimation(StoredAnimation.slideHorizontal(55));
-			bA[activeButton].setTranslationX(0);
+			slideLeft(bA[activeButton]);
+			
+			if(activeButton == MainActivity.TYPE_POMODORO){
+				slideLeft(themePomodoroText);
+			} else if(activeButton == MainActivity.TYPE_LONGBREAK || activeButton == MainActivity.TYPE_TRACKING){
+				slideLeft(themeBreakText);
+			}
 		}
 
 		if (activeButton != tag) {
-			bA[tag].startAnimation(StoredAnimation.slideHorizontal(-55));
-			bA[tag].setTranslationX(55);
+			slideRight(bA[tag]);
+			if(tag == MainActivity.TYPE_POMODORO){
+				slideRight(themePomodoroText);
+			} else if( tag == MainActivity.TYPE_LONGBREAK || tag == MainActivity.TYPE_TRACKING){
+				slideRight(themeBreakText);
+			}
+			
 			// Start Own
 			mA.start(tag);
 			activeButton = tag;
 		} else {
 			activeButton = -1;
 		}
+	}
+	
+	public void slideRight(View view){
+		view.startAnimation(StoredAnimation.slideHorizontal(-55));
+		view.setTranslationX(55);
+	}
+	
+	public void slideLeft(View view){
+		view.startAnimation(StoredAnimation.slideHorizontal(55));
+		view.setTranslationX(0);
 	}
 
 	public void restart() {
@@ -185,9 +232,13 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 	public void stop() {
 		if (activeButton != -1) {
-			bA[activeButton]
-					.startAnimation(StoredAnimation.slideHorizontal(50));
-			bA[activeButton].setTranslationX(0);
+			slideLeft(bA[activeButton]);
+			if(activeButton == MainActivity.TYPE_POMODORO){
+				slideLeft(themePomodoroText);
+			} else if( activeButton == MainActivity.TYPE_LONGBREAK || activeButton == MainActivity.TYPE_TRACKING){
+				slideLeft(themeBreakText);
+			}
+			
 			mA.stop();
 			activeButton = -1;
 		}
@@ -198,6 +249,11 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 			activeButton = i;
 			// bA[tag].startAnimation(StoredAnimation.slideHorizontal(-55));
 			bA[activeButton].setTranslationX(55);
+			if(activeButton == MainActivity.TYPE_POMODORO){
+				themePomodoroText.setTranslationX(55);
+			} else if( activeButton == MainActivity.TYPE_LONGBREAK || activeButton == MainActivity.TYPE_TRACKING){
+				themeBreakText.setTranslationX(55);
+			}
 		}
 	}
 
