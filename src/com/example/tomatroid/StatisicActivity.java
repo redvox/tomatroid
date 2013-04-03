@@ -139,10 +139,11 @@ public class StatisicActivity extends Activity {
 
 	public String prepareInfoText(int[] array) {
 		if (array[2] != 0) {
-			return array[1] + " mins\n" + array[0] / array[2]
-					+ " per Day\n(over " + array[2] + " days)";
+			return Util.generateTimeText(array[1]) + " total\n"
+					+ Util.generateTimeText(array[1] / array[2])+ " per Day\n" +
+					"(over " + array[2] + " days)";
 		} else {
-			return "Keine Informationen";
+			return "nothing recorded yet";
 		}
 	}
 
