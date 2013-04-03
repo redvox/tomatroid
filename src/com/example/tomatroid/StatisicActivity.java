@@ -72,7 +72,7 @@ public class StatisicActivity extends Activity {
 
 		// Pomodoro Overview
 		int[] pomodoroInfoArray = sqHelper.getTotalCountTimeDays(
-				new int[] { SQHelper.TYPE_POMODORO }, new int[] {});
+				new int[] { SQHelper.TYPE_POMODORO }, new int[] {}, new int[] {});
 		TextView pomodoroCount = (TextView) findViewById(R.id.statistic_pomodoroCount);
 		pomodoroCount.setText("" + pomodoroInfoArray[0]);
 		TextView pomodoroInfo = (TextView) findViewById(R.id.statistic_pomodoroInfo);
@@ -81,17 +81,13 @@ public class StatisicActivity extends Activity {
 		// Long Break Overview
 		int[] breakInfoArray = sqHelper.getTotalCountTimeDays(new int[] {
 				SQHelper.TYPE_LONGBREAK, SQHelper.TYPE_SHORTBREAK },
-				new int[] {});
-		TextView breakCount = (TextView) findViewById(R.id.statistic_breakCount);
-		breakCount.setText("" + breakInfoArray[0]);
+				new int[] {}, new int[] {});
 		TextView breakInfo = (TextView) findViewById(R.id.statistic_breakInfo);
 		breakInfo.setText(prepareInfoText(breakInfoArray));
 
 		// Sleep Overview
 		int[] sleepInfoArray = sqHelper.getTotalCountTimeDays(
-				new int[] { SQHelper.TYPE_SLEEPING }, new int[] {});
-		TextView sleepCount = (TextView) findViewById(R.id.statistic_sleepCount);
-		sleepCount.setText("" + sleepInfoArray[0]);
+				new int[] { SQHelper.TYPE_SLEEPING }, new int[] {}, new int[] {});
 		TextView sleepInfo = (TextView) findViewById(R.id.statistic_sleepInfo);
 		sleepInfo.setText(prepareInfoText(sleepInfoArray));
 
@@ -167,10 +163,6 @@ public class StatisicActivity extends Activity {
 			LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.theme_statistic_list_row, null);
 			
-//			Log.e("Statistic Theme Adapter", "getCalled");
-//			Log.e("Statistic Theme Adapter", "position " +position);
-//			Log.e("Statistic Theme Adapter", "value " +values.get(position));
-			
 			int themeId = sqHelper.getTheme(values.get(position));
 
 			TextView rankText = (TextView) v.findViewById(R.id.rankText);
@@ -178,7 +170,7 @@ public class StatisicActivity extends Activity {
 			rankText.append(". ");
 
 			int[] themeInfo = sqHelper.getTotalCountTimeDays(new int[] {},
-					new int[] { themeId });
+					new int[] { themeId }, new int[] {});
 			TextView infoText = (TextView) v.findViewById(R.id.infoText);
 			infoText.setText(prepareInfoText(themeInfo));
 

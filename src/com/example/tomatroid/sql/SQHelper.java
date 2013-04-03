@@ -126,53 +126,6 @@ public class SQHelper extends SQLiteOpenHelper {
 		c.close();
 		return count;
 	}
-
-//	public int[] getTotalCountTimeDays(int[] types, int[] themes) {
-//		return getTotalCountTimeDays(types, themes, new int[0]);
-//	}
-
-	public int[] getTotalCountTimeDays(int[] types, int[] themes) {
-		int[] info = new int[3];
-
-		StringBuffer where = new StringBuffer();
-
-		if (types.length > 0 && themes.length > 0) {
-			where.append("(");
-		}
-
-		if (types.length > 0) {
-			for (int i = 0; i < types.length - 1; i++) {
-				where.append(KEY_TYPE + " = " + types[i] + " OR ");
-			}
-			where.append(KEY_TYPE + " = " + types[types.length - 1]);
-		}
-
-		if (types.length > 0 && themes.length > 0) {
-			where.append(") AND (");
-		}
-
-		if (themes.length > 0) {
-			for (int i = 0; i < themes.length - 1; i++) {
-				where.append(KEY_THEME + " = " + themes[i] + " OR ");
-			}
-			where.append(KEY_THEME + " = " + themes[themes.length - 1]);
-		}
-
-		if (types.length > 0 && themes.length > 0) {
-			where.append(")");
-		}
-
-		openDatabase();
-		Cursor c;
-		c = db.query(TABLE_DATES, null, where.toString(), null, null, null,
-				null);
-
-		info[0] = c.getCount();
-		info[1] = calculateDuration(c);
-		info[2] = calculateDays(c);
-		c.close();
-		return info;
-	}
 	
 	public int[] getTotalCountTimeDays(int[] types, int[] themes, int[] date) {
 		int[] info = new int[3];

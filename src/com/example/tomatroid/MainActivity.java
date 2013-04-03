@@ -170,13 +170,7 @@ public class MainActivity extends Activity {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(KEY_POMODOROTHEME, pomodoroTheme);
 		editor.putString(KEY_BREAKTHEME, breakTheme);
-		
 		editor.putInt(KEY_TAG, controlListener.activeButton);
-		
-//		editor.putInt(KEY_POMODOROTIME, pomodoroTime);
-//		editor.putInt(KEY_SHORTBREAKTIME, shortBreakTime);
-//		editor.putInt(KEY_LONGBREAKTIME, longBreakTime);
-//		editor.putInt(KEY_REMEMBERTIME, rememberTime);
 		
 		if(tracking){
 			long elapsedMillis = timeText.getBase();
