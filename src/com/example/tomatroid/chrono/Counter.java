@@ -82,7 +82,7 @@ public class Counter extends CountDownTimer {
 
 	public void toggleCountUp() {
 		countUp = true;
-		timeText.setTextColor(Color.parseColor(MainActivity.COLOR_RED));
+		timeText.setTextColor(MainActivity.COLOR_RED);
 	}
 
 	public boolean isCountUp() {

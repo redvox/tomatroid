@@ -33,7 +33,7 @@ public class Bar extends View {
 	Paint text;
 	Paint white;
 
-	public Bar(MainActivity mA, Context context, int value, String colorString, int maxValue) {
+	public Bar(MainActivity mA, Context context, int value, int colorString, int maxValue) {
 		super(context);
 		this.mA = mA;
 		this.context = context;
@@ -41,7 +41,7 @@ public class Bar extends View {
 		this.maxValue = maxValue;
 
 		color = new Paint();
-		color.setColor(Color.parseColor(colorString));
+		color.setColor(colorString);
 
 		text = new Paint();
 		text.setTextSize(30);

@@ -3,9 +3,6 @@ package com.example.tomatroid;
 import java.util.ArrayList;
 
 import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.example.tomatroid.digram.BarChart;
 import com.example.tomatroid.digram.DayBarChart;
@@ -22,15 +19,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;

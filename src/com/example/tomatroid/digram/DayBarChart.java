@@ -34,7 +34,6 @@ public class DayBarChart extends View {
 	Paint breakPaint;
 	Paint trackPaint;
 	Paint sleepPaint;
-//	Paint nowPaint = new Paint(Color.parseColor(MainActivity.COLOR_RED));
 	Paint nowPaint;
 	Paint textPaint;
 	Paint stroke;
@@ -44,15 +43,15 @@ public class DayBarChart extends View {
 		super(context);
 		
 		pomodoroPaint = new Paint();
-		pomodoroPaint.setColor(Color.parseColor(MainActivity.COLOR_POMODORO));
+		pomodoroPaint.setColor(MainActivity.COLOR_POMODORO);
 		breakPaint = new Paint();
-		breakPaint.setColor(Color.parseColor(MainActivity.COLOR_BREAK));
+		breakPaint.setColor(MainActivity.COLOR_BREAK);
 		trackPaint = new Paint();
-		trackPaint.setColor(Color.parseColor(MainActivity.COLOR_TRACKING));
+		trackPaint.setColor(MainActivity.COLOR_TRACKING);
 		sleepPaint = new Paint();
-		sleepPaint.setColor(Color.parseColor(MainActivity.COLOR_SLEEP));
+		sleepPaint.setColor(MainActivity.COLOR_SLEEP);
 		nowPaint = new Paint();
-		nowPaint.setColor(Color.parseColor(MainActivity.COLOR_RED));
+		nowPaint.setColor(MainActivity.COLOR_RED);
 //		nowPaint.setStrokeWidth(10);
 		
 		stroke = new Paint();

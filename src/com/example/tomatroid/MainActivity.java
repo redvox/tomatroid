@@ -41,13 +41,19 @@ public class MainActivity extends Activity {
 	public static final int TYPE_TRACKING = 3;
 	public static final int TYPE_SLEEPING = 4;
 	
-	public static final String COLOR_POMODORO = "#fdf700";
-	public static final String COLOR_BREAK = "#04B404";
-	public static final String COLOR_TRACKING = "#800080";
-	public static final String COLOR_SLEEP = "#A4A4A4";
-	public static final String COLOR_BLUE = "#6495ED";
-	public static final String COLOR_RED = "#DC143C";
+	public static final String COLOR_STRING_POMODORO = "#fdf700";
+	public static final String COLOR_STRING_BREAK = "#04B404";
+	public static final String COLOR_STRING_TRACKING = "#800080";
+	public static final String COLOR_STRING_SLEEP = "#A4A4A4";
+	public static final String COLOR_STRING_BLUE = "#6495ED";
+	public static final String COLOR_STRING_RED = "#DC143C";
 	
+	public static final int COLOR_POMODORO = Color.parseColor(COLOR_STRING_POMODORO);
+	public static final int COLOR_BREAK =Color.parseColor(COLOR_STRING_BREAK);
+	public static final int COLOR_TRACKING = Color.parseColor(COLOR_STRING_TRACKING);
+	public static final int COLOR_SLEEP = Color.parseColor(COLOR_STRING_SLEEP);
+	public static final int COLOR_BLUE = Color.parseColor(COLOR_STRING_BLUE);
+	public static final int COLOR_RED = Color.parseColor(COLOR_STRING_RED);
 	
 	LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT);
@@ -157,7 +163,7 @@ public class MainActivity extends Activity {
 		Typeface tf = Typeface.createFromAsset(getAssets(), "telegrama.otf");
 		// Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
-		timeText.setTextColor(Color.parseColor(COLOR_BLUE));
+		timeText.setTextColor(COLOR_BLUE);
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
@@ -212,11 +218,11 @@ public class MainActivity extends Activity {
 		controlListener.toogle(tag);
 
 		if(tag == TYPE_TRACKING){
-			timeText.setTextColor(Color.parseColor(COLOR_TRACKING));
+			timeText.setTextColor(COLOR_TRACKING);
 		} else if( tag == TYPE_LONGBREAK || tag == TYPE_TRACKING){
-			timeText.setTextColor(Color.parseColor(COLOR_BREAK));
+			timeText.setTextColor(COLOR_BREAK);
 		} else if(tag == TYPE_SLEEPING){
-			timeText.setTextColor(Color.parseColor(COLOR_SLEEP));
+			timeText.setTextColor(COLOR_SLEEP);
 		}
 		
 		tracking = settings.getBoolean(KEY_TRACKINGSTATE, false);
@@ -298,22 +304,22 @@ public class MainActivity extends Activity {
 			break;
 		case TYPE_SHORTBREAK:
 			startCounter(shortBreakTime, tag);
-			timeText.setTextColor(Color.parseColor(COLOR_BREAK));
+			timeText.setTextColor(COLOR_BREAK);
 			break;
 		case TYPE_LONGBREAK:
 			startCounter(longBreakTime, tag);
-			timeText.setTextColor(Color.parseColor(COLOR_BREAK));
+			timeText.setTextColor(COLOR_BREAK);
 			break;
 		case TYPE_TRACKING:
 			timeText.setBase(SystemClock.elapsedRealtime());
 			timeText.start();
-			timeText.setTextColor(Color.parseColor(COLOR_TRACKING));
+			timeText.setTextColor(COLOR_TRACKING);
 			tracking = true;
 			break;
 		case TYPE_SLEEPING:
 			timeText.setBase(SystemClock.elapsedRealtime());
 			timeText.start();
-			timeText.setTextColor(Color.parseColor(COLOR_SLEEP));
+			timeText.setTextColor(COLOR_SLEEP);
 			tracking = true;
 			break;
 		}
