@@ -110,6 +110,12 @@ public class SQHelper extends SQLiteOpenHelper {
 		return db.query(TABLE_THEME, null, KEY_HIDE +" = "+hideStatus, null, null, null,
 				KEY_OVERALLTIME+ " DESC");
 	}
+	
+	public Cursor getCursorForDay(int day, int month, int year){
+		openDatabase();
+		return db.query(TABLE_DATES, null, KEY_DATE_DAY +" = "+day+" AND "+KEY_DATE_MONTH +" = "+month+" AND "+KEY_DATE_YEAR +" = "+year, null, null, null,
+				null);
+	}
 
 	public int getStartUpPomodoroCount() {
 		openDatabase();
