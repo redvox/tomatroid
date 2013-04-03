@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
 	public static final String COLOR_POMODORO = "#fdf700";
 	public static final String COLOR_BREAK = "#04B404";
 	public static final String COLOR_TRACKING = "#800080";
-	public static final String COLOR_SLEEP = "#fdf700";
+	public static final String COLOR_SLEEP = "#A4A4A4";
 	public static final String COLOR_BLUE = "#6495ED";
 	public static final String COLOR_RED = "#DC143C";
 	
@@ -211,10 +211,19 @@ public class MainActivity extends Activity {
 		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
 		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK, 4);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
-		
+
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
-		controlListener.toogle(settings.getInt(KEY_TAG, -1));
+		int tag = settings.getInt(KEY_TAG, -1);
+		controlListener.toogle(tag);
+
+		if(tag == TYPE_TRACKING){
+			timeText.setTextColor(Color.parseColor(COLOR_TRACKING));
+		} else if( tag == TYPE_LONGBREAK || tag == TYPE_TRACKING){
+			timeText.setTextColor(Color.parseColor(COLOR_BREAK));
+		} else if(tag == TYPE_SLEEPING){
+			timeText.setTextColor(Color.parseColor(COLOR_SLEEP));
+		}
 		
 		tracking = settings.getBoolean(KEY_TRACKINGSTATE, false);
 		if (tracking) {
@@ -290,28 +299,27 @@ public class MainActivity extends Activity {
 	 */
 	public void start(int tag) {
 		switch (tag) {
-		// Pomodoro
-		case 0:
+		case TYPE_POMODORO:
 			startCounter(pomodoroTime, tag);
 			break;
-		// Short Break
-		case 1:
+		case TYPE_SHORTBREAK:
 			startCounter(shortBreakTime, tag);
+			timeText.setTextColor(Color.parseColor(COLOR_BREAK));
 			break;
-		// Long Break
-		case 2:
+		case TYPE_LONGBREAK:
 			startCounter(longBreakTime, tag);
+			timeText.setTextColor(Color.parseColor(COLOR_BREAK));
 			break;
-		// Tracking
-		case 3:
+		case TYPE_TRACKING:
 			timeText.setBase(SystemClock.elapsedRealtime());
 			timeText.start();
+			timeText.setTextColor(Color.parseColor(COLOR_TRACKING));
 			tracking = true;
 			break;
-		// Sleeping
-		case 4:
+		case TYPE_SLEEPING:
 			timeText.setBase(SystemClock.elapsedRealtime());
 			timeText.start();
+			timeText.setTextColor(Color.parseColor(COLOR_SLEEP));
 			tracking = true;
 			break;
 		}
