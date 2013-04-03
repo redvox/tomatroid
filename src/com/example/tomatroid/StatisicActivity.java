@@ -8,11 +8,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.example.tomatroid.digram.BarChart;
+import com.example.tomatroid.digram.DayBarChart;
 import com.example.tomatroid.digram.LineChart;
 import com.example.tomatroid.digram.PieChart;
 import com.example.tomatroid.sql.SQHelper;
 import com.example.tomatroid.util.NavigationBarManager;
 import com.example.tomatroid.util.StoredAnimation;
+import com.example.tomatroid.util.Util;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -104,11 +106,13 @@ public class StatisicActivity extends Activity {
 		themelist.setAdapter(new ThemeListAdapter(getApplicationContext(),
 				R.layout.theme_statistic_list_row, R.id.themeText, valueList));
 
-		int[] barValues = new int[] { 3, 10, 4, 5, 6, 7, 8 };
+//		int[] barValues = new int[] { 3, 10, 4, 5, 6, 7, 8 };
+//		BarChart multiBar = new BarChart(this, barValues);+
+//		statistic_flipper.addView(multiBar);
 		
-		BarChart multiBar = new BarChart(this, barValues);
-		statistic_flipper.addView(multiBar);
 		
+		DayBarChart daychart = new DayBarChart(this);
+		statistic_flipper.addView(daychart);
 		
 		int[][] barValues1 = new int[][] { new int[] { 3, 10, 4, 5, 6, 7, 8 },
 				new int[] { 3, 3, 3, 3, 3, 3, 3 },
@@ -139,14 +143,14 @@ public class StatisicActivity extends Activity {
 
 	public String prepareInfoText(int[] array) {
 		if (array[2] != 0) {
-			return Util.generateTimeText(array[1]) + " total\n"
+			return Util.generateTimeText(array[1]) + " total\n" 
 					+ Util.generateTimeText(array[1] / array[2])+ " per Day\n" +
 					"(over " + array[2] + " days)";
 		} else {
 			return "nothing recorded yet";
 		}
 	}
-
+	
 	class ThemeListAdapter extends ArrayAdapter<String> {
 
 		ArrayList<String> values;
