@@ -17,7 +17,6 @@
         <activity
             android:name="com.example.tomatroid.MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,28 +27,23 @@
         <activity
             android:name="com.example.tomatroid.ThemeList"
             android:theme="@android:style/Theme.Holo.Light" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.example.tomatroid.StatisicActivity"
             android:theme="@android:style/Theme.Holo.Light" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.example.tomatroid.DatabaseList"
             android:theme="@android:style/Theme.Holo.Light" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
 
         <receiver android:name="com.example.tomatroid.util.AlarmReceiver" />
 
         <activity android:name="com.example.tomatroid.SettingsActivity" >
+        </activity>
+        <activity
+            android:name="com.example.tomatroid.WeeklyActivity"
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
     </application>
 
