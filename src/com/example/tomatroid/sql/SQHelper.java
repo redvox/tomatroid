@@ -91,10 +91,6 @@ public class SQHelper extends SQLiteOpenHelper {
 	}
 
 	public Cursor getDatesCursor() {
-		// String[] columns = new String[] { SQHelper.KEY_ROWID,
-		// SQHelper.KEY_DATE_DAY,
-		// SQHelper.KEY_DATE_MONTH, SQHelper.KEY_DATE_YEAR, SQHelper.KEY_TYPE,
-		// SQHelper.KEY_THEME };
 		openDatabase();
 		return db.query(TABLE_DATES, null, null, null, null, null, null);
 	}
@@ -117,216 +113,143 @@ public class SQHelper extends SQLiteOpenHelper {
 				null);
 	}
 
-	public int getStartUpPomodoroCount() {
+	public int getTodayCountOf(int type) {		
 		openDatabase();
 		DateTime dt = new DateTime();
-		int day = dt.getDayOfMonth();
-		int month = dt.getMonthOfYear();
-		int year = dt.getYear();
 
-		Cursor c = db.query(TABLE_DATES, null, KEY_DATE_DAY + " = " + day
-				+ " AND " + KEY_DATE_MONTH + " = " + month + " AND "
-				+ KEY_DATE_YEAR + " = " + year + " AND " + KEY_TYPE + " = "
-				+ TYPE_POMODORO, null, null, null, null);
-		int count = c.getCount();
-		c.close();
-		return count;
+		return getCount(KEY_ROWID, new String[][]{{
+			KEY_DATE_DAY, 
+			KEY_DATE_MONTH, 
+			KEY_DATE_YEAR, 
+			KEY_TYPE}}, 
+			new int[][]{{
+				dt.getDayOfMonth(), 
+				dt.getMonthOfYear(), 
+				dt.getYear(), 
+				type
+				}});
 	}
 	
-	public int[] getTotalCountTimeDays(int[] types, int[] themes, int[] date) {
-		int[] info = new int[3];
+	public int getTodaySumOf(int type) {
+		openDatabase();
+		DateTime dt = new DateTime();
+		
+		return getSum(KEY_DURATION, new String[][]{{
+			KEY_DATE_DAY, 
+			KEY_DATE_MONTH, 
+			KEY_DATE_YEAR, 
+			KEY_TYPE}}, 
+			new int[][]{{
+				dt.getDayOfMonth(), 
+				dt.getMonthOfYear(), 
+				dt.getYear(), 
+				type
+				}});
+	}
+	
+	public int getTotalDurationWithoutSleep() {
+		openDatabase();
+
+		Cursor cursor = db
+				.rawQuery("SELECT SUM("+ KEY_DURATION +") FROM "+ TABLE_DATES +" WHERE "+ KEY_TYPE +" != "+ TYPE_SLEEPING, null);
+		if (cursor.moveToFirst()) {
+			return cursor.getInt(0);
+		} else {
+			return 0;
+		}
+	}
+
+	public int getSum(String field, String[][] keys, int[][] values) {
+		openDatabase();
+		
+		String where = buildDNFWhereSQLStatement(keys, values);
+		Cursor cursor = db
+				.rawQuery("SELECT SUM("+ field +") FROM "+ TABLE_DATES +" WHERE "+ where, null);
+		if (cursor.moveToFirst()) {
+			return cursor.getInt(0);
+		} else {
+			return 0;
+		}
+	}
+	
+	public int getCount(String field, String[][] keys, int[][] values) {
+		openDatabase();
+		
+		String where = buildDNFWhereSQLStatement(keys, values);
+		Cursor cursor = db
+				.rawQuery("SELECT COUNT("+ field +") FROM "+ TABLE_DATES +" WHERE "+ where, null);
+		if (cursor.moveToFirst()) {
+			return cursor.getInt(0);
+		} else {
+			return 0;
+		}
+	}
+	
+	public int getGroupCount(String[] groupe, String[][] keys, int[][] values){
+		openDatabase();
+	
+		String where = buildDNFWhereSQLStatement(keys, values);
+		StringBuffer sb = new StringBuffer();
+		
+		for (int k = 0; k < groupe.length - 1; k++) {
+			sb.append(groupe[k] + ", ");
+		}
+		sb.append(groupe[groupe.length - 1]);
+		
+		Cursor cursor = db
+				.rawQuery("SELECT * FROM "+ TABLE_DATES +" WHERE "+ where + " GROUP BY "+sb.toString(), null);
+		if (cursor.moveToFirst()) {
+			return cursor.getCount();
+		} else {
+			return 0;
+		}
+	}
+	
+	public String buildDNFWhereSQLStatement(String[][] keys, int[][] values) {
+
+		ArrayList<StringBuffer> bufferArray = new ArrayList<StringBuffer>();
+
+		for (int i = 0; i < keys.length; i++) {
+			StringBuffer sb = new StringBuffer();
+			for (int k = 0; k < keys[i].length - 1; k++) {
+				sb.append(keys[i][k] + " = " + values[i][k] + " AND ");
+			}
+			sb.append(keys[i][keys[i].length - 1] + " = " + values[i][keys[i].length - 1]);
+			bufferArray.add(sb);
+		}
 
 		StringBuffer finalwhere = new StringBuffer();
-		StringBuffer where1 = null;
-		StringBuffer where2 = null;
-		StringBuffer where3 = null;
+		for (int h = 0; h < bufferArray.size() - 1; h++) {
+			finalwhere.append(bufferArray.get(h)+" OR ");
+		}
+		finalwhere.append(bufferArray.get(bufferArray.size()-1));
 
-		// TYPE HERE
-		if (types.length > 0) {
-			where1 = new StringBuffer();
-			where1.append("(");
-			for (int i = 0; i < types.length - 1; i++) {
-				where1.append(KEY_TYPE + " = " + types[i] + " OR ");
-			}
-			where1.append(KEY_TYPE + " = " + types[types.length - 1]);
-			where1.append(")");
-		}
-
-		// THEME WHERE
-		if (themes.length > 0) {
-			where2 = new StringBuffer();
-			where2.append("(");
-			for (int i = 0; i < themes.length - 1; i++) {
-				where2.append(KEY_THEME + " = " + themes[i] + " OR ");
-			}
-			where2.append(KEY_THEME + " = " + themes[themes.length - 1]);
-			where2.append(")");
-		}
-
-		// DATE WHERE
-		
-		if (date.length > 0) {
-			where3 = new StringBuffer();
-			where3.append("(");
-			where3.append(KEY_DATE_DAY + " = " + date[0] + " AND ");
-			where3.append(KEY_DATE_MONTH + " = " + date[1] + " AND ");
-			where3.append(KEY_DATE_YEAR + " = " + date[2]);
-			where3.append(")");
-		}
-		
-//		if(where1 != null && where2 != null && where3 != null){
-//			finalwhere.append("(");
-//			finalwhere.append(where1.toString());
-//			finalwhere.append(") AND (");
-//			finalwhere.append(where2.toString());
-//			finalwhere.append(") AND (");
-//			finalwhere.append(where3.toString());
-//			finalwhere.append(")");
-//		}
-		
-		if(where1 != null){
-			finalwhere.append(where1.toString());
-		}
-		
-		if(where1 != null && where2 != null){
-			finalwhere.append(" AND ");
-		}
-		
-		if(where2 != null){
-			finalwhere.append(where2.toString());
-		}
-		
-		if(where3 != null && (where1 != null || where2 != null)){
-			finalwhere.append(" AND ");
-		}
-		
-		if(where3 != null){
-			finalwhere.append(where3.toString());
-		}
-		
-		openDatabase();
-		Cursor c;
-		c = db.query(TABLE_DATES, null, finalwhere.toString(), null, null, null,
-				null);
-
-		info[0] = c.getCount();
-		info[1] = calculateDuration(c);
-		info[2] = calculateDays(c);
-		
-		c.close();
-		return info;
+		return finalwhere.toString();
 	}
 
-	public int getStartUpPomodoroTime() {
-		openDatabase();
-		DateTime dt = new DateTime();
-		int day = dt.getDayOfMonth();
-		int month = dt.getMonthOfYear();
-		int year = dt.getYear();
-
-		Cursor c = db.query(TABLE_DATES, new String[] { KEY_DURATION, },
-				KEY_DATE_DAY + " = " + day + " AND " + KEY_DATE_MONTH + " = "
-						+ month + " AND " + KEY_DATE_YEAR + " = " + year
-						+ " AND " + KEY_TYPE + " = " + TYPE_POMODORO, null,
-				null, null, null);
-
-		int duration = calculateDuration(c);
-
-		c.close();
-		return duration;
-	}
-
-	public int getStartUpBreakTime() {
-		openDatabase();
-		DateTime dt = new DateTime();
-		int day = dt.getDayOfMonth();
-		int month = dt.getMonthOfYear();
-		int year = dt.getYear();
-
-		Cursor c = db.query(TABLE_DATES, new String[] { KEY_DURATION, },
-				KEY_DATE_DAY + " = " + day + " AND " + KEY_DATE_MONTH + " = "
-						+ month + " AND " + KEY_DATE_YEAR + " = " + year
-						+ " AND (" + KEY_TYPE + " = " + TYPE_SHORTBREAK
-						+ " OR " + KEY_TYPE + " = " + TYPE_LONGBREAK + ")",
-				null, null, null, null);
-
-		int duration = calculateDuration(c);
-		c.close();
-		return duration;
-	}
-	
-	public int getStartUpTrackingCount() {
-		openDatabase();
-		DateTime dt = new DateTime();
-		int day = dt.getDayOfMonth();
-		int month = dt.getMonthOfYear();
-		int year = dt.getYear();
-
-		Cursor c = db.query(TABLE_DATES, new String[] { KEY_DURATION, },
-				KEY_DATE_DAY + " = " + day + " AND " + KEY_DATE_MONTH + " = "
-						+ month + " AND " + KEY_DATE_YEAR + " = " + year
-						+ " AND " + KEY_TYPE + " = " + TYPE_TRACKING,
-				null, null, null, null);
-
-		int duration = calculateDuration(c);
-		c.close();
-		return duration;
-	}
-
-	public int calculateDuration(Cursor c) {
-		int duration = 0;
-		int column = c.getColumnIndex(KEY_DURATION);
-		if (c.moveToFirst()) {
-			do {
-				duration += c.getInt(column);
-			} while (c.moveToNext());
-		}
-		return duration;
-	}
-
-	public int calculateDays(Cursor c) {
-		int days = 0;
-		int day_column = c.getColumnIndex(KEY_DATE_DAY);
-		int month_column = c.getColumnIndex(KEY_DATE_MONTH);
-
-		int day_tmp = -1;
-		int month_tmp = -1;
-		if (c.moveToFirst()) {
-			do {
-				if (c.getInt(day_column) != day_tmp
-						|| c.getInt(month_column) != month_tmp) {
-					day_tmp = c.getInt(day_column);
-					month_tmp = c.getInt(month_column);
-					days++;
-				}
-			} while (c.moveToNext());
-		}
-		return days;
-	}
-
-	public Cursor getLastXDays(int x) {
-		openDatabase();
-		DateTime dt = new DateTime();
-		int day = dt.getDayOfMonth();
-		int month = dt.getMonthOfYear();
-		int year = dt.getYear();
-
-		dt = dt.minusDays(x);
-		int old_day = dt.getDayOfMonth();
-		int old_month = dt.getMonthOfYear();
-		int old_year = dt.getYear();
-
-		return db.query(TABLE_DATES, new String[] { KEY_DATE_WEEKDAY, KEY_TYPE,
-				KEY_DURATION }, "(" + KEY_DATE_DAY + " <= " + day + " AND "
-				+ KEY_DATE_MONTH + " <= " + month + " AND " + KEY_DATE_YEAR
-				+ " <= " + year
-
-				+ " AND " + KEY_DATE_DAY + " >= " + old_day + " AND "
-				+ KEY_DATE_MONTH + " >= " + old_month + " AND " + KEY_DATE_YEAR
-				+ " >= " + old_year
-
-				+ ")", null, null, null, null);
-	}
+//	public Cursor getLastXDays(int x) {
+//		openDatabase();
+//		DateTime dt = new DateTime();
+//		int day = dt.getDayOfMonth();
+//		int month = dt.getMonthOfYear();
+//		int year = dt.getYear();
+//
+//		dt = dt.minusDays(x);
+//		int old_day = dt.getDayOfMonth();
+//		int old_month = dt.getMonthOfYear();
+//		int old_year = dt.getYear();
+//
+//		return db.query(TABLE_DATES, new String[] { KEY_DATE_WEEKDAY, KEY_TYPE,
+//				KEY_DURATION }, "(" + KEY_DATE_DAY + " <= " + day + " AND "
+//				+ KEY_DATE_MONTH + " <= " + month + " AND " + KEY_DATE_YEAR
+//				+ " <= " + year
+//
+//				+ " AND " + KEY_DATE_DAY + " >= " + old_day + " AND "
+//				+ KEY_DATE_MONTH + " >= " + old_month + " AND " + KEY_DATE_YEAR
+//				+ " >= " + old_year
+//
+//				+ ")", null, null, null, null);
+//	}
 
 	public void addTheme(String name, int parentId) {
 		openDatabase();
@@ -371,7 +294,7 @@ public class SQHelper extends SQLiteOpenHelper {
 		if (c.moveToFirst()) {
 			name = c.getString(0);
 		}
-		// c.close();
+		c.close();
 
 		return name;
 	}
