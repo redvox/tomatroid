@@ -33,7 +33,8 @@ public class StatisicActivity extends Activity {
 	LayoutParams barParams = new TableLayout.LayoutParams(
 			LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
 	SQHelper sqHelper = new SQHelper(this);
-
+	int activityDiagramLength = 14;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -147,7 +148,7 @@ public class StatisicActivity extends Activity {
 		ArrayList<String> nameList;
 		ArrayList<Integer> idList;
 		int totalWithoutSleep ;
-		int[][] dates = Util.getLastXDatesArray(7);
+		int[][] dates = Util.getLastXDatesArray(activityDiagramLength);
 		int rank = 1;
 		
 		public ThemeListAdapter(Context context, int layoutViewResourceId,
@@ -173,29 +174,10 @@ public class StatisicActivity extends Activity {
 						SQHelper.KEY_THEME}}, 
 						new int[][]{{
 							themeId}});
-			
+
 			TextView infoText = (TextView) v.findViewById(R.id.infoText);
 			infoText.setText(prepareInfoText(totalDuration, themeId));
-
-			int[] barValues = new int[7];
-			for (int i = 0; i < 7; i++) {
-				barValues[i] = sqHelper.getSum(
-						SQHelper.KEY_DURATION, 
-						new String[][]{{
-					SQHelper.KEY_THEME, 
-					SQHelper.KEY_DATE_DAY, 
-					SQHelper.KEY_DATE_MONTH, 
-					SQHelper.KEY_DATE_YEAR}}, 
-					new int[][]{{
-						themeId,
-						dates[i][0], 
-						dates[i][1], 
-						dates[i][2]}}); 
-			}
-
-			BarChart bars2 = (BarChart) v.findViewById(R.id.barChart);
-			bars2.setValues(barValues);
-
+			
 			PieChart pieChart = (PieChart) v.findViewById(R.id.pieChart);
 			int pomodoroDuration = sqHelper.getSum(
 					SQHelper.KEY_DURATION, 
@@ -235,6 +217,26 @@ public class StatisicActivity extends Activity {
 					MainActivity.COLOR_TRACKING,
 					MainActivity.COLOR_SLEEP
 					});
+			
+			
+			int[] barValues = new int[activityDiagramLength];
+			for (int i = 0; i < activityDiagramLength; i++) {
+				barValues[i] = sqHelper.getSum(
+						SQHelper.KEY_DURATION, 
+						new String[][]{{
+					SQHelper.KEY_THEME, 
+					SQHelper.KEY_DATE_DAY, 
+					SQHelper.KEY_DATE_MONTH, 
+					SQHelper.KEY_DATE_YEAR}}, 
+					new int[][]{{
+						themeId,
+						dates[i][0], 
+						dates[i][1], 
+						dates[i][2]}}); 
+			}
+
+			BarChart bars = (BarChart) v.findViewById(R.id.barChart);
+			bars.setValues(barValues);
 			
 			rank++;
 			return super.getView(position, v, parent);

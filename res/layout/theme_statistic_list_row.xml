@@ -25,7 +25,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/infoLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal" >
@@ -37,20 +36,21 @@
             android:layout_weight="1"
             android:textColor="#000000" />
 
-        <com.example.tomatroid.digram.BarChart
+        <com.example.tomatroid.digram.PieChart
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/barChart"
+            android:id="@+id/pieChart"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_weight="1" >
-        </com.example.tomatroid.digram.BarChart>
+        </com.example.tomatroid.digram.PieChart>
     </LinearLayout>
 
-    <com.example.tomatroid.digram.PieChart
+    <com.example.tomatroid.digram.BarChart
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pieChart"
-        android:layout_width="50dp"
-        android:layout_height="50dp" >
-    </com.example.tomatroid.digram.PieChart>
+        android:id="@+id/barChart"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1" >
+    </com.example.tomatroid.digram.BarChart>
 
 </LinearLayout>
