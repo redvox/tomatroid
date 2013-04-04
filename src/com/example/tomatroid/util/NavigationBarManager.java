@@ -14,6 +14,7 @@ import com.example.tomatroid.MainActivity;
 import com.example.tomatroid.R;
 import com.example.tomatroid.StatisicActivity;
 import com.example.tomatroid.ThemeList;
+import com.example.tomatroid.WeeklyActivity;
 
 public class NavigationBarManager implements OnNavigationListener {
 
@@ -57,6 +58,11 @@ public class NavigationBarManager implements OnNavigationListener {
 				Intent i4 = new Intent(activity, DatabaseList.class);
 				i4.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				activity.startActivity(i4);
+				break;
+			case 4:
+				Intent i5 = new Intent(activity, WeeklyActivity.class);
+				i5.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				activity.startActivity(i5);
 				break;
 			}
 

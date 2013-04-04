@@ -36,8 +36,6 @@ public class StatisicActivity extends Activity {
 	final int ACTIVITYNUMBER = 1;
 
 	LinearLayout overview;
-	ViewFlipper statistic_flipper;
-	ImageButton prev;
 	LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
 			LayoutParams.WRAP_CONTENT);
 	LayoutParams barParams = new TableLayout.LayoutParams(
@@ -52,24 +50,32 @@ public class StatisicActivity extends Activity {
 		NavigationBarManager navi = new NavigationBarManager(this,
 				ACTIVITYNUMBER);
 
-		overview = (LinearLayout) findViewById(R.id.statistic_overview);
-		statistic_flipper = (ViewFlipper) findViewById(R.id.statistic_flipper);
-		statistic_flipper.setAnimateFirstView(false);
-
-		prev = (ImageButton) findViewById(R.id.statistic_prev);
-		prev.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				statistic_flipper.setAnimation(StoredAnimation
-						.inFromRightAnimation(1));
-				statistic_flipper.showPrevious();
-				Log.e("Image Button", "clicked");
-			}
-		});
-
-		int totalPomodoro = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{SQHelper.KEY_TYPE}}, new int[][]{{SQHelper.TYPE_POMODORO}});
-		int totalBreak = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{SQHelper.KEY_TYPE},{SQHelper.KEY_TYPE}}, new int[][]{{SQHelper.TYPE_LONGBREAK},{SQHelper.TYPE_SHORTBREAK}});
-		int totalTracking = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{SQHelper.KEY_TYPE}}, new int[][]{{SQHelper.TYPE_TRACKING}});
+		int totalPomodoro = sqHelper.getSum(
+				SQHelper.KEY_DURATION, 
+				new String[][]{{
+					SQHelper.KEY_TYPE
+					}}, 
+					new int[][]{{
+						SQHelper.TYPE_POMODORO
+						}});
+		
+		int totalBreak = sqHelper.getSum(
+				SQHelper.KEY_DURATION, 
+				new String[][]{
+						{SQHelper.KEY_TYPE},
+						{SQHelper.KEY_TYPE}}, 
+						new int[][]{
+						{SQHelper.TYPE_LONGBREAK},
+						{SQHelper.TYPE_SHORTBREAK}
+						});
+		
+		int totalTracking = sqHelper.getSum(
+				SQHelper.KEY_DURATION, 
+				new String[][]{{
+					SQHelper.KEY_TYPE
+					}}, new int[][]{{
+							SQHelper.TYPE_TRACKING
+							}});
 		
 		// Pomodoro Count
 		TextView pomodoroCount = (TextView) findViewById(R.id.statistic_pomodoroCount);
@@ -114,35 +120,6 @@ public class StatisicActivity extends Activity {
 		ListView themelist = (ListView) findViewById(R.id.statistic_themelist);
 		themelist.setAdapter(new ThemeListAdapter(getApplicationContext(),
 				R.layout.theme_statistic_list_row, R.id.themeText, valueList));
-
-		// int[] barValues = new int[] { 3, 10, 4, 5, 6, 7, 8 };
-		// BarChart multiBar = new BarChart(this, barValues);+
-		// statistic_flipper.addView(multiBar);
-
-		DayBarChart daychart = new DayBarChart(this);
-		statistic_flipper.addView(daychart);
-
-		int[][] barValues1 = new int[][] { new int[] { 3, 10, 4, 5, 6, 7, 8 },
-				new int[] { 3, 3, 3, 3, 3, 3, 3 },
-				new int[] { 1, 1, 1, 1, 1, 1, 1 }, };
-		String[] axisLables = new String[] { "Mo", "Di", "Mi", "Do", "Fr",
-				"Sa", "So" };
-		String[] lineNames = new String[] { "Pomodoro", "Breaks", "Sleep" };
-		LineChart multiline = new LineChart(this, barValues1, axisLables,
-				lineNames);
-		statistic_flipper.addView(multiline);
-
-		// float values[] = { 3456, 5734, 5735, 5477, 9345, 3477 };
-		// PieChart pie = new PieChart(this, values);
-		// overview.addView(pie, 0, barParams);
-
-		// themelist.addView(pie);
-		//
-
-		// TextView t1 = new TextView(this);
-		// t1.setText("Total Pomodoro");
-		// overview.addView(t1, params);
-
 	}
 
 	@Override
@@ -172,15 +149,25 @@ public class StatisicActivity extends Activity {
 
 		ArrayList<String> values;
 		int totalWithoutSleep ;
+		int[][] dates;
+		int rank = 1;
 		
 		public ThemeListAdapter(Context context, int layoutViewResourceId,
 				int textViewResourceId, ArrayList<String> values) {
 			super(context, layoutViewResourceId, textViewResourceId, values);
 			this.values = values;
 			totalWithoutSleep = sqHelper.getTotalDurationWithoutSleep(); 
+			
+			dates = new int[7][3];
+			DateMidnight dm = new DateMidnight();
+			dm = dm.minusDays(7);
+			for (int i = 0; i < 7; i++) {
+				dm = dm.plusDays(1);
+				dates[i][0] = dm.getDayOfMonth();
+				dates[i][1] = dm.getMonthOfYear();
+				dates[i][2] = dm.getYear();
+			}
 		}
-
-		int rank = 1;
 
 		@Override
 		public View getView(int position, View v, ViewGroup parent) {
@@ -197,12 +184,9 @@ public class StatisicActivity extends Activity {
 			
 			TextView infoText = (TextView) v.findViewById(R.id.infoText);
 			infoText.setText(prepareInfoText(totalDuration, themeId));
-			
-			DateMidnight dm = new DateMidnight();
-			dm = dm.minusDays(7);
+
 			int[] barValues = new int[7];
 			for (int i = 0; i < 7; i++) {
-				dm = dm.plusDays(1);
 				barValues[i] = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{
 					SQHelper.KEY_THEME, 
 					SQHelper.KEY_DATE_DAY, 
@@ -210,9 +194,9 @@ public class StatisicActivity extends Activity {
 					SQHelper.KEY_DATE_YEAR}}, 
 					new int[][]{{
 						themeId,
-						dm.getDayOfMonth(), 
-						dm.getMonthOfYear(), 
-						dm.getYear()}}); 
+						dates[i][0], 
+						dates[i][1], 
+						dates[i][2]}}); 
 			}
 			BarChart bars = new BarChart(getContext(), barValues);
 

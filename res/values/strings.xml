@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Tomatroid</string>
@@ -16,54 +17,49 @@
     <string name="theme_name">Theme Name</string>
     <string name="new_theme">New Theme</string>
     <string name="theme_parent">Parent Theme</string>
-	<string name="breaks">Breaks</string>
-	<string name="pomodoros">Pomodoros</string>
-	<string name="hide">Hide</string>
-	<string name="show">Shown</string>
-	<string name="name">Name</string>
-	<string name="parent">Parent</string>
-	<string name="save">Save</string>
-	<string name="back">Back</string>
-	<string name="insert">Insert</string>
-	<string name="change">Change</string>		
-	<string name="cancel">Cancel</string>
-	<string name="delete">Delete</string>
-	<string name="delete_theme">Delete Theme</string>
-	<string name="change_theme">Change Theme</string>
-	
-	<string name="pomodoro">Pomodoro</string>
-	<string name="longbreak">Long Break</string>
-	<string name="shortbreak">Short Break</string>
-	<string name="tracking">Tracking</string>
-	<string name="sleep">Sleep</string>
-	
-	<string name="pomodoro_length">Pomodoro Length</string>
-	<string name="pomodoro_length_description">Length of an Pomodoro (in minutes)</string>
-    
-	<string name="longbreak_length">Long Break Length</string>
-	<string name="longbreak_length_description">Length of the long break (in minutes)</string>
-	
-	<string name="shortbreak_length">Short Break Length</string>
-	<string name="shortbreak_length_description">Length of the short break (in minutes)</string>
-	
-	<string name="pomodoro_until_break">Pomodoros until break</string>
-	<string name="pomodoro_until_break_description">How many pomodoros do you want to make until the long break</string>
-	
-	<string name="vibrate">Vibrate</string>
-	<string name="vibrate_description">Pomodoro</string>
-	
-	<string name="rememberTime_length">Remember interval</string>
-	<string name="rememberTime_length_description">After a Countdown ended, when do you want to be reminded that it ended?\n(To make a pomodoro or take a break)</string>
-	
-	<string name="could_not_save_description">Could not save your input.\nPlease be sure to enter only numbers.</string>
-	
-	<string name="give_time_to_other_theme">Soll die Zeit einem anderen Thema zugeordnet werden?\n(Standard ist übergeordnetes Thema)</string>
-	
+    <string name="breaks">Breaks</string>
+    <string name="pomodoros">Pomodoros</string>
+    <string name="hide">Hide</string>
+    <string name="show">Shown</string>
+    <string name="name">Name</string>
+    <string name="parent">Parent</string>
+    <string name="save">Save</string>
+    <string name="back">Back</string>
+    <string name="insert">Insert</string>
+    <string name="change">Change</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="delete_theme">Delete Theme</string>
+    <string name="change_theme">Change Theme</string>
+    <string name="pomodoro">Pomodoro</string>
+    <string name="longbreak">Long Break</string>
+    <string name="shortbreak">Short Break</string>
+    <string name="tracking">Tracking</string>
+    <string name="sleep">Sleep</string>
+    <string name="pomodoro_length">Pomodoro Length</string>
+    <string name="pomodoro_length_description">Length of an Pomodoro (in minutes)</string>
+    <string name="longbreak_length">Long Break Length</string>
+    <string name="longbreak_length_description">Length of the long break (in minutes)</string>
+    <string name="shortbreak_length">Short Break Length</string>
+    <string name="shortbreak_length_description">Length of the short break (in minutes)</string>
+    <string name="pomodoro_until_break">Pomodoros until break</string>
+    <string name="pomodoro_until_break_description">How many pomodoros do you want to make until the long break</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="vibrate_description">Pomodoro</string>
+    <string name="rememberTime_length">Remember interval</string>
+    <string name="rememberTime_length_description">After a Countdown ended, when do you want to be reminded that it ended?\n(To make a pomodoro or take a break)</string>
+    <string name="could_not_save_description">Could not save your input.\nPlease be sure to enter only numbers.</string>
+    <string name="give_time_to_other_theme">Soll die Zeit einem anderen Thema zugeordnet werden?\n(Standard ist übergeordnetes Thema)</string>
+
     <string-array name="action_list">
         <item>Today\'s Summary</item>
         <item>Statistics</item>
         <item>Theme Manager</item>
         <item>Database Entrys</item>
+        <item>Weekly Summary</item>
     </string-array>
+
+    <string name="title_activity_weekly">WeeklyActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

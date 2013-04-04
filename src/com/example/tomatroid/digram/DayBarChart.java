@@ -145,7 +145,7 @@ public class DayBarChart extends View {
 		}
 		
 //		canvas.drawText("0", textOffset, 10, stroke);
-		canvas.drawText("0", textOffset, 15, textPaint);
+		canvas.drawText("0", textOffset, 16, textPaint);
 		int h = 1;
 		for (int m = 60; m < maxValue; m+=60) {
 //			canvas.drawText(h+"", textOffset, m*pixelPerMinute+5, stroke);
@@ -153,7 +153,7 @@ public class DayBarChart extends View {
 			h++;
 		}
 //		canvas.drawText("24", textOffset, height-10, stroke);
-		canvas.drawText("24", textOffset, height-5, textPaint);
+		canvas.drawText("24", textOffset, height-4, textPaint);
 		
 		
 		canvas.drawLine(0, now * pixelPerMinute, width, now * pixelPerMinute, nowPaint);
@@ -169,7 +169,7 @@ public class DayBarChart extends View {
 		height = (float) h - ypad;
 
 		pixelPerMinute = height / maxValue;
-		bar_width = width / barValues.length;
+		bar_width = (width-textOffset) / barValues.length;
 	}
 	
 	public int[][][] getValuesFromDatabase(){

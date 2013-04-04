@@ -4,128 +4,113 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <ImageButton
-        android:id="@+id/statistic_prev"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#0066FF"
-        android:gravity="center"
-        android:scaleType="centerInside"
-        android:src="@android:drawable/ic_media_rew" />
-
-    <ViewFlipper
-        android:id="@+id/statistic_flipper"
+    <LinearLayout
+        android:id="@+id/statistic_overview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
 
         <LinearLayout
-            android:id="@+id/statistic_overview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="horizontal" >
+            android:layout_weight="1"
+            android:orientation="vertical" >
 
-            <LinearLayout
+            <com.example.tomatroid.digram.PieChart
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/overviewPieChart"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" >
+                android:layout_height="100dp"
+                android:layout_gravity="center_vertical" >
+            </com.example.tomatroid.digram.PieChart>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:text="@string/pomodoros"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/statistic_pomodoroCount"
+                    style="@style/BigText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/statistic_pomodoroInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+            <include layout="@layout/horizontal_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:text="@string/breaks"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal" >
 
                 <com.example.tomatroid.digram.PieChart
                     xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/overviewPieChart"
-                    android:layout_width="fill_parent"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center_vertical" >
+                    android:id="@+id/breakPieChart"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" >
                 </com.example.tomatroid.digram.PieChart>
 
                 <TextView
+                    android:id="@+id/statistic_breakInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="left"
-                    android:text="@string/pomodoros"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:orientation="horizontal" >
+            <include layout="@layout/horizontal_line" />
 
-                    <TextView
-                        android:id="@+id/statistic_pomodoroCount"
-                        style="@style/BigText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:text="@string/sleep"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                    <TextView
-                        android:id="@+id/statistic_pomodoroInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
-                </RelativeLayout>
+            <TextView
+                android:id="@+id/statistic_sleepInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right" />
 
-                <include layout="@layout/horizontal_line" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="left"
-                    android:text="@string/breaks"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:orientation="horizontal" >
-
-                    <com.example.tomatroid.digram.PieChart
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/breakPieChart"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp" >
-                    </com.example.tomatroid.digram.PieChart>
-
-                    <TextView
-                        android:id="@+id/statistic_breakInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" />
-                </RelativeLayout>
-
-                <include layout="@layout/horizontal_line" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="left"
-                    android:text="@string/sleep"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <TextView
-                    android:id="@+id/statistic_sleepInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right" />
-
-                <include layout="@layout/horizontal_line" />
-            </LinearLayout>
-
-            <include layout="@layout/vertical_line" />
-
-            <ListView
-                android:id="@+id/statistic_themelist"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1" >
-            </ListView>
+            <include layout="@layout/horizontal_line" />
         </LinearLayout>
-    </ViewFlipper>
+
+        <include layout="@layout/vertical_line" />
+
+        <ListView
+            android:id="@+id/statistic_themelist"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+        </ListView>
+    </LinearLayout>
 
 </LinearLayout>
