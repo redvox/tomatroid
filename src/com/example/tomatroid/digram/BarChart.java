@@ -17,36 +17,35 @@ public class BarChart extends View {
 	float bar_width = 1;
 	float pixelPerMinute = 0;
 	float maxValue = 60;
-
-	// final int x = 0;
-	// final int y = 1;
-
+	float average = 0;
+	
 	int[] barValues;
-	// int[][][] barValueCoords;
 
 	Paint paint = new Paint();
 	Paint stroke = new Paint();
+	Paint avgPaint = new Paint();
 	RectF rect;
 
 	public BarChart(Context context, int[] barValues) {
 		super(context);
 		setValues(barValues);
-
-		paint.setColor(Color.DKGRAY);
-		stroke.setStyle(Style.STROKE);
-		stroke.setColor(Color.WHITE);
-		stroke.setStrokeWidth(5);
+		preparePaint();
 	}
 
-	// constructor
+	// inflater constructor
 	public BarChart(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
+		preparePaint();
+	}
+
+	private void preparePaint(){
 		paint.setColor(Color.DKGRAY);
 		stroke.setStyle(Style.STROKE);
 		stroke.setColor(Color.WHITE);
 		stroke.setStrokeWidth(5);
+		avgPaint.setColor(Color.YELLOW);
 	}
-
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -63,6 +62,9 @@ public class BarChart extends View {
 
 			x += bar_width;
 		}
+		
+		float avgLine = height - (average * pixelPerMinute);
+		canvas.drawLine(0, avgLine, width, avgLine, avgPaint);
 	}
 
 	@Override
@@ -78,17 +80,18 @@ public class BarChart extends View {
 
 		pixelPerMinute = height / maxValue;
 		bar_width = width / barValues.length;
-//		Log.e("BarChart", "pixelPerMinute: " + pixelPerMinute + " maxVal: "
-//				+ maxValue);
-		// barPixelHeight = value * pointPerMinute;
 	}
 
 	public void setValues(int[] barValues) {
 		this.barValues = barValues;
+		int total = 0;
+		
 		for (int i = 0; i < barValues.length; i++) {
+			total += barValues[i];
 			if (barValues[i] > maxValue)
 				maxValue = barValues[i];
 		}
+		average = total / barValues.length;
 		maxValue = (maxValue / 100f) * 120f;
 	}
 }
