@@ -2,34 +2,26 @@ package com.example.tomatroid;
 
 import java.util.ArrayList;
 
-import org.joda.time.DateMidnight;
 
 import com.example.tomatroid.digram.BarChart;
-import com.example.tomatroid.digram.DayBarChart;
-import com.example.tomatroid.digram.LineChart;
 import com.example.tomatroid.digram.PieChart;
 import com.example.tomatroid.sql.SQHelper;
 import com.example.tomatroid.util.NavigationBarManager;
-import com.example.tomatroid.util.StoredAnimation;
 import com.example.tomatroid.util.Util;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 public class StatisicActivity extends Activity {
 
@@ -109,17 +101,22 @@ public class StatisicActivity extends Activity {
 						MainActivity.COLOR_TRACKING });
 
 		// Theme List Overview
-		ArrayList<String> valueList = new ArrayList<String>();
+		
+		ArrayList<String> nameList = new ArrayList<String>();
+		ArrayList<Integer> idList = new ArrayList<Integer>();
 		Cursor c = sqHelper.getThemeCursor();
 		if (c.moveToFirst()) {
+			int column_name = c.getColumnIndex(SQHelper.KEY_NAME);
+			int column_id = c.getColumnIndex(SQHelper.KEY_ROWID);
 			do {
-				valueList.add(c.getString(c.getColumnIndex(SQHelper.KEY_NAME)));
+				nameList.add(c.getString(column_name));
+				idList.add(c.getInt(column_id));
 			} while (c.moveToNext());
 		}
 		c.close();
 		ListView themelist = (ListView) findViewById(R.id.statistic_themelist);
 		themelist.setAdapter(new ThemeListAdapter(getApplicationContext(),
-				R.layout.theme_statistic_list_row, R.id.themeText, valueList));
+				R.layout.theme_statistic_list_row, R.id.themeText, nameList, idList));
 	}
 
 	@Override
@@ -147,26 +144,18 @@ public class StatisicActivity extends Activity {
 
 	class ThemeListAdapter extends ArrayAdapter<String> {
 
-		ArrayList<String> values;
+		ArrayList<String> nameList;
+		ArrayList<Integer> idList;
 		int totalWithoutSleep ;
-		int[][] dates;
+		int[][] dates = Util.getLastXDatesArray(7);
 		int rank = 1;
 		
 		public ThemeListAdapter(Context context, int layoutViewResourceId,
-				int textViewResourceId, ArrayList<String> values) {
-			super(context, layoutViewResourceId, textViewResourceId, values);
-			this.values = values;
+				int textViewResourceId, ArrayList<String> nameList, ArrayList<Integer> idList) {
+			super(context, layoutViewResourceId, textViewResourceId, nameList);
+			this.nameList = nameList;
+			this.idList = idList;
 			totalWithoutSleep = sqHelper.getTotalDurationWithoutSleep(); 
-			
-			dates = new int[7][3];
-			DateMidnight dm = new DateMidnight();
-			dm = dm.minusDays(7);
-			for (int i = 0; i < 7; i++) {
-				dm = dm.plusDays(1);
-				dates[i][0] = dm.getDayOfMonth();
-				dates[i][1] = dm.getMonthOfYear();
-				dates[i][2] = dm.getYear();
-			}
 		}
 
 		@Override
@@ -174,20 +163,25 @@ public class StatisicActivity extends Activity {
 			LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.theme_statistic_list_row, null);
 
-			int themeId = sqHelper.getTheme(values.get(position));
-
 			TextView rankText = (TextView) v.findViewById(R.id.rankText);
-			rankText.setText("" + rank);
-			rankText.append(". ");
+			rankText.setText(rank + ". ");
 
-			int totalDuration = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{SQHelper.KEY_THEME}}, new int[][]{{themeId}});
+			int themeId = idList.get(position);
+			int totalDuration = sqHelper.getSum(
+					SQHelper.KEY_DURATION, 
+					new String[][]{{
+						SQHelper.KEY_THEME}}, 
+						new int[][]{{
+							themeId}});
 			
 			TextView infoText = (TextView) v.findViewById(R.id.infoText);
 			infoText.setText(prepareInfoText(totalDuration, themeId));
 
 			int[] barValues = new int[7];
 			for (int i = 0; i < 7; i++) {
-				barValues[i] = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{
+				barValues[i] = sqHelper.getSum(
+						SQHelper.KEY_DURATION, 
+						new String[][]{{
 					SQHelper.KEY_THEME, 
 					SQHelper.KEY_DATE_DAY, 
 					SQHelper.KEY_DATE_MONTH, 
@@ -198,18 +192,35 @@ public class StatisicActivity extends Activity {
 						dates[i][1], 
 						dates[i][2]}}); 
 			}
-			BarChart bars = new BarChart(getContext(), barValues);
-
-			// LinearLayout ll = (LinearLayout) v.findViewById(R.id.infoLayout);
-			// ll.addView(bars, 100, 100);
 
 			BarChart bars2 = (BarChart) v.findViewById(R.id.barChart);
 			bars2.setValues(barValues);
 
 			PieChart pieChart = (PieChart) v.findViewById(R.id.pieChart);
-			int pomodoroDuration = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{SQHelper.KEY_TYPE, SQHelper.KEY_THEME}}, new int[][]{{0, themeId}});
-			int breakDuration = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{SQHelper.KEY_TYPE, SQHelper.KEY_THEME}}, new int[][]{{2, themeId}});
-			int trackDuration = sqHelper.getSum(SQHelper.KEY_DURATION, new String[][]{{SQHelper.KEY_TYPE, SQHelper.KEY_THEME}}, new int[][]{{3, themeId}});
+			int pomodoroDuration = sqHelper.getSum(
+					SQHelper.KEY_DURATION, 
+					new String[][]{{
+						SQHelper.KEY_TYPE, 
+						SQHelper.KEY_THEME}}, 
+						new int[][]{{
+							0, 
+							themeId}});
+			int breakDuration = sqHelper.getSum(
+					SQHelper.KEY_DURATION,
+					new String[][]{{
+						SQHelper.KEY_TYPE, 
+						SQHelper.KEY_THEME}}, 
+						new int[][]{{
+							2, 
+							themeId}});
+			int trackDuration = sqHelper.getSum(
+					SQHelper.KEY_DURATION, 
+					new String[][]{{
+						SQHelper.KEY_TYPE, 
+						SQHelper.KEY_THEME}}, 
+						new int[][]{{
+							3, 
+							themeId}});
 			
 			pieChart.setValuesWithColor(
 					new float[] { 
