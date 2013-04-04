@@ -38,10 +38,19 @@ public class DayBarChart extends View {
 	Paint textPaint;
 	Paint stroke;
 	RectF rect;
-
+	
 	public DayBarChart(Context context) {
 		super(context);
-		
+		initialising();
+	}
+	
+	// inflater constructor
+	public DayBarChart(Context context, AttributeSet attributeSet) {
+		super(context, attributeSet);
+		initialising();
+	}
+	
+	private void initialising(){
 		pomodoroPaint = new Paint();
 		pomodoroPaint.setColor(MainActivity.COLOR_POMODORO);
 		breakPaint = new Paint();
@@ -65,48 +74,6 @@ public class DayBarChart extends View {
 		textPaint.setTextSize(20);
 
 		now = DateTime.now().getMinuteOfDay();
-		
-		barValues = new int[][][]
-				{
-				   {
-				      {4, 0*60, 8*60},
-
-				   },
-				   {
-					      {4, 0*60, 8*60},
-					      {2, 9*60, 10*60},
-					      {0, 10*60, 11*60},
-					      {0, 13*60, 15*60},
-				   },
-				   {
-					      {4, 0*60, 6*60},
-					      {0, 10*60, 11*60},
-					      {0, 13*60, 15*60},
-					      {3, 15*60, 25*60},
-				   },
-				   {
-					      {4, 0*60, 7*60},
-					      {2, 9*60, 10*60},
-					      {0, 13*60, 15*60}, 
-				   },
-				   {
-					      {4, 0*60, 10*60},
-					      {2, 9*60, 10*60},
-					      {0, 10*60, 11*60},
-					      {0, 13*60, 15*60}, 
-				   },
-				   {
-					      {4, 0*60, 11*60},
-					      {2, 9*60, 10*60},
-					      {0, 10*60, 11*60},
-				   },
-				   {
-					      {4, 0*60, 7*60},
-					      {2, 9*60, 10*60},
-					      {0, 10*60, 11*60},
-					      {0, 13*60, 15*60},
-				   }
-				};
 	}
 	
 	@Override
@@ -117,23 +84,20 @@ public class DayBarChart extends View {
 		Paint paint;
 
 		for (int i = 0; i < barValues.length; i++) {
+			Log.e("DayBarChart", " --"+i+" "+barValues.length);
 			for (int k = 0; k < barValues[i].length; k++) {
 				float barStart = ((float) barValues[i][k][1]) * pixelPerMinute;
 				float barStop = ((float) barValues[i][k][2]) * pixelPerMinute;
 				
 				int tag = barValues[i][k][0];
 				if (tag == MainActivity.TYPE_POMODORO) {
-//					canvas.drawRect(x, barStart, x + bar_width, barStop, pomodoroPaint);
 					paint = pomodoroPaint;
 				} else if (tag == MainActivity.TYPE_LONGBREAK
 						|| tag == MainActivity.TYPE_SHORTBREAK) {
-//					canvas.drawRect(x, barStart, x + bar_width, barStop, breakPaint);
 					paint = breakPaint;
 				} else if (tag == MainActivity.TYPE_TRACKING) {
-//					canvas.drawRect(x, barStart, x + bar_width, barStop, trackPaint);
 					paint = trackPaint;
-				} else {
-//					canvas.drawRect(x, barStart, x + bar_width, barStop, sleepPaint);
+				} else {	
 					paint = sleepPaint;
 				}
 				
@@ -172,26 +136,7 @@ public class DayBarChart extends View {
 		bar_width = (width-textOffset) / barValues.length;
 	}
 	
-	public int[][][] getValuesFromDatabase(){
-		SQHelper sqh = new SQHelper(getContext());
-		DateTime dt = DateTime.now();
-		Cursor c = sqh.getCursorForDay(dt.getDayOfMonth(), dt.getMonthOfYear(), dt.getYear());
-		
-		int column_type = c.getColumnIndex(SQHelper.KEY_TYPE);
-		int column_startHour = c.getColumnIndex(SQHelper.KEY_DATE_START_HOUR);
-		int column_startMinute = c.getColumnIndex(SQHelper.KEY_DATE_START_MINUTE);
-		int column_endHour = c.getColumnIndex(SQHelper.KEY_DATE_END_HOUR);
-		int column_endMinute = c.getColumnIndex(SQHelper.KEY_DATE_END_MINUTE);
-		
-		int[][][] barValues = new int[1][c.getCount()][3];
-		int i = 0;
-		if(c.moveToFirst()){
-			do {
-				barValues[0][i][0] = c.getInt(column_type);
-				barValues[0][i][1] = (c.getInt(column_startHour)*60) + c.getInt(column_startMinute);
-				barValues[0][i][2] = (c.getInt(column_endHour)*60) + c.getInt(column_endMinute);
-			} while (c.moveToNext());
-		}
-		return barValues;
+	public void setValues(int[][][] values){
+		this.barValues = values;
 	}
 }
