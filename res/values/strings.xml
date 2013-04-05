@@ -24,6 +24,7 @@
     <string name="name">Name</string>
     <string name="parent">Parent</string>
     <string name="save">Save</string>
+    <string name="dataSaves">Your settings are saved</string>
     <string name="back">Back</string>
     <string name="insert">Insert</string>
     <string name="change">Change</string>
@@ -45,7 +46,11 @@
     <string name="pomodoro_until_break">Pomodoros until break</string>
     <string name="pomodoro_until_break_description">How many pomodoros do you want to make until the long break</string>
     <string name="vibrate">Vibrate</string>
-    <string name="vibrate_description">Pomodoro</string>
+    <string name="vibrate_description">Should your device vibrate if an Pomodoro is over?</string>
+    <string name="sound">Sound</string>
+    <string name="sound_description">Should your device play sounds if an Pomodoro is over?</string>
+    <string name="airplanemode">Airplane Mode on Sleep</string>
+    <string name="airplanemode_description">Should your device go into airplane mode when you go to sleep?</string>
     <string name="rememberTime_length">Remember interval</string>
     <string name="rememberTime_length_description">After a Countdown ended, when do you want to be reminded that it ended?\n(To make a pomodoro or take a break)</string>
     <string name="could_not_save_description">Could not save your input.\nPlease be sure to enter only numbers.</string>

@@ -11,6 +11,7 @@ import com.example.tomatroid.util.NavigationBarManager;
 
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -29,7 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 	int rememberTime;
 	String pomodoroTheme, breakTheme;
 	boolean tracking = false;
-	boolean vibrate;
+	boolean airplanemode;
 
 	int pomodorosNum = 1;
 	int pomodorosUntilLongBreakNum;
@@ -97,6 +97,10 @@ public class MainActivity extends Activity {
 	static final String KEY_ACTIVEBUTTON = "button";
 	static final String KEY_POMODOROTHEME = "pomodoroTheme";
 	static final String KEY_BREAKTHEME = "breakTheme";
+
+	public static final String KEY_VIBRATE = "vibrate";
+	public static final String KEY_PLAYSOUND = "playsound";
+	static final String KEY_AIRAIRPLANEMODE = "airplanemode";
 
 	static final String KEY_POMODOROTIME = "pomodorotime";
 	static final String KEY_SHORTBREAKTIME = "shortbreaktime";
@@ -211,6 +215,7 @@ public class MainActivity extends Activity {
 		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
 		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK, 4);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
+		airplanemode = settings.getBoolean(KEY_AIRAIRPLANEMODE, false);
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
@@ -321,6 +326,8 @@ public class MainActivity extends Activity {
 			timeText.start();
 			timeText.setTextColor(COLOR_SLEEP);
 			tracking = true;
+			if(airplanemode)
+				airplanemode(true);
 			break;
 		}
 	}
@@ -345,8 +352,13 @@ public class MainActivity extends Activity {
 
 		resetTimeText();
 
+		if (tag == TYPE_SLEEPING) {
+			if(airplanemode)
+				airplanemode(false);
+		}
+
 		// #######
-		// minutes = 10;
+//		 minutes = 10;
 		// #######
 		
 		if (minutes > 0) {
@@ -386,7 +398,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void resetTimeText() {
-		timeText.setTextColor(Color.parseColor(COLOR_BLUE));
+		timeText.setTextColor(COLOR_BLUE);
 		timeText.setText("00:00");
 	}
 
@@ -443,6 +455,18 @@ public class MainActivity extends Activity {
 		if ((pomodorosNum + 1) % pomodorosUntilLongBreakNum == 0)
 			return true;
 		return false;
+	}
+
+	public void airplanemode(boolean bool){
+		boolean isEnabled = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;
+
+		if(bool != isEnabled){
+			Log.e("MainActiviry", "toogle airplanemode");
+			Settings.System.putInt(getBaseContext().getContentResolver(), Settings.System.AIRPLANE_MODE_ON, bool ? 1 : 0);
+			Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+			intent.putExtra("state", bool ? 1 : 0);
+			sendBroadcast(intent);
+		}
 	}
 
 	public void barExceededLimit(int oldMax) {

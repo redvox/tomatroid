@@ -11,6 +11,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
@@ -33,8 +36,15 @@ public class AlarmReceiver extends BroadcastReceiver {
 		int type = intent.getIntExtra(KEY_TYPE, -1);
 		if(type == TYPE_ONLY_NOTIFICATION){
 //			setVibration(context, false);
-			fireVibration(context);
 			fireNotification(context, intent.getIntExtra(KEY_TAG, -1));
+
+			SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
+
+			if(settings.getBoolean(MainActivity.KEY_VIBRATE, false))
+				fireVibration(context);
+
+			if(settings.getBoolean(MainActivity.KEY_PLAYSOUND, false))
+				fireSound(context);
 		} else {
 //			Intent startMain = new Intent(context, MainActivity.class);
 //			startMain.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -50,13 +60,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 	}
 	
 	public static void stopAlarmManager(Context context){
-		Log.e("MainActivity", "AlarmManager Stopped");
+//		Log.e("MainActivity", "AlarmManager Stopped");
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(AlarmReceiver.getPendingIntent(context, 0));
 	}
 	
 	public static void startAlarmManager(Context context, long timeinmilliesinthefuture, int tag){
-		Log.e("MainActivity", "AlarmManager Started in "+timeinmilliesinthefuture/1000);
+//		Log.e("MainActivity", "AlarmManager Started in "+timeinmilliesinthefuture/1000);
 		
 		Intent aIndent = new Intent(context, AlarmReceiver.class);
 		aIndent.putExtra(KEY_TYPE, TYPE_ONLY_NOTIFICATION);
@@ -119,6 +129,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 		v.vibrate(pattern, -1);
 	}
 	
+	public static void fireSound(Context context){
+		Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		Ringtone r = RingtoneManager.getRingtone(context, notification);
+		r.play();
+	}
+
 	public static void setVibration(Context context, boolean bool){
 		SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
