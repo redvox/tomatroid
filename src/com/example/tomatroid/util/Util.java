@@ -1,6 +1,14 @@
 package com.example.tomatroid.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.joda.time.DateMidnight;
+
+import android.content.Context;
+import android.text.GetChars;
 
 public class Util {
 
@@ -33,5 +41,20 @@ public class Util {
 			dates[i][2] = dm.getYear();
 		}
 		return dates;
+	}
+	
+	public static String readRawTextFile(Context contex, int id) {
+		InputStream inputStream = contex.getResources().openRawResource(id);
+		InputStreamReader in = new InputStreamReader(inputStream);
+		BufferedReader buf = new BufferedReader(in);
+		String line;
+		StringBuilder text = new StringBuilder();
+		try {
+			while ((line = buf.readLine()) != null)
+				text.append(line);
+		} catch (IOException e) {
+			return null;
+		}
+		return text.toString();
 	}
 }

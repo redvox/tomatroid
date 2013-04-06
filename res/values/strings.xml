@@ -55,7 +55,8 @@
     <string name="rememberTime_length_description">After a Countdown ended, when do you want to be reminded that it ended?\n(To make a pomodoro or take a break)</string>
     <string name="could_not_save_description">Could not save your input.\nPlease be sure to enter only numbers.</string>
     <string name="give_time_to_other_theme">Soll die Zeit einem anderen Thema zugeordnet werden?\n(Standard ist übergeordnetes Thema)</string>
-
+	<string name="about">About</string> 
+	<string name="update_dialog_title">New version installed</string> 
     <string-array name="action_list">
         <item>Today\'s Summary</item>
         <item>Statistics</item>

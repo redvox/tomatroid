@@ -1,0 +1,8 @@
+<h4>1.7.7 <font color="#FF0000">*NEW VERSION*</font></h4>
+- Added about dialog.<br>
+- About dialog is shown when new version is installed.<br>
+
+<h4>1.7.6</h4>
+- Added sound notification.<br>
+- Vibration and Sound can now be disabled in the settings menu.<br>
+- On pressing sleep, your app can now automatically switch airplane mode.<br>

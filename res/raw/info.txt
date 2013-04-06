@@ -1,0 +1,7 @@
+<h2>Tomatroid</h2>
+Copyright 2013<br>
+
+<h4>Contact</h4>
+<b>test@test.com</b><br>
+<b>www.mywebsite.com</b><br>
+<b>1-800-555-1234</b><br><br>

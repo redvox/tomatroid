@@ -3,6 +3,7 @@ package com.example.tomatroid;
 import java.util.ArrayList;
 
 import com.example.tomatroid.chrono.Counter;
+import com.example.tomatroid.dialog.AboutDialog;
 import com.example.tomatroid.digram.Axis;
 import com.example.tomatroid.digram.Bar;
 import com.example.tomatroid.sql.SQHelper;
@@ -19,12 +20,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -84,12 +88,14 @@ public class MainActivity extends Activity {
 	String pomodoroTheme, breakTheme;
 	boolean tracking = false;
 	boolean airplanemode;
+	boolean firstStartUpTutorial = false;
 
 	int pomodorosNum = 1;
 	int pomodorosUntilLongBreakNum;
 
 	Bar pomodoroBar, breakBar, trackBar;
 	Axis axis;
+	SharedPreferences settings;
 
 	static final String KEY_THEME = "theme";
 	static final String KEY_CHRONOSTATE = "chrono";
@@ -101,7 +107,8 @@ public class MainActivity extends Activity {
 	public static final String KEY_VIBRATE = "vibrate";
 	public static final String KEY_PLAYSOUND = "playsound";
 	static final String KEY_AIRAIRPLANEMODE = "airplanemode";
-
+	static final String KEY_APPVERSION = "appversion";
+	
 	static final String KEY_POMODOROTIME = "pomodorotime";
 	static final String KEY_SHORTBREAKTIME = "shortbreaktime";
 	static final String KEY_LONGBREAKTIME = "longbreaktime";
@@ -127,10 +134,14 @@ public class MainActivity extends Activity {
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (Chronometer) findViewById(R.id.timetext);
+//		ProgressBar progress = (ProgressBar) findViewById(R.id.progressbar);
+//		progress.setIndeterminate(false);
+//		progress.setMax(100);
+//		progress.setProgress(50);
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
 
-		pomodorosNum = sqhelper.getStartUpPomodoroCount();
-		pomodorosNumText.setTextColor(Color.parseColor(COLOR_POMODORO));
+		pomodorosNum = sqhelper.getTodayCountOf(SQHelper.TYPE_POMODORO);
+		pomodorosNumText.setTextColor(COLOR_POMODORO);
 		pomodorosNumText.setText("" + pomodorosNum);
 
 		LinearLayout digramLayout = new LinearLayout(this);
@@ -171,6 +182,21 @@ public class MainActivity extends Activity {
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
+		
+		settings = getSharedPreferences(PREFS_NAME, 0);
+		try {
+			int oldVersionCode = settings.getInt(KEY_APPVERSION, 1);
+			int newVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+			
+			if((oldVersionCode != newVersionCode) && !firstStartUpTutorial){
+				showAboutDialog(getString(R.string.update_dialog_title));
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putInt(KEY_APPVERSION, newVersionCode);
+				editor.commit();
+			}
+			
+		} catch (NameNotFoundException e) {
+		}
 	}
 
 	@Override
@@ -207,7 +233,6 @@ public class MainActivity extends Activity {
 		controlListener.themeListAdapter.notifyDataSetChanged();
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 		
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		pomodoroTheme = settings.getString(KEY_POMODOROTHEME, sqhelper.getTheme(1));
 		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
 		pomodoroTime = settings.getInt(KEY_POMODOROTIME, 25);
@@ -216,7 +241,7 @@ public class MainActivity extends Activity {
 		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK, 4);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
 		airplanemode = settings.getBoolean(KEY_AIRAIRPLANEMODE, false);
-
+		
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
 		int tag = settings.getInt(KEY_TAG, -1);
@@ -356,7 +381,7 @@ public class MainActivity extends Activity {
 			if(airplanemode)
 				airplanemode(false);
 		}
-
+		
 		// #######
 //		 minutes = 10;
 		// #######
@@ -442,6 +467,9 @@ public class MainActivity extends Activity {
 			stop();
 			controlListener.stop();
 			break;
+		case R.id.menu_about:
+			showAboutDialog(getString(R.string.about));
+			break;
 		default:
 			break;
 		}
@@ -456,17 +484,24 @@ public class MainActivity extends Activity {
 			return true;
 		return false;
 	}
-
+	
 	public void airplanemode(boolean bool){
 		boolean isEnabled = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;
-
+		
 		if(bool != isEnabled){
 			Log.e("MainActiviry", "toogle airplanemode");
-			Settings.System.putInt(getBaseContext().getContentResolver(), Settings.System.AIRPLANE_MODE_ON, bool ? 1 : 0);
+			Settings.System.putInt(getBaseContext().getContentResolver(), Settings.System.AIRPLANE_MODE_ON, bool ? 1 : 0); 
 			Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
 			intent.putExtra("state", bool ? 1 : 0);
 			sendBroadcast(intent);
 		}
+	}
+	
+	public void showAboutDialog(String title){
+		AboutDialog about = new AboutDialog(this);
+//		about.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.btn_dialog);
+		about.setTitle(title);
+		about.show();
 	}
 
 	public void barExceededLimit(int oldMax) {
