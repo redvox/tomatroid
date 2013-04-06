@@ -1,8 +1,12 @@
-<h4>1.7.7 <font color="#FF0000">*NEW VERSION*</font></h4>
-- Added about dialog.<br>
-- About dialog is shown when new version is installed.<br>
+<h4>1.7.8 <font color="#FF0000">*NEW VERSION*</font></h4>
+Fix: Days in statistic will now calculated correctly.
+Fix: The statistic ranking is now correct.
+
+<h4>1.7.7</h4>
+New: Added about dialog.<br>
+New: About dialog is shown when new version is installed.<br>
 
 <h4>1.7.6</h4>
-- Added sound notification.<br>
-- Vibration and Sound can now be disabled in the settings menu.<br>
-- On pressing sleep, your app can now automatically switch airplane mode.<br>
+New: Added sound notification.<br>
+New: Vibration and Sound can now be disabled in the settings menu.<br>
+New: On pressing sleep, your app can now automatically switch airplane mode.<br>

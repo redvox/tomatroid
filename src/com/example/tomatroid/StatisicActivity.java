@@ -76,18 +76,18 @@ public class StatisicActivity extends Activity {
 
 		// Pomodoro Overview
 		TextView pomodoroInfo = (TextView) findViewById(R.id.statistic_pomodoroInfo);
-		pomodoroInfo.setText(prepareInfoText(totalPomodoro, SQHelper.TYPE_POMODORO));
+		pomodoroInfo.setText(prepareInfoText(totalPomodoro, SQHelper.KEY_TYPE, SQHelper.TYPE_POMODORO));
 
 		// Long Break Overview
 		TextView breakInfo = (TextView) findViewById(R.id.statistic_breakInfo);
-		breakInfo.setText(prepareInfoText(totalBreak, SQHelper.TYPE_LONGBREAK));
+		breakInfo.setText(prepareInfoText(totalBreak, SQHelper.KEY_TYPE, SQHelper.TYPE_LONGBREAK));
 
 		PieChart breakPieChart = (PieChart) findViewById(R.id.breakPieChart);
 		breakPieChart.setValues(new float[] { 0 });
 
 		// Sleep Overview;
 		TextView sleepInfo = (TextView) findViewById(R.id.statistic_sleepInfo);
-		sleepInfo.setText(prepareInfoText(totalTracking, SQHelper.TYPE_SLEEPING));
+		sleepInfo.setText(prepareInfoText(totalTracking, SQHelper.KEY_TYPE, SQHelper.TYPE_SLEEPING));
 
 		// Overview Pie Chart
 		PieChart overviewPieChart = (PieChart) findViewById(R.id.overviewPieChart);
@@ -126,13 +126,17 @@ public class StatisicActivity extends Activity {
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 	}
 
-	public String prepareInfoText(int totalDuration, int type) {
-		int daysAmount = sqHelper.getGroupCount(new String[]{SQHelper.KEY_DATE_DAY, SQHelper.KEY_DATE_MONTH, SQHelper.KEY_DATE_YEAR}, new String[][]{{SQHelper.KEY_TYPE}}, new int[][]{{type}});
+	public String prepareInfoText(int totalDuration, String key, int value) {
+		int daysAmount = sqHelper.getDaysCount(
+				new String[][]{{
+					key}}, 
+					new int[][]{{
+						value}});
+		
 		int average = 0;
 		if(daysAmount > 0){
 			average = totalDuration / daysAmount;
 		}
-		
 		
 		if (totalDuration != 0) {
 			return Util.generateTimeText(totalDuration) + " total\n"
@@ -149,7 +153,6 @@ public class StatisicActivity extends Activity {
 		ArrayList<Integer> idList;
 		int totalWithoutSleep ;
 		int[][] dates = Util.getLastXDatesArray(activityDiagramLength);
-		int rank = 1;
 		
 		public ThemeListAdapter(Context context, int layoutViewResourceId,
 				int textViewResourceId, ArrayList<String> nameList, ArrayList<Integer> idList) {
@@ -165,7 +168,7 @@ public class StatisicActivity extends Activity {
 			v = vi.inflate(R.layout.theme_statistic_list_row, null);
 
 			TextView rankText = (TextView) v.findViewById(R.id.rankText);
-			rankText.setText(rank + ". ");
+			rankText.setText((position+1) + ". ");
 
 			int themeId = idList.get(position);
 			int totalDuration = sqHelper.getSum(
@@ -176,7 +179,7 @@ public class StatisicActivity extends Activity {
 							themeId}});
 
 			TextView infoText = (TextView) v.findViewById(R.id.infoText);
-			infoText.setText(prepareInfoText(totalDuration, themeId));
+			infoText.setText(prepareInfoText(totalDuration, SQHelper.KEY_THEME, themeId));
 			
 			PieChart pieChart = (PieChart) v.findViewById(R.id.pieChart);
 			int pomodoroDuration = sqHelper.getSum(
@@ -238,7 +241,6 @@ public class StatisicActivity extends Activity {
 			BarChart bars = (BarChart) v.findViewById(R.id.barChart);
 			bars.setValues(barValues);
 			
-			rank++;
 			return super.getView(position, v, parent);
 		}
 	}

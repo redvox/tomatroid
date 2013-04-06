@@ -205,6 +205,36 @@ public class SQHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public int getDaysCount(String[][] keys, int[][] values){
+		openDatabase();
+	
+		String where = buildDNFWhereSQLStatement(keys, values);
+		Cursor cursor = db.query(TABLE_DATES, null, where, null, null, null, null);
+		
+		if (cursor.moveToFirst()) {
+			int daysCount = 0;
+			int oldDayNumber = 0;
+			int oldMonthNumber = 0;
+			int oldYearNumber = 0;
+			
+			int column_day = cursor.getColumnIndex(KEY_DATE_DAY);
+			int column_month = cursor.getColumnIndex(KEY_DATE_MONTH);
+			int column_year = cursor.getColumnIndex(KEY_DATE_YEAR);
+			
+			do{
+				if( (oldDayNumber != cursor.getInt(column_day)) || (oldMonthNumber != cursor.getInt(column_month)) || (oldYearNumber != cursor.getInt(column_year)) ){
+					oldDayNumber = cursor.getInt(column_day);
+					oldMonthNumber = cursor.getInt(column_month);
+					oldYearNumber = cursor.getInt(column_year);
+					daysCount++;
+				}
+			} while(cursor.moveToNext());
+			return daysCount;
+		} else {
+			return 0;
+		}
+	}
+	
 	public String buildDNFWhereSQLStatement(String[][] keys, int[][] values) {
 
 		ArrayList<StringBuffer> bufferArray = new ArrayList<StringBuffer>();
