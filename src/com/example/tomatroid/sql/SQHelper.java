@@ -35,16 +35,26 @@ public class SQHelper extends SQLiteOpenHelper {
 	public static final String KEY_THEME = "theme";
 
 	static final String CREATE_DATES_TABLE = "create table " + TABLE_DATES
-			+ "(" + KEY_ROWID + " integer primary key autoincrement, "
-			+ KEY_DATE_DAY + " integer not null, " + KEY_DATE_MONTH
-			+ " integer not null," + KEY_DATE_YEAR + " integer not null,"
-			+ KEY_DATE_WEEKDAY + " integer not null," + KEY_DATE_WEEKNUM
-			+ " integer not null," + KEY_DATE_START_HOUR + " integer not null,"
-			+ KEY_DATE_START_MINUTE + " integer not null," + KEY_DATE_END_HOUR
-			+ " integer not null," + KEY_DATE_END_MINUTE + " integer not null,"
-			+ KEY_DURATION + " integer not null," + KEY_TYPE
-			+ " integer not null," + KEY_THEME + " integer,"
-			+ KEY_STARTTIMEMILLIES + " text not null," + KEY_ENDTIMEMILLIES
+			+ "(" 
+			+ KEY_ROWID + " integer primary key autoincrement, "
+			+ KEY_DATE_DAY + " integer not null, " 
+			+ KEY_DATE_MONTH
+			+ " integer not null," 
+			+ KEY_DATE_YEAR + " integer not null,"
+			+ KEY_DATE_WEEKDAY + " integer not null," 
+			+ KEY_DATE_WEEKNUM
+			+ " integer not null," 
+			+ KEY_DATE_START_HOUR + " integer not null,"
+			+ KEY_DATE_START_MINUTE + " integer not null," 
+			+ KEY_DATE_END_HOUR
+			+ " integer not null," 
+			+ KEY_DATE_END_MINUTE + " integer not null,"
+			+ KEY_DURATION + " integer not null," 
+			+ KEY_TYPE
+			+ " integer not null," 
+			+ KEY_THEME + " integer,"
+			+ KEY_STARTTIMEMILLIES + " text not null," 
+			+ KEY_ENDTIMEMILLIES
 			+ " text not null);";
 
 	// TABLE Theme

@@ -1,6 +1,10 @@
-<h4>1.7.8 <font color="#FF0000">*NEW VERSION*</font></h4>
-Fix: Days in statistic will now calculated correctly.
-Fix: The statistic ranking is now correct.
+<h4>1.7.9 <font color="#FF0000">*CURRENT VERSION*</font></h4>
+
+
+<h4>1.7.8</h4>
+New: New Design of the Weekly Summary.<br>
+Fix: Days in statistic will now calculated correctly.<br>
+Fix: The statistic ranking is now correct.<br>
 
 <h4>1.7.7</h4>
 New: Added about dialog.<br>

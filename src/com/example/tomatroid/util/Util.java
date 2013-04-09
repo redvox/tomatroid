@@ -31,7 +31,7 @@ public class Util {
 	}
 	
 	static public int[][] getLastXDatesArray(int days){
-		int[][] dates = new int[days][3];
+		int[][] dates = new int[days][4];
 		DateMidnight dm = new DateMidnight();
 		dm = dm.minusDays(days);
 		for (int i = 0; i < days; i++) {
@@ -39,6 +39,7 @@ public class Util {
 			dates[i][0] = dm.getDayOfMonth();
 			dates[i][1] = dm.getMonthOfYear();
 			dates[i][2] = dm.getYear();
+			dates[i][3] = dm.getDayOfWeek();
 		}
 		return dates;
 	}

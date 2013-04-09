@@ -64,6 +64,16 @@
         <item>Database Entrys</item>
         <item>Weekly Summary</item>
     </string-array>
+    
+    <string-array name="weekday_shortcut">
+        <item>Mo</item>
+        <item>Di</item>
+        <item>Mi</item>
+        <item>Do</item>
+        <item>Fr</item>
+        <item>Sa</item>
+        <item>So</item>
+    </string-array>
 
     <string name="title_activity_weekly">WeeklyActivity</string>
     <string name="action_settings">Settings</string>
