@@ -16,7 +16,7 @@ public class WeeklyActivity extends Activity {
 	int days = 14;
 	int maxValue = 1440;
 	String[] weekday_shortcut;
-	
+	DayBarChart dayBarChart;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +44,20 @@ public class WeeklyActivity extends Activity {
 		int column_startMinute = previusDay.getColumnIndex(SQHelper.KEY_DATE_START_MINUTE);
 		int column_endHour = previusDay.getColumnIndex(SQHelper.KEY_DATE_END_HOUR);
 		int column_endMinute = previusDay.getColumnIndex(SQHelper.KEY_DATE_END_MINUTE);
-//		int column_dayOfMonth = previusDay.getColumnIndex(SQHelper.KEY_DATE_DAY);
 		int column_weekday = previusDay.getColumnIndex(SQHelper.KEY_DATE_WEEKDAY);
 		
 		for(int d = 0; d < days; d++){
-			Cursor today = sqh.getCursorForDay(
-					dates[d+1][0], 
-					dates[d+1][1],
-					dates[d+1][2]);
+			int today = d+1; 
+			Cursor todayCursor = sqh.getCursorForDay(
+					dates[today][0], 
+					dates[today][1],
+					dates[today][2]);
 			
 			// Adding previus Day
 			int i = 0;
 			if(previusDay.moveToLast()){
 				if(previusDay.getInt(column_startHour) > previusDay.getInt(column_endHour)){
-					barValues[d] = new int[today.getCount()+1][4];
+					barValues[d] = new int[todayCursor.getCount()+1][4];
 					
 					barValues[d][0][0] = previusDay.getInt(column_type);
 					barValues[d][0][1] = 0;
@@ -65,38 +65,44 @@ public class WeeklyActivity extends Activity {
 					
 					i++;
 				} else {
-					barValues[d] = new int[today.getCount()][4];
+					barValues[d] = new int[todayCursor.getCount()][4];
 				}
 			} else {
-				barValues[d] = new int[today.getCount()][4];
+				barValues[d] = new int[todayCursor.getCount()][4];
 			}
 			
 			// Column Lable
-			columnLables[d] = weekday_shortcut[dates[d][3]-1]+" "+dates[d][0];
+			columnLables[d] = weekday_shortcut[dates[today][3]-1]+" "+dates[today][0];
 			
 			// Adding Today
-			if (today.moveToFirst()) {
+			if (todayCursor.moveToFirst()) {
 				do {
-					barValues[d][i][0] = today.getInt(column_type);
-					barValues[d][i][1] = (today.getInt(column_startHour) * 60) + today.getInt(column_startMinute);
-					barValues[d][i][2] = (today.getInt(column_endHour) * 60) + today.getInt(column_endMinute);
+					barValues[d][i][0] = todayCursor.getInt(column_type);
+					barValues[d][i][1] = (todayCursor.getInt(column_startHour) * 60) + todayCursor.getInt(column_startMinute);
+					barValues[d][i][2] = (todayCursor.getInt(column_endHour) * 60) + todayCursor.getInt(column_endMinute);
 					if(barValues[d][i][1] > barValues[d][i][2])
 						barValues[d][i][2] = maxValue;
 					
-					barValues[d][0][3] = today.getInt(column_weekday);
+					barValues[d][0][3] = todayCursor.getInt(column_weekday);
 					
 					i++;
-				} while (today.moveToNext());
+				} while (todayCursor.moveToNext());
 			}
 			
-			previusDay = today;
+			previusDay = todayCursor;
 		}
 		
-		DayBarChart dayBarChart = (DayBarChart) findViewById(R.id.dayBarChart);
+		dayBarChart = (DayBarChart) findViewById(R.id.dayBarChart);
 		dayBarChart.setValues(barValues, columnLables);
 		dayBarChart.setOnTouchListener(dayBarChart);
 	}
 
+	@Override
+	protected void onResume() {
+		dayBarChart.refreshNowLine();
+		super.onResume();
+	}
+	
 	// @Override
 	// public boolean onCreateOptionsMenu(Menu menu) {
 	// // Inflate the menu; this adds items to the action bar if it is present.

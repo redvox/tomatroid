@@ -1,6 +1,7 @@
 package com.example.tomatroid.digram;
 
 import org.joda.time.DateTime;
+import org.xml.sax.DTDHandler;
 
 import com.example.tomatroid.MainActivity;
 import com.example.tomatroid.sql.SQHelper;
@@ -34,6 +35,8 @@ public class DayBarChart extends View implements OnTouchListener {
 	float axisTextOffset = 30;
 	float startX;
 	float x;
+	float origin_x = 0;
+	float move = 0;
 	
 	// Settings
 	int daysToShow = 7;
@@ -119,7 +122,6 @@ public class DayBarChart extends View implements OnTouchListener {
 						
 			// Column Lables
 			canvas.drawRect(x, 0, x+bar_width, headLineOffset, whilePaint);
-			Log.e("DayBarChart", ""+columnlables[i]);
 			canvas.drawText(columnlables[i], x+bar_width_half, 25, labletextPaint);
 			
 			// vertical Raster
@@ -147,7 +149,6 @@ public class DayBarChart extends View implements OnTouchListener {
 			}
 			x += bar_width;
 		}// For every Column
-		Log.e("DayBarChart", "onDraw bar_width "+bar_width);
 		
 		// Axis
 		canvas.drawRect(0, 0, axisTextOffset, height, whilePaint);
@@ -155,7 +156,7 @@ public class DayBarChart extends View implements OnTouchListener {
 		canvas.drawLine(axisTextOffset, headLineOffset, width, headLineOffset, strokeBlack);
 		int h = 1;
 		for (int m = 60; m < maxValue; m+=60) {
-			canvas.drawText(hourString[h], textOffset, m*pixelPerMinute+5+headLineOffset, axistextPaint);
+			canvas.drawText(hourString[h], textOffset, m*pixelPerMinute+7+headLineOffset, axistextPaint);
 			h++;
 		}
 		canvas.drawText(hourString[24], textOffset, height-4, axistextPaint);
@@ -177,22 +178,21 @@ public class DayBarChart extends View implements OnTouchListener {
 		bar_width = (width-textOffset) / daysToShow;
 		bar_width_half = bar_width/2;
 		
-		now = DateTime.now().getMinuteOfDay() * pixelPerMinute;
+		DateTime dt = new DateTime();
+		now = dt.getMinuteOfDay() * pixelPerMinute + headLineOffset;
 		Log.e("DayBarChart", "onSizeChanged");
 		calculateOffset();
 	}
 	
 	public void calculateOffset(){
-		
 		if(barValues != null){
 			int daysOff = barValues.length - daysToShow;
-			Log.e("DayBarChart", "daysOff "+daysOff);
-			Log.e("DayBarChart", "bar_width "+bar_width);
-			Log.e("DayBarChart", "bar_width*daysOff "+bar_width*daysOff);
-			if(daysOff > 0)
+			if(daysOff > 0){
 				startX = (bar_width*daysOff)*-1 + axisTextOffset;
-				x = startX;
-			Log.e("DayBarChart", "--x-- "+x);
+			} else {
+				startX = axisTextOffset;
+			}				
+			x = startX;
 		}
 	}
 	
@@ -203,12 +203,12 @@ public class DayBarChart extends View implements OnTouchListener {
 		calculateOffset();
 	}
 	
-	float origin_x = 0;
-	float move = 0;
-//	float origin_y = 0;
+	public void refreshNowLine(){
+//		now = DateTime.now().getMinuteOfDay() * pixelPerMinute;
+//		invalidate();
+	}
 	
 	public boolean onTouch(View v, MotionEvent event) {
-		
 //		float distance = (float) Math.sqrt(Math.pow(event.getX() - origin_x, 2.0f)
 //				+ Math.pow(event.getY() - origin_y, 2.0f));
 		
@@ -230,7 +230,6 @@ public class DayBarChart extends View implements OnTouchListener {
 					move = (startX-axisTextOffset)*-1;
 				x = startX + move;
 				invalidate();
-				
 				break;
 			}
 		}
