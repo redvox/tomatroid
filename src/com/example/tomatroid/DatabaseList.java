@@ -172,8 +172,7 @@ public class DatabaseList extends ListActivity {
 				title.setVisibility(View.GONE);
 			}
 			
-			tv1.setText(c.getInt(day) + "." + c.getInt(month) + "."+ c.getInt(year) +"  "+ c.getInt(startHour) + ":" + c.getInt(startMinute)
-					+ " - " + c.getInt(endHour) + ":" + c.getInt(endMinute));
+			tv1.setText(c.getInt(startHour) + ":" + c.getInt(startMinute) + " - " + c.getInt(endHour) + ":" + c.getInt(endMinute));
 
 			tv3.setText(Util.generateTimeText(c.getInt(duration)));
 			tv2.setText(sqHelper.getTheme(c.getInt(theme)));
