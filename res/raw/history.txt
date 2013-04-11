@@ -1,5 +1,9 @@
-<h4>1.7.9 <font color="#FF0000">*CURRENT VERSION*</font></h4>
+<h4>1.7.10 <font color="#FF0000">*CURRENT VERSION*</font></h4>
+New: The type and theme of database entrys can now be changed.<br>
+New: Added seperators to the database list.
 
+<h4>1.7.9</h4>
+New: Weekly Summary now shows 14 days and is scrollable.<br>
 
 <h4>1.7.8</h4>
 New: New Design of the Weekly Summary.<br>

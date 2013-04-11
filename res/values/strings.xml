@@ -15,6 +15,7 @@
     <string name="title_activity_statictic">StaticticActivity</string>
     <string name="title_activity_database_list">DatabaseList</string>
     <string name="theme_name">Theme Name</string>
+    <string name="type">Type</string>
     <string name="new_theme">New Theme</string>
     <string name="theme_parent">Parent Theme</string>
     <string name="breaks">Breaks</string>
@@ -56,7 +57,10 @@
     <string name="could_not_save_description">Could not save your input.\nPlease be sure to enter only numbers.</string>
     <string name="give_time_to_other_theme">Soll die Zeit einem anderen Thema zugeordnet werden?\n(Standard ist übergeordnetes Thema)</string>
 	<string name="about">About</string> 
+	<string name="today">Today</string> 
+	<string name="yesterday">Yesterday</string> 
 	<string name="update_dialog_title">New version installed</string> 
+	<string name="sleep_shortbreak_will_ignore_type">Sleep and Shortbreak will ignore the theme</string> 
     <string-array name="action_list">
         <item>Today\'s Summary</item>
         <item>Statistics</item>

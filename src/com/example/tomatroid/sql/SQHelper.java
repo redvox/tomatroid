@@ -102,7 +102,8 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	public Cursor getDatesCursor() {
 		openDatabase();
-		return db.query(TABLE_DATES, null, null, null, null, null, null);
+		return db.query(TABLE_DATES, null, null, null, null, null, 
+				KEY_ROWID+ " DESC");
 	}
 
 	public Cursor getThemeCursor() {
@@ -330,7 +331,7 @@ public class SQHelper extends SQLiteOpenHelper {
 		openDatabase();
 		Cursor c = db.query(TABLE_THEME, new String[] { KEY_NAME }, KEY_ROWID
 				+ " = ?", new String[] { id + "" }, null, null, null);
-		String name = "error";
+		String name = "";
 		if (c.moveToFirst()) {
 			name = c.getString(0);
 		}
@@ -353,6 +354,16 @@ public class SQHelper extends SQLiteOpenHelper {
 	
 	public void deleteEntry(int id){
 		db.delete(TABLE_DATES, KEY_ROWID+" = "+id, null);
+	}
+	
+	public void changeEntry(int id, int type, int themeId){
+		openDatabase();
+		ContentValues newContent = new ContentValues();
+		newContent.put(KEY_TYPE, type);
+		if(type == TYPE_SLEEPING || type == TYPE_SHORTBREAK)
+			themeId = -99;
+		newContent.put(KEY_THEME, themeId);
+		db.update(TABLE_DATES, newContent, KEY_ROWID+" = "+id, null);
 	}
 
 	@Override
