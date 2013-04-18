@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
 	static final String KEY_SHORTBREAKTIME = "shortbreaktime";
 	static final String KEY_LONGBREAKTIME = "longbreaktime";
 	static final String KEY_POMODORO_UNTIL_BREAK = "pomodorountilbreak";
-	static final String KEY_REMEMBERTIME = "remembertime";
+	public static final String KEY_REMEMBERTIME = "remembertime";
 	static final String KEY_TAG = "tag";
 	static final String KEY_COUNTER = "counter";
 	static final String KEY_COUNTERPAUSETIME= "counterpausetime";
@@ -217,8 +217,7 @@ public class MainActivity extends Activity {
 		if (counter != null) {
 			counter.cancel();
 			saveCounterState(editor);
-			if (!counter.isCountUp())
-				AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(), controlListener.activeButton);
+			AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(), controlListener.activeButton);
 		} else {
 			editor.putBoolean(KEY_COUNTER, false);
 		}
@@ -319,6 +318,7 @@ public class MainActivity extends Activity {
 //		AlarmReceiver.setVibration(this, true);
 		
 		counter = newCounter;
+//		AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(), controlListener.activeButton);
 		dialogManager.show(tag, checkOnLongBreak());
 	}
 

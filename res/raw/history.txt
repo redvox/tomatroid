@@ -1,21 +1,22 @@
-<h4>1.7.10 <font color="#FF0000">*CURRENT VERSION*</font></h4>
+<b>1.7.10 <font color="#FF0000">*CURRENT VERSION*</font></b>
 New: The type and theme of database entrys can now be changed.<br>
 New: Added seperators to the database list.<br>
 Fix: Weekly Summary now shows the correct column labels also red "now" line is now correct.<br>
+Fix: Notifications now should be fired after counter finish, to remind you that it is finished.<br>
 
-<h4>1.7.9</h4>
+<b>1.7.9</b>
 New: Weekly Summary now shows 14 days and is scrollable.<br>
 
-<h4>1.7.8</h4>
+<b>1.7.8</b>
 New: New Design of the Weekly Summary.<br>
 Fix: Days in statistic will now calculated correctly.<br>
 Fix: The statistic ranking is now correct.<br>
 
-<h4>1.7.7</h4>
+<b>1.7.7</b>
 New: Added about dialog.<br>
 New: About dialog is shown when new version is installed.<br>
 
-<h4>1.7.6</h4>
+<b>1.7.6</b>
 New: Added sound notification.<br>
 New: Vibration and Sound can now be disabled in the settings menu.<br>
 New: On pressing sleep, your app can now automatically switch airplane mode.<br>

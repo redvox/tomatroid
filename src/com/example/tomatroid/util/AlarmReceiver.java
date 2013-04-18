@@ -34,23 +34,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		int type = intent.getIntExtra(KEY_TYPE, -1);
-		if(type == TYPE_ONLY_NOTIFICATION){
-//			setVibration(context, false);
-			fireNotification(context, intent.getIntExtra(KEY_TAG, -1));
+//		setVibration(context, false);
+		fireNotification(context, intent.getIntExtra(KEY_TAG, -1));
 
-			SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
+		SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
 
-			if(settings.getBoolean(MainActivity.KEY_VIBRATE, false))
-				fireVibration(context);
+		if(settings.getBoolean(MainActivity.KEY_VIBRATE, false))
+			fireVibration(context);
 
-			if(settings.getBoolean(MainActivity.KEY_PLAYSOUND, false))
-				fireSound(context);
-		} else {
-//			Intent startMain = new Intent(context, MainActivity.class);
-//			startMain.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-//			startMain.putExtra(KEY_TYPE, intent.getIntExtra(KEY_TYPE, -1));
-//			context.startActivity(startMain);
-		}
+		if(settings.getBoolean(MainActivity.KEY_PLAYSOUND, false))
+			fireSound(context);
+		
+		int rememberTime = settings.getInt(MainActivity.KEY_REMEMBERTIME, 10);
+		startAlarmManager(context, rememberTime*60000, type);
+//		rememberTime*
+		
+//		Intent startMain = new Intent(context, MainActivity.class);
+//		startMain.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+//		startMain.putExtra(KEY_TYPE, intent.getIntExtra(KEY_TYPE, -1));
+//		context.startActivity(startMain);
 	}
 	
 	public static PendingIntent getPendingIntent(Context context, int type){
@@ -60,13 +62,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 	}
 	
 	public static void stopAlarmManager(Context context){
-//		Log.e("MainActivity", "AlarmManager Stopped");
+		Log.e("MainActivity", "AlarmManager Stopped");
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(AlarmReceiver.getPendingIntent(context, 0));
 	}
 	
 	public static void startAlarmManager(Context context, long timeinmilliesinthefuture, int tag){
-//		Log.e("MainActivity", "AlarmManager Started in "+timeinmilliesinthefuture/1000);
+		Log.e("MainActivity", "AlarmManager Started in "+(timeinmilliesinthefuture/1000)/60);
 		
 		Intent aIndent = new Intent(context, AlarmReceiver.class);
 		aIndent.putExtra(KEY_TYPE, TYPE_ONLY_NOTIFICATION);
