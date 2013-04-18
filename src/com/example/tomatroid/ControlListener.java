@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -78,6 +79,7 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		themePomodoroText.setTextSize(20);
 		themePomodoroText.setTag(90);
 		themePomodoroText.setBackgroundColor(backgroundColor);
+		themePomodoroText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 //		controlLayout.addView(themePomodoroText);
 		
 		RelativeLayout rL1 = new RelativeLayout(mA);
@@ -98,6 +100,7 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		themeBreakText.setTextSize(20);
 		themeBreakText.setTag(91);
 		themeBreakText.setBackgroundColor(backgroundColor);
+		themeBreakText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 //		controlLayout.addView(themeBreakText);
 
 		RelativeLayout rL2 = new RelativeLayout(mA);
