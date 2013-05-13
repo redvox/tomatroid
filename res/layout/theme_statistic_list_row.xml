@@ -41,7 +41,7 @@
             android:id="@+id/pieChart"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:layout_weight="1" >
+            android:layout_weight="2" >
         </com.example.tomatroid.digram.PieChart>
     </LinearLayout>
 

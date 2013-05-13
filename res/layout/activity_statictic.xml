@@ -8,8 +8,8 @@
         android:id="@+id/statistic_overview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -55,8 +55,6 @@
                     android:layout_alignParentRight="true" />
             </RelativeLayout>
 
-            <include layout="@layout/horizontal_line" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,13 +68,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:orientation="horizontal" >
-
+<!--  
                 <com.example.tomatroid.digram.PieChart
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/breakPieChart"
                     android:layout_width="50dp"
                     android:layout_height="50dp" >
                 </com.example.tomatroid.digram.PieChart>
+-->
 
                 <TextView
                     android:id="@+id/statistic_breakInfo"
@@ -84,8 +83,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true" />
             </RelativeLayout>
-
-            <include layout="@layout/horizontal_line" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -101,7 +98,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right" />
 
-            <include layout="@layout/horizontal_line" />
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"
+                android:layout_gravity="right"
+                android:onClick="onCheckboxClicked"
+                android:text="@string/calculate_with_children" />
         </LinearLayout>
 
         <include layout="@layout/vertical_line" />

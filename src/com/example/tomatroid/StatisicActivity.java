@@ -12,12 +12,15 @@ import com.example.tomatroid.util.Util;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -34,6 +37,11 @@ public class StatisicActivity extends Activity {
 			LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
 	SQHelper sqHelper = new SQHelper(this);
 	int activityDiagramLength = 14;
+	ThemeListAdapter themeListAdapter;
+	ListView themelist;
+	boolean withChrilden;
+	
+	final static String KEY_WITHCHILDREN = "withchildren";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,14 @@ public class StatisicActivity extends Activity {
 		NavigationBarManager navi = new NavigationBarManager(this,
 				ACTIVITYNUMBER);
 
+		SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+		withChrilden = settings.getBoolean(KEY_WITHCHILDREN, true);
+		
+		Log.e("Statistic Activirty", "checkbox state "+withChrilden);
+		
+		CheckBox cb = (CheckBox) findViewById(R.id.checkbox);
+		cb.setChecked(withChrilden);
+		
 		int totalPomodoro = sqHelper.getSum(
 				SQHelper.KEY_DURATION, 
 				new String[][]{{
@@ -82,8 +98,8 @@ public class StatisicActivity extends Activity {
 		TextView breakInfo = (TextView) findViewById(R.id.statistic_breakInfo);
 		breakInfo.setText(prepareInfoText(totalBreak, SQHelper.KEY_TYPE, SQHelper.TYPE_LONGBREAK));
 
-		PieChart breakPieChart = (PieChart) findViewById(R.id.breakPieChart);
-		breakPieChart.setValues(new float[] { 0 });
+//		PieChart breakPieChart = (PieChart) findViewById(R.id.breakPieChart);
+//		breakPieChart.setValues(new float[] { 0 });
 
 		// Sleep Overview;
 		TextView sleepInfo = (TextView) findViewById(R.id.statistic_sleepInfo);
@@ -102,10 +118,28 @@ public class StatisicActivity extends Activity {
 						MainActivity.COLOR_TRACKING });
 
 		// Theme List Overview
-		
+		createThemeListAdapter();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(KEY_WITHCHILDREN, withChrilden);
+		editor.commit();
+	}
+	
+	public void createThemeListAdapter(){
 		ArrayList<String> nameList = new ArrayList<String>();
 		ArrayList<Integer> idList = new ArrayList<Integer>();
-		Cursor c = sqHelper.getThemeCursor();
+		Cursor c = sqHelper.getThemeCursor(0, withChrilden);
 		if (c.moveToFirst()) {
 			int column_name = c.getColumnIndex(SQHelper.KEY_NAME);
 			int column_id = c.getColumnIndex(SQHelper.KEY_ROWID);
@@ -115,15 +149,12 @@ public class StatisicActivity extends Activity {
 			} while (c.moveToNext());
 		}
 		c.close();
-		ListView themelist = (ListView) findViewById(R.id.statistic_themelist);
-		themelist.setAdapter(new ThemeListAdapter(getApplicationContext(),
-				R.layout.theme_statistic_list_row, R.id.themeText, nameList, idList));
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
+		
+		themeListAdapter = new ThemeListAdapter(getApplicationContext(),
+				R.layout.theme_statistic_list_row, R.id.themeText, nameList, idList);
+		
+		themelist = (ListView) findViewById(R.id.statistic_themelist);
+		themelist.setAdapter(themeListAdapter);
 	}
 
 	public String prepareInfoText(int totalDuration, String key, int value) {
@@ -139,12 +170,20 @@ public class StatisicActivity extends Activity {
 		}
 		
 		if (totalDuration != 0) {
-			return Util.generateTimeText(totalDuration) + " total\n"
-					+ Util.generateTimeText(average) + " per Day\n"
-					+ "(over " + daysAmount + " days)";
+			return Util.generateTimeText(totalDuration) + "\navg "
+					+ Util.generateTimeText(average) + "\n"
+					+ "over "+ daysAmount + "d";
 		} else {
 			return "nothing recorded yet";
 		}
+	}
+	
+	public void onCheckboxClicked(View view) {
+//	    boolean checked = ((CheckBox) view).isChecked();
+		withChrilden = !withChrilden;
+		createThemeListAdapter();
+//		themeListAdapter.notifyDataSetChanged();
+//		themelist.invalidate();
 	}
 
 	class ThemeListAdapter extends ArrayAdapter<String> {
@@ -171,41 +210,65 @@ public class StatisicActivity extends Activity {
 			rankText.setText((position+1) + ". ");
 
 			int themeId = idList.get(position);
+			
+			ArrayList<Integer> iDs = new ArrayList<Integer>();
+			iDs.add(themeId);
+			if(withChrilden)
+				iDs.addAll(sqHelper.getAllThemeChrildren(themeId));
+			
+			String[][] what1 = new String[iDs.size()][1];
+			int[][] who1 = new int[iDs.size()][1];
+			
+			int n = 0;
+			for(Integer k : iDs){
+				what1[n][0] = SQHelper.KEY_THEME;
+				who1[n][0] = k;
+				n++;
+			}
+			
 			int totalDuration = sqHelper.getSum(
 					SQHelper.KEY_DURATION, 
-					new String[][]{{
-						SQHelper.KEY_THEME}}, 
-						new int[][]{{
-							themeId}});
+					what1, 
+					who1);
 
 			TextView infoText = (TextView) v.findViewById(R.id.infoText);
 			infoText.setText(prepareInfoText(totalDuration, SQHelper.KEY_THEME, themeId));
 			
 			PieChart pieChart = (PieChart) v.findViewById(R.id.pieChart);
+			
+			String[][] what2 = new String[iDs.size()][2];
+			int[][] who2 = new int[iDs.size()][2];
+			
+			n = 0;
+			for(Integer k : iDs){
+				what2[n][0] = SQHelper.KEY_TYPE;
+				what2[n][1] = SQHelper.KEY_THEME;
+				who2[n][0] = 0;
+				who2[n][1] = k;
+				n++;
+			}
 			int pomodoroDuration = sqHelper.getSum(
 					SQHelper.KEY_DURATION, 
-					new String[][]{{
-						SQHelper.KEY_TYPE, 
-						SQHelper.KEY_THEME}}, 
-						new int[][]{{
-							0, 
-							themeId}});
+					what2,who2);
+			
+			n = 0;
+			for(Integer k : iDs){
+				who2[n][0] = 2;
+				n++;
+			}
 			int breakDuration = sqHelper.getSum(
 					SQHelper.KEY_DURATION,
-					new String[][]{{
-						SQHelper.KEY_TYPE, 
-						SQHelper.KEY_THEME}}, 
-						new int[][]{{
-							2, 
-							themeId}});
+					what2,who2);
+			
+			n = 0;
+			for(Integer k : iDs){
+				who2[n][0] = 3;
+				n++;
+			}
+			
 			int trackDuration = sqHelper.getSum(
 					SQHelper.KEY_DURATION, 
-					new String[][]{{
-						SQHelper.KEY_TYPE, 
-						SQHelper.KEY_THEME}}, 
-						new int[][]{{
-							3, 
-							themeId}});
+					what2,who2);
 			
 			pieChart.setValuesWithColor(
 					new float[] { 

@@ -14,7 +14,7 @@ import android.util.Log;
 public class SQHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "pomodorodroid";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 11;
 
 	// TABLE Dates
 	public static final String TABLE_DATES = "dates";
@@ -38,24 +38,20 @@ public class SQHelper extends SQLiteOpenHelper {
 			+ "(" 
 			+ KEY_ROWID + " integer primary key autoincrement, "
 			+ KEY_DATE_DAY + " integer not null, " 
-			+ KEY_DATE_MONTH
-			+ " integer not null," 
+			+ KEY_DATE_MONTH + " integer not null," 
 			+ KEY_DATE_YEAR + " integer not null,"
 			+ KEY_DATE_WEEKDAY + " integer not null," 
-			+ KEY_DATE_WEEKNUM
-			+ " integer not null," 
+			+ KEY_DATE_WEEKNUM + " integer not null," 
 			+ KEY_DATE_START_HOUR + " integer not null,"
 			+ KEY_DATE_START_MINUTE + " integer not null," 
-			+ KEY_DATE_END_HOUR
-			+ " integer not null," 
+			+ KEY_DATE_END_HOUR + " integer not null," 
 			+ KEY_DATE_END_MINUTE + " integer not null,"
 			+ KEY_DURATION + " integer not null," 
-			+ KEY_TYPE
-			+ " integer not null," 
+			+ KEY_TYPE + " integer not null," 
 			+ KEY_THEME + " integer,"
 			+ KEY_STARTTIMEMILLIES + " text not null," 
-			+ KEY_ENDTIMEMILLIES
-			+ " text not null);";
+			+ KEY_ENDTIMEMILLIES + " text not null" 
+			+ ");";
 
 	// TABLE Theme
 	public static final String TABLE_THEME = "themes";
@@ -63,12 +59,14 @@ public class SQHelper extends SQLiteOpenHelper {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_ITEMOF = "itemof";
 	public static final String KEY_OVERALLTIME = "overalltime";
+	public static final String KEY_OVERALLTIME_W_CHILDREN = "overalltimewithchildren";
 	public static final String KEY_HIDE = "hide";
 
 	static final String CREATE_THEME_TABLE = "create table " + TABLE_THEME
 			+ "(" + KEY_ROWID + " integer primary key autoincrement, "
 			+ KEY_ITEMOF + " integer," + KEY_NAME + " text not null, "
 			+ KEY_OVERALLTIME + " integer not null, "
+			+ KEY_OVERALLTIME_W_CHILDREN + " integer not null, "
 			+ KEY_HIDE + " integer not null "
 			+ ");";
 
@@ -82,19 +80,47 @@ public class SQHelper extends SQLiteOpenHelper {
 
 	public SQHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		Log.e("SQHepler", "constructor DATABASE_VERSION: "+DATABASE_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
+		db = database;
 		Log.e("SQHepler", "onCreate");
 		createTables(database);
+	}
+	
+	@Override
+	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		db = database;
+		Log.e(SQHelper.class.getName(), "Upgrading database from version " + oldVersion +" to "+newVersion);
+		
+		if(oldVersion <= 5){
+			Log.e(SQHelper.class.getName(), "++ Datebase Upgrade 5 ++");
+			String sql2 = "ALTER TABLE "+TABLE_THEME+" "
+			+"ADD "+KEY_OVERALLTIME_W_CHILDREN+" integer not null default 0";
+			db.execSQL(sql2);
+		}
+		
+		if(oldVersion <= 11){
+			Log.e(SQHelper.class.getName(), "++ Datebase Upgrade 11 ++");
+			Cursor c1 = getThemeCursor();
+			if (c1.moveToFirst()) {
+				int column_id = c1.getColumnIndex(KEY_ROWID);
+				int column_overalltime = c1.getColumnIndex(KEY_OVERALLTIME);
+				do{
+					int id = c1.getInt(column_id);
+					int overalltime = c1.getInt(column_overalltime);
+					incrementColumn(id, KEY_OVERALLTIME_W_CHILDREN, TABLE_THEME, overalltime);
+					incrementParentTime(id, overalltime);
+					} while(c1.moveToNext());
+			} 
+		}
 	}
 
 	public void createTables(SQLiteDatabase database) {
 		database.execSQL(CREATE_DATES_TABLE);
 		database.execSQL(CREATE_THEME_TABLE);
-		db = database;
 		addTheme("Default", -1);
 		addTheme("Gaming", -1);
 		addTheme("Pomodoro App", -1);
@@ -112,10 +138,16 @@ public class SQHelper extends SQLiteOpenHelper {
 				KEY_OVERALLTIME+ " DESC");
 	}
 	
-	public Cursor getThemeCursor(int hideStatus) {
+	public Cursor getThemeCursor(int hideStatus, boolean withChildren) {
 		openDatabase();
+		String sortby;
+		if(withChildren){
+			sortby = KEY_OVERALLTIME_W_CHILDREN;
+		} else {
+			sortby = KEY_OVERALLTIME;
+		}
 		return db.query(TABLE_THEME, null, KEY_HIDE +" = "+hideStatus, null, null, null,
-				KEY_OVERALLTIME+ " DESC");
+				sortby+ " DESC");
 	}
 	
 	public Cursor getCursorForDay(int day, int month, int year){
@@ -268,36 +300,13 @@ public class SQHelper extends SQLiteOpenHelper {
 		return finalwhere.toString();
 	}
 
-//	public Cursor getLastXDays(int x) {
-//		openDatabase();
-//		DateTime dt = new DateTime();
-//		int day = dt.getDayOfMonth();
-//		int month = dt.getMonthOfYear();
-//		int year = dt.getYear();
-//
-//		dt = dt.minusDays(x);
-//		int old_day = dt.getDayOfMonth();
-//		int old_month = dt.getMonthOfYear();
-//		int old_year = dt.getYear();
-//
-//		return db.query(TABLE_DATES, new String[] { KEY_DATE_WEEKDAY, KEY_TYPE,
-//				KEY_DURATION }, "(" + KEY_DATE_DAY + " <= " + day + " AND "
-//				+ KEY_DATE_MONTH + " <= " + month + " AND " + KEY_DATE_YEAR
-//				+ " <= " + year
-//
-//				+ " AND " + KEY_DATE_DAY + " >= " + old_day + " AND "
-//				+ KEY_DATE_MONTH + " >= " + old_month + " AND " + KEY_DATE_YEAR
-//				+ " >= " + old_year
-//
-//				+ ")", null, null, null, null);
-//	}
-
 	public void addTheme(String name, int parentId) {
 		openDatabase();
 		ContentValues newContent = new ContentValues();
 		newContent.put(KEY_NAME, name);
 		newContent.put(KEY_ITEMOF, parentId);
 		newContent.put(KEY_OVERALLTIME, 0);
+		newContent.put(KEY_OVERALLTIME_W_CHILDREN, 0);
 		newContent.put(KEY_HIDE, 0);
 		db.insert(TABLE_THEME, null, newContent);
 	}
@@ -335,8 +344,6 @@ public class SQHelper extends SQLiteOpenHelper {
 		if (c.moveToFirst()) {
 			name = c.getString(0);
 		}
-		c.close();
-
 		return name;
 	}
 
@@ -348,8 +355,31 @@ public class SQHelper extends SQLiteOpenHelper {
 		if (c.moveToFirst()) {
 			id = c.getInt(0);
 		}
-		// c.close();
 		return id;
+	}
+	
+	public int getParent(int id) {
+		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ITEMOF }, KEY_ROWID
+				+ " = ?", new String[] { id + "" }, null, null, null);
+		int parentid = -1;
+		if (c.moveToFirst()) {
+			parentid = c.getInt(0);
+		}
+		return parentid;
+	}
+
+	
+	public ArrayList<Integer> getAllThemeChrildren(int id){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		openDatabase();
+		Cursor c = db.query(TABLE_THEME, new String[] { KEY_ROWID }, KEY_ITEMOF
+				+ " = ?", new String[] { ""+id }, null, null, null);
+		if(c.moveToFirst()){
+			do{
+				list.add(c.getInt(0));
+			} while(c.moveToNext());
+		}
+		return list;
 	}
 	
 	public void deleteEntry(int id){
@@ -366,23 +396,13 @@ public class SQHelper extends SQLiteOpenHelper {
 		db.update(TABLE_DATES, newContent, KEY_ROWID+" = "+id, null);
 	}
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(SQHelper.class.getName(), "Upgrading database from version "
-				+ oldVersion + " to " + newVersion
-				+ ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATES);
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THEME);
-		onCreate(db);
-	}
-
 	public void renewTables() {
 		openDatabase();
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATES);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THEME);
 		createTables(db);
 	}
-
+	
 	public void insertDate(int tag, int minutesPast, String theme) {
 		openDatabase();
 
@@ -404,20 +424,52 @@ public class SQHelper extends SQLiteOpenHelper {
 		newContent.put(KEY_STARTTIMEMILLIES, startDate.getMillis());
 		newContent.put(KEY_ENDTIMEMILLIES, endDate.getMillis());
 		db.insert(TABLE_DATES, null, newContent);
-		Cursor c = db.rawQuery("UPDATE " + TABLE_THEME + " SET " + KEY_OVERALLTIME + " = "
-				+ KEY_OVERALLTIME + " + " + minutesPast + " WHERE " + KEY_ROWID
-				+ "=" + getTheme(theme), null);
 		
-		if(c.moveToFirst()){
-			Log.e("SQHelper", "Update " + c.getInt(c.getColumnIndex(KEY_OVERALLTIME)));
+		int themeid = getTheme(theme);
+		incrementColumn(themeid, KEY_OVERALLTIME, TABLE_THEME, minutesPast);
+		incrementColumn(themeid, KEY_OVERALLTIME_W_CHILDREN, TABLE_THEME, minutesPast);
+		incrementParentTime(themeid, minutesPast);
+		
+//		Log.e("SQHepler", "## Inspect Start ##");
+//		Cursor c1 = getThemeCursor();
+//		if (c1.moveToFirst()) {
+//			int column_id = c1.getColumnIndex(SQHelper.KEY_ROWID);
+//			int column_overalltime = c1.getColumnIndex(SQHelper.KEY_OVERALLTIME);
+//			int column_overalltime_w_children = c1.getColumnIndex(SQHelper.KEY_OVERALLTIME_W_CHILDREN);
+//			int column_itemof = c1.getColumnIndex(SQHelper.KEY_ITEMOF);
+//			do{
+//				int id = c1.getInt(column_id);
+//				int overalltime = c1.getInt(column_overalltime);
+//				int overalltime_w_children = c1.getInt(column_overalltime_w_children);
+//				int itemof = c1.getInt(column_itemof);
+//				Log.e(SQHelper.class.getName(), "id: "+getTheme(id)+" itemof: "+itemof+" overalltime: " + overalltime +" overalltime_w_children: "+overalltime_w_children);
+//			} while(c1.moveToNext());
+//		}
+//		Log.e("SQHepler", "######## Inspect End #########");		
+	}
+	
+	public void incrementColumn(int where, String column, String table, int value){
+		db.execSQL("UPDATE " + table + " SET " 
+				+ column + " = "+ column + " + " + value 
+				+ " WHERE " + KEY_ROWID+ "=" + where);
+	}
+	
+	public void incrementParentTime(int themeid, int minutesPast){
+		int parentid = getParent(themeid);
+		
+		if(parentid != -1){
+			Log.e(SQHelper.class.getName(), " insertChilddrenTime parentid "+getTheme(parentid)+" of themeid "+getTheme(themeid)+" value: "+minutesPast);
+			incrementColumn(parentid, KEY_OVERALLTIME_W_CHILDREN, TABLE_THEME, minutesPast);
+			incrementParentTime(parentid, minutesPast);
 		} else {
-			Log.e("SQHelper", "Update cursor empty");
+			Log.e(SQHelper.class.getName(), " insertChilddrenTime "+getTheme(themeid)+" has no parent");
 		}
 	}
 
 	private void openDatabase() {
-		if (db == null)
+		if (db == null){
 			db = getWritableDatabase();
+		}
 	}
 
 }
