@@ -248,7 +248,7 @@ public class MainActivity extends Activity {
 
 		if(tag == TYPE_TRACKING){
 			timeText.setTextColor(COLOR_TRACKING);
-		} else if( tag == TYPE_LONGBREAK || tag == TYPE_TRACKING){
+		} else if( tag == TYPE_LONGBREAK || tag == TYPE_SHORTBREAK){
 			timeText.setTextColor(COLOR_BREAK);
 		} else if(tag == TYPE_SLEEPING){
 			timeText.setTextColor(COLOR_SLEEP);
