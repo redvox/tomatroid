@@ -26,68 +26,53 @@ public class DialogManager implements OnClickListener {
 		this.tag = tag;
 		this.longBreak = longBreak;
 
+		AlertDialog.Builder builder = new AlertDialog.Builder(mA);
+		builder.setNegativeButton("Stop", this);
+		builder.setNeutralButton("Skip!", this);
+		
 		// Start new Dialog
 		switch (tag) {
 		// Pomodoro
-		case 0:
-			if (longBreak) {
-				dialog = getBeforePomodoroDialog(mA);
-				dialog.setTitle(mA.getString(R.string.longbreak));
-				dialog.setMessage("You are done with your Pomodoro, lets take a long break.");
+		case 0:			
+			if (longBreak) {		
+				builder.setTitle(mA.getString(R.string.longbreak));	
 			} else {
-				dialog = getBeforePomodoroDialog(mA);
-				dialog.setTitle(mA.getString(R.string.shortbreak));
-				dialog.setMessage("You are done with your Pomodoro, lets take a short break.");
+				builder.setTitle(mA.getString(R.string.shortbreak));
 			}
+			
+			builder.setMessage("You are done with your Pomodoro, lets take a long break\n" +
+					  		   "(you will be rememberd in "+mA.rememberTime+"min)");
+			builder.setPositiveButton("Take the break!", this);
 			break;
 		// After Short of Long break
 		default:
-			dialog = getBeforePomodoro(mA);
+			builder.setTitle("Pomodoro Time!");
+			builder.setMessage("Your break is over, lets do some work\n" +
+					  		   "(you will be rememberd in "+mA.rememberTime+"min)");
+			builder.setPositiveButton("Do a pomodoro!", this);
 			break;
 		}
-
+		
+		dialog = builder.create();
 		dialog.show();
-	}
-
-	private AlertDialog getBeforePomodoroDialog(Context context) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setNegativeButton("Void it & Stop!", this);
-		builder.setNeutralButton("Skip it!", this);
-		builder.setPositiveButton("Take the break!", this);
-		return builder.create();
-	}
-
-	private AlertDialog getBeforePomodoro(Context context) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle("Pomodoro Time!");
-		builder.setMessage("Your break is over, lets do some work.");
-		builder.setNegativeButton("Void it & Stop!", this);
-		builder.setNeutralButton("Extend the break! ("+mA.rememberTime+"min)", this);
-		builder.setPositiveButton("Do a pomodoro!", this);
-		return builder.create();
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		Log.e("Dialog", "Which " + which);
 		switch (which) {
-		// Button Void it & Stop everything
+		
+		// Stop
 		case -2:
-			mA.controlListener.stop();
+			mA.controlListener.end(tag);
 			break;
-		// Button Skip it / Extend Break
+		// Button Skip
+			
 		case -3:
-			switch (tag) {
-			// Is pomodoro, start pomodoro
-			case 0:
-				mA.controlListener.restart();
-				break;
-			// On break, so nothing
-			default:
-				break;
-			}
+			mA.controlListener.restart();
 			break;
-		// Button Take it
+			
+		// Button Take
 		case -1:
 			switch (tag) {
 			// Is pomodoro, start a break
