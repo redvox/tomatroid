@@ -218,6 +218,20 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		}
 	}
 	
+	public void end(int tag) {
+		if (activeButton != -1) {
+			slideLeft(bA[activeButton]);
+			if(activeButton == MainActivity.TYPE_POMODORO){
+				slideLeft(themePomodoroText);
+			} else if( activeButton == MainActivity.TYPE_LONGBREAK || activeButton == MainActivity.TYPE_TRACKING){
+				slideLeft(themeBreakText);
+			}
+			
+			mA.end(activeButton);
+			activeButton = -1;
+		}
+	}
+	
 	public void slideRight(View view){
 		view.startAnimation(StoredAnimation.slideHorizontal(-55));
 		view.setTranslationX(55);
