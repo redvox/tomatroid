@@ -30,29 +30,36 @@ public class AlarmReceiver extends BroadcastReceiver {
 	
 	static public final String KEY_TAG = "tag";
 	static public final String KEY_VIBRATE = "vibrate";
+	static public final String KEY_ALARM = "alarm";
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		int type = intent.getIntExtra(KEY_TYPE, -1);
-//		setVibration(context, false);
-		fireNotification(context, intent.getIntExtra(KEY_TAG, -1));
-
-		SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
-
-		if(settings.getBoolean(MainActivity.KEY_VIBRATE, false))
-			fireVibration(context);
-
-		if(settings.getBoolean(MainActivity.KEY_PLAYSOUND, false))
-			fireSound(context);
 		
+		SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
+		
+		showNotificationText(context, intent.getIntExtra(KEY_TAG, -1));
+		fireNotification(context, settings);
+				
 		int rememberTime = settings.getInt(MainActivity.KEY_REMEMBERTIME, 10);
 		startAlarmManager(context, rememberTime*60000, type);
-//		rememberTime*
+
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(KEY_ALARM, false);
+		editor.commit();
 		
 //		Intent startMain = new Intent(context, MainActivity.class);
 //		startMain.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
 //		startMain.putExtra(KEY_TYPE, intent.getIntExtra(KEY_TYPE, -1));
 //		context.startActivity(startMain);
+	} 
+	
+	public static void fireNotification(Context context, SharedPreferences settings){
+		if(settings.getBoolean(MainActivity.KEY_VIBRATE, false))
+			fireVibration(context);
+
+		if(settings.getBoolean(MainActivity.KEY_PLAYSOUND, false))
+			fireSound(context);
 	}
 	
 	public static PendingIntent getPendingIntent(Context context, int type){
@@ -62,14 +69,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 	}
 	
 	public static void stopAlarmManager(Context context){
-		Log.e("MainActivity", "AlarmManager Stopped");
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(AlarmReceiver.getPendingIntent(context, 0));
 	}
 	
 	public static void startAlarmManager(Context context, long timeinmilliesinthefuture, int tag){
-		Log.e("MainActivity", "AlarmManager Started in "+(timeinmilliesinthefuture/1000)/60);
-		
 		Intent aIndent = new Intent(context, AlarmReceiver.class);
 		aIndent.putExtra(KEY_TYPE, TYPE_ONLY_NOTIFICATION);
 		aIndent.putExtra(KEY_TAG, tag);
@@ -78,7 +82,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+timeinmilliesinthefuture, pIntent);
 	}
 	
-	public static void fireNotification(Context context, int tag){
+	public static void showNotificationText(Context context, int tag){
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				context).setSmallIcon(R.drawable.ic_launcher);
 
@@ -89,14 +93,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 			mBuilder.setContentTitle("Break over");
 			mBuilder.setContentText("Lets do some work!");
 		}
-	
-//		mBuilder.addAction(android.R.drawable.btn_minus, "Void it", getPendingIntent(context, TYPE_BUTTON_VOID));
-//		mBuilder.addAction(android.R.drawable.btn_plus, "Extend", getPendingIntent(context, TYPE_BUTTON_EXTEND));
-//		mBuilder.addAction(android.R.drawable.btn_star, "Taking", getPendingIntent(context, TYPE_BUTTON_TAKE));
-
-		Intent resultIntent = new Intent(context, MainActivity.class);
-//		resultIntent.putExtra(KEY_VIBRATE, false);
 		
+		Intent resultIntent = new Intent(context, MainActivity.class);	
 		mBuilder.setAutoCancel(true);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 		stackBuilder.addParentStack(MainActivity.class);

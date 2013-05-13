@@ -312,10 +312,14 @@ public class MainActivity extends Activity {
 		newCounter.setBaseTime(milliesBase);
 		newCounter.start();
 
-//		if(vibrate){
-//			AlarmReceiver.fireVibration(this);
-//		}
-//		AlarmReceiver.setVibration(this, true);
+		if(settings.getBoolean(AlarmReceiver.KEY_ALARM, true)){
+			AlarmReceiver.fireNotification(this, settings);
+		} else {
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(AlarmReceiver.KEY_ALARM, true);
+			editor.commit();
+		}
+		
 		
 		counter = newCounter;
 //		AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(), controlListener.activeButton);
