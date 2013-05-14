@@ -42,8 +42,8 @@ public class ThemeList extends Activity {
 		
 		NavigationBarManager navi = new NavigationBarManager(this, ACTIVITYNUMBER);
 
-		Cursor c1 = sqHelper.getThemeCursor(0);
-		Cursor c2 = sqHelper.getThemeCursor(1);
+		Cursor c1 = sqHelper.getThemeCursor(0, false);
+		Cursor c2 = sqHelper.getThemeCursor(1, false);
 
 		shown = (ListView) findViewById(R.id.shown);
 		hide = (ListView) findViewById(R.id.hide);
