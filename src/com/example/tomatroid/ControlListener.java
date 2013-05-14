@@ -134,22 +134,28 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 			ImageView iV = new ImageView(rL.getContext());
 			iV.setBackgroundResource(android.R.drawable.ic_media_play);
 			iV.setMaxWidth(50);
-
-			bA[i] = new Button(mA);
+//			bA[i] = new Button(mA); 
+			bA[i] = (Button) mInflater.inflate(R.layout.button_template, null);
 			bA[i].setText(commands.get(i));
 			bA[i].setTag(i);
 			bA[i].setOnClickListener(this);
-			bA[i].setBackgroundColor(backgroundColor);
-
 			rL.addView(iV, relativeLayoutForButtons);
 			rL.addView(bA[i]);
-
 			controlLayout.addView(rL);
 		}
+		
+//		Button b = (Button) getLayoutInflater().inflate(R.layout.template_button, null);
+//		b.setText(category.getName());
+		
+		bA[0].setBackgroundResource(R.drawable.button_yellow);
+		bA[1].setBackgroundResource(R.drawable.button_green);
+		bA[2].setBackgroundResource(R.drawable.button_green);
+		bA[3].setBackgroundResource(R.drawable.button_purple);
+		bA[4].setBackgroundResource(R.drawable.button_gray);
 
 		// Theme List
 		themeListAdapter = new SimpleCursorAdapter(mA,
-				R.layout.choose_theme_row, sqHelper.getThemeCursor(0),
+				R.layout.choose_theme_row, sqHelper.getThemeCursor(0, false),
 				new String[] { SQHelper.KEY_NAME }, new int[] { R.id.name }, 0);
 		themeListView = (ListView) mA.findViewById(R.id.themeList);
 		themeListView.setAdapter(themeListAdapter);

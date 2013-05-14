@@ -26,7 +26,7 @@
     <string name="parent">Parent</string>
     <string name="save">Save</string>
     <string name="dataSaves">Your settings are saved</string>
-    <string name="back">Back</string>
+    <string name="back">Back (no saving)</string>
     <string name="insert">Insert</string>
     <string name="change">Change</string>
     <string name="cancel">Cancel</string>
@@ -61,6 +61,7 @@
 	<string name="yesterday">Yesterday</string> 
 	<string name="update_dialog_title">New version installed</string> 
 	<string name="sleep_shortbreak_will_ignore_type">Sleep and Shortbreak will ignore the theme</string> 
+	<string name="calculate_with_children">Calculate statistics with children</string> 
     <string-array name="action_list">
         <item>Today\'s Summary</item>
         <item>Statistics</item>

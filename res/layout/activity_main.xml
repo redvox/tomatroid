@@ -76,6 +76,8 @@
                     android:id="@+id/newtheme"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/button_blue"
+                    style="@style/ButtonText"
                     android:text="@string/new_theme" />
 
                 <ListView

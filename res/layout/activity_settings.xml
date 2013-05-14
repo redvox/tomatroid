@@ -22,17 +22,21 @@
 
     <Button
         android:id="@+id/save"
+        style="@style/ButtonText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/back"
+        android:background="@drawable/button_blue"
         android:onClick="save"
         android:text="@string/save" />
-    
+
     <Button
         android:id="@+id/back"
+        style="@style/ButtonText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/button_blue"
         android:onClick="back"
         android:text="@string/back" />
 
