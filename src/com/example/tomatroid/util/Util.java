@@ -13,20 +13,30 @@ import android.text.GetChars;
 public class Util {
 
 	
-	static public String generateTimeText(float value) {
-		int hours = (int) value / 60;
-		int minutes = (int) value % 60;
-
+	static public String generateTimeText(float rawMinutes) {
+		int minutes = (int) rawMinutes % 60;
+		int hours = (int) rawMinutes / 60;
+		int days = (int)  hours / 24;
+//		hours = hours % 24;
+		
 		StringBuffer stb = new StringBuffer();
 
+//		if(days > 0){
+//			stb.append(days);
+//			stb.append("d ");
+//			if (hours < 10)
+//				stb.append("0");
+//		}
+		
 		if (hours > 0) {
 			stb.append(hours);
-			stb.append(":");
+			stb.append("h ");
 			if (minutes < 10)
 				stb.append("0");
 		}
 		stb.append(minutes);
-
+		stb.append("m");
+		
 		return stb.toString();
 	}
 	
