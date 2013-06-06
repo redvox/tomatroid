@@ -312,19 +312,39 @@ public class SQHelper extends SQLiteOpenHelper {
 	}
 	
 	public void changeTheme(int id, String name, int parentId){
-		openDatabase();
+		openDatabase();		
+		Cursor cursor = db.query(TABLE_THEME, new String[] { KEY_OVERALLTIME },  KEY_ROWID +" = " + id, null, null, null,
+				KEY_OVERALLTIME+ " DESC");
+		int totalTime = 0;
+		if(cursor.moveToFirst()){
+		totalTime = cursor.getInt(0);
+		}
+		
+		decrementParentTime(id, totalTime);
+		
 		ContentValues newContent = new ContentValues();
 		newContent.put(KEY_NAME, name);
 		newContent.put(KEY_ITEMOF, parentId);
 		db.update(TABLE_THEME, newContent, KEY_ROWID+" = "+id, null);
+		
+		incrementParentTime(id, totalTime);
 	}
 	
 	public void deleteTheme(int id, String name, int newId){
 		openDatabase();
+		Cursor cursor = db.query(TABLE_THEME, new String[] { KEY_OVERALLTIME },  KEY_ROWID +" = " + id, null, null, null,
+				KEY_OVERALLTIME+ " DESC");
+		int totalTime = 0;
+		if(cursor.moveToFirst()){
+		totalTime = cursor.getInt(0);
+		}
+		
 		ContentValues newContent = new ContentValues();
 		newContent.put(KEY_THEME, newId);
 		db.update(TABLE_DATES, newContent, KEY_THEME+" = "+id, null);		
 		db.delete(TABLE_THEME, KEY_ROWID+" = "+id, null);
+		
+		incrementParentTime(id, totalTime);
 	}
 	
 	public void changeThemeStatus(int id, int hide){
@@ -461,6 +481,24 @@ public class SQHelper extends SQLiteOpenHelper {
 			Log.e(SQHelper.class.getName(), " insertChilddrenTime parentid "+getTheme(parentid)+" of themeid "+getTheme(themeid)+" value: "+minutesPast);
 			incrementColumn(parentid, KEY_OVERALLTIME_W_CHILDREN, TABLE_THEME, minutesPast);
 			incrementParentTime(parentid, minutesPast);
+		} else {
+			Log.e(SQHelper.class.getName(), " insertChilddrenTime "+getTheme(themeid)+" has no parent");
+		}
+	}
+	
+	public void decrementColumn(int where, String column, String table, int value){
+		db.execSQL("UPDATE " + table + " SET " 
+				+ column + " = "+ column + " - " + value 
+				+ " WHERE " + KEY_ROWID+ "=" + where);
+	}
+	
+	public void decrementParentTime(int themeid, int minutesPast){
+		int parentid = getParent(themeid);
+		
+		if(parentid != -1){
+			Log.e(SQHelper.class.getName(), " insertChilddrenTime parentid "+getTheme(parentid)+" of themeid "+getTheme(themeid)+" value: "+minutesPast);
+			decrementColumn(parentid, KEY_OVERALLTIME_W_CHILDREN, TABLE_THEME, minutesPast);
+			decrementParentTime(parentid, minutesPast);
 		} else {
 			Log.e(SQHelper.class.getName(), " insertChilddrenTime "+getTheme(themeid)+" has no parent");
 		}
