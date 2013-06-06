@@ -1,27 +1,34 @@
-<b>1.7.11 <font color="#FF0000">*CURRENT VERSION*</font></b>
+<b>1.7.12 <font color="#FF0000">*CURRENT VERSION*</font></b><br>
+<b>New:</b> The Buttons where redesigned with some color.<br>
+<b>New:</b> On ending an pomodoro of break the LED flashes yellow.<br>
+<b>New:</b> If a theme parent is changed or the theme is deleted the time will properly added to its new parent.<br>
+<br>
+<b>1.7.11</b><br>
+New: Theme statistics can now shown with or without children.<br>
 Fix: Fixed text color error.<br>
 Fix: Dialog buttons are now homogeneous.<br>
 Fix: Sounds and Vibration works now properly even if the phone is not locked.<br>
-
-<b>1.7.10</b>
+Fix: Changed time representation from 1:30 to 1h 30m.<br>
+<br>
+<b>1.7.10</b><br>
 New: The type and theme of database entrys can now be changed.<br>
 New: Added seperators to the database list.<br>
 Fix: Weekly Summary now shows the correct column labels also red "now" line is now correct.<br>
 Fix: Notifications now should be fired after counter finish, to remind you that it is finished.<br>
-
-<b>1.7.9</b>
+<br>
+<b>1.7.9</b><br>
 New: Weekly Summary now shows 14 days and is horizontal scrollable.<br>
-
-<b>1.7.8</b>
+<br>
+<b>1.7.8</b><br>
 New: New Design of the Weekly Summary.<br>
 Fix: Days in statistic will now calculated correctly.<br>
 Fix: The statistic ranking is now correct.<br>
-
-<b>1.7.7</b>
+<br>
+<b>1.7.7</b><br>
 New: Added about dialog.<br>
 New: About dialog is shown when new version is installed.<br>
-
-<b>1.7.6</b>
+<br>
+<b>1.7.6</b><br>
 New: Added sound notification.<br>
 New: Vibration and Sound can now be disabled in the settings menu.<br>
 New: On pressing sleep, your app can now automatically switch airplane mode.<br>
