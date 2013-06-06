@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -96,6 +97,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		
 		Intent resultIntent = new Intent(context, MainActivity.class);	
 		mBuilder.setAutoCancel(true);
+		mBuilder.setLights(Color.YELLOW, 500, 500);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(resultIntent);
