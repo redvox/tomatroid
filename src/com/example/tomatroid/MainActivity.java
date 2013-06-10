@@ -107,6 +107,7 @@ public class MainActivity extends Activity {
 	public static final String KEY_PLAYSOUND = "playsound";
 	static final String KEY_AIRAIRPLANEMODE = "airplanemode";
 	static final String KEY_APPVERSION = "appversion";
+	static final String KEY_FIRSTSTART = "firststart";
 	
 	static final String KEY_POMODOROTIME = "pomodorotime";
 	static final String KEY_SHORTBREAKTIME = "shortbreaktime";
@@ -183,13 +184,27 @@ public class MainActivity extends Activity {
 		controlListener.themeBreakText.setText(breakTheme);
 		
 		settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		if(settings.getBoolean(KEY_FIRSTSTART, true)){
+			editor.putInt(MainActivity.KEY_POMODOROTIME, 25);
+			editor.putInt(MainActivity.KEY_SHORTBREAKTIME, 5);
+			editor.putInt(MainActivity.KEY_LONGBREAKTIME, 35);
+			editor.putInt(MainActivity.KEY_POMODORO_UNTIL_BREAK, 4);
+			editor.putInt(MainActivity.KEY_REMEMBERTIME, 5);
+			editor.putBoolean(MainActivity.KEY_VIBRATE,   true);
+			editor.putBoolean(MainActivity.KEY_PLAYSOUND, true);
+			editor.putBoolean(MainActivity.KEY_AIRAIRPLANEMODE, true);
+			editor.putBoolean(KEY_FIRSTSTART, false);
+			editor.commit();
+		}
+		
 		try {
 			int oldVersionCode = settings.getInt(KEY_APPVERSION, 1);
 			int newVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
 			
 			if((oldVersionCode != newVersionCode) && !firstStartUpTutorial){
 				showAboutDialog(getString(R.string.update_dialog_title));
-				SharedPreferences.Editor editor = settings.edit();
+				editor = settings.edit();
 				editor.putInt(KEY_APPVERSION, newVersionCode);
 				editor.commit();
 			}
