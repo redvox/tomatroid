@@ -1,4 +1,7 @@
-<b>1.7.12 <font color="#FF0000">*CURRENT VERSION*</font></b><br>
+<b>1.7.13 <font color="#FF0000">*CURRENT VERSION*</font></b><br>
+<b>Fix:</b> The setting values are now set on startup.<br>
+<br>
+<b>1.7.12 </b><br>
 <b>New:</b> The Buttons where redesigned with some color.<br>
 <b>New:</b> On ending an pomodoro of break the LED flashes yellow.<br>
 <b>New:</b> If a theme parent is changed or the theme is deleted the time will properly added to its new parent.<br>
