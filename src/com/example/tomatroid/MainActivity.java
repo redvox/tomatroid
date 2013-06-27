@@ -274,7 +274,7 @@ public class MainActivity extends Activity {
 		}
 		
 		if(settings.getBoolean(KEY_COUNTER, false)){
-			AlarmReceiver.stopAlarmManager(this);
+			AlarmReceiver.stopAlarmManager(this, tag);
 			counter = loadCounterState(settings);
 			counter.start();
 		}

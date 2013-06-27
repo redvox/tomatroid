@@ -35,6 +35,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		Log.e("onReceive", "receiving");
+		
 		int type = intent.getIntExtra(KEY_TYPE, -1);
 		
 		SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
@@ -63,22 +65,20 @@ public class AlarmReceiver extends BroadcastReceiver {
 			fireSound(context);
 	}
 	
-	public static PendingIntent getPendingIntent(Context context, int type){
+	public static PendingIntent getPendingIntent(Context context, int tag){
 		Intent aIndent = new Intent(context, AlarmReceiver.class);
-		aIndent.putExtra(KEY_TYPE, type);
+		aIndent.putExtra(KEY_TYPE, TYPE_ONLY_NOTIFICATION);
+		aIndent.putExtra(KEY_TYPE, tag);
 		return PendingIntent.getBroadcast(context, 192837, aIndent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 	
-	public static void stopAlarmManager(Context context){
+	public static void stopAlarmManager(Context context, int type){
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(AlarmReceiver.getPendingIntent(context, 0));
+		am.cancel(AlarmReceiver.getPendingIntent(context, type));
 	}
 	
 	public static void startAlarmManager(Context context, long timeinmilliesinthefuture, int tag){
-		Intent aIndent = new Intent(context, AlarmReceiver.class);
-		aIndent.putExtra(KEY_TYPE, TYPE_ONLY_NOTIFICATION);
-		aIndent.putExtra(KEY_TAG, tag);
-		PendingIntent pIntent = PendingIntent.getBroadcast(context, 192837, aIndent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pIntent = getPendingIntent(context, tag);
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+timeinmilliesinthefuture, pIntent);
 	}
@@ -118,7 +118,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// // SOS
 		int dot = 200; // Length of a Morse Code "dot" in milliseconds
 		// int dash = 500; // Length of a Morse Code "dash" in milliseconds
-		int short_gap = 200; // Length of Gap Between dots/dashes
+//		int short_gap = 200; // Length of Gap Between dots/dashes
 		// int medium_gap = 500; // Length of Gap Between Letters
 		// int long_gap = 1000; // Length of Gap Between Words
 		// long[] pattern = { 0, // Start immediately
