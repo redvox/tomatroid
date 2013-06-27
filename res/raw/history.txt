@@ -1,6 +1,26 @@
 <big><b> Changelog </b></big><br>
 
-<br><big><b> 1.7.13 <font color="#FF0000">*CURRENT VERSION*</font> </b></big><br>
+<br><big><b> 1.7.14 <font color="#FF0000">*CURRENT VERSION*</font> </b></big><br>
+
+
+<img src="fix" align="top"/>
+<b>Fix:</b> 
+Added some fixes to adress the 4.2 alarm receiver issue. 
+<br>
+
+<img src="change"/>
+<b>Change:</b> 
+The changelog design is reworked.
+<br>
+
+<img src="fix" align="top"/>
+<b>Fix:</b> 
+Theme List is now available from Database List.  
+<br>
+
+
+<br><big><b> 1.7.13 </b></big><br>
+
 
 <img src="fix" align="top"/>
 <b>Fix:</b> 
