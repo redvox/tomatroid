@@ -1,37 +1,124 @@
-<b>1.7.13 <font color="#FF0000">*CURRENT VERSION*</font></b><br>
-<b>Fix:</b> The setting values are now set on startup.<br>
+<big><b> Changelog </b></big><br>
+
+<br><big><b> 1.7.13 <font color="#FF0000">*CURRENT VERSION*</font> </b></big><br>
+
+<img src="fix" align="top"/>
+<b>Fix:</b> 
+The setting values are now set on startup.
 <br>
-<b>1.7.12 </b><br>
-<b>New:</b> The Buttons where redesigned with some color.<br>
-<b>New:</b> On ending an pomodoro of break the LED flashes yellow.<br>
-<b>New:</b> If a theme parent is changed or the theme is deleted the time will properly added to its new parent.<br>
+
+
+<br><big><b> 1.7.12 </b></big><br>
+
+
+<img src="change"/>
+<b>Change:</b> 
+The Buttons where redesigned with some color.
 <br>
-<b>1.7.11</b><br>
-New: Theme statistics can now shown with or without children.<br>
-Fix: Fixed text color error.<br>
-Fix: Dialog buttons are now homogeneous.<br>
-Fix: Sounds and Vibration works now properly even if the phone is not locked.<br>
-Fix: Changed time representation from 1:30 to 1h 30m.<br>
+
+<img src="newfeature"/>
+<b>New:</b> 
+On ending an pomodoro of break the LED flashes yellow.
 <br>
-<b>1.7.10</b><br>
-New: The type and theme of database entrys can now be changed.<br>
-New: Added seperators to the database list.<br>
-Fix: Weekly Summary now shows the correct column labels also red "now" line is now correct.<br>
-Fix: Notifications now should be fired after counter finish, to remind you that it is finished.<br>
+
+<img src="newfeature"/>
+<b>New:</b> 
+If a theme parent is changed or the theme is deleted the time will properly added to its new parent.
 <br>
-<b>1.7.9</b><br>
-New: Weekly Summary now shows 14 days and is horizontal scrollable.<br>
+
+
+<br><big><b> 1.7.11 </b></big><br>
+
+
+<img src="newfeature"/>
+<b>New:</b> 
+Theme statistics can now shown with or without children.
 <br>
-<b>1.7.8</b><br>
-New: New Design of the Weekly Summary.<br>
-Fix: Days in statistic will now calculated correctly.<br>
-Fix: The statistic ranking is now correct.<br>
+
+<img src="fix"/>
+<b>Fix:</b> 
+Fixed text color error.
 <br>
-<b>1.7.7</b><br>
-New: Added about dialog.<br>
-New: About dialog is shown when new version is installed.<br>
+
+<img src="fix"/>
+<b>Fix:</b> 
+Dialog buttons are now homogeneous.
 <br>
-<b>1.7.6</b><br>
-New: Added sound notification.<br>
-New: Vibration and Sound can now be disabled in the settings menu.<br>
-New: On pressing sleep, your app can now automatically switch airplane mode.<br>
+
+<img src="fix" />
+<b>Fix:</b> 
+Sounds and Vibration works now properly even if the phone is not locked.
+<br>
+
+<img src="fix"/>
+<b>Fix:</b> 
+Changed time representation from 1:30 to 1h 30m.
+<br>
+
+
+<br><big><b> 1.7.10 </b></big><br>
+
+
+<img src="newfeature"/>
+New: The type and theme of database entrys can now be changed.
+<br>
+
+<img src="newfeature"/>
+New: Added seperators to the database list.
+<br>
+
+<img src="fix"/>
+Fix: Weekly Summary now shows the correct column labels also red "now" line is now correct.
+<br>
+
+<img src="fix"/>
+Fix: Notifications now should be fired after counter finish, to remind you that it is finished.
+<br>
+
+
+<br><big><b> 1.7.9 </b></big><br>
+
+
+<img src="newfeature"/>
+New: Weekly Summary now shows 14 days and is horizontal scrollable.
+<br>
+
+
+<br><big><b> 1.7.8 </b></big><br>
+
+
+<img src="newfeature"/>
+New: New Design of the Weekly Summary.
+<br>
+
+<img src="fix"/>
+Fix: Days in statistic will now calculated correctly.
+<br>
+
+<img src="fix"/>
+Fix: The statistic ranking is now correct.
+<br>
+
+<br><big><b> 1.7.7 </b></big><br>
+
+<img src="newfeature"/>
+New: Added about dialog.
+<br>
+<img src="newfeature"/>
+New: About dialog is shown when new version is installed.
+<br>
+
+
+<br><big><b> 1.7.6 </b></big><br>
+
+<img src="newfeature"/>
+New: Added sound notification.
+<br>
+
+<img src="newfeature"/>
+New: Vibration and Sound can now be disabled in the settings menu.
+<br>
+
+<img src="newfeature"/>
+New: On pressing sleep, your app can now automatically switch airplane mode.
+<br>

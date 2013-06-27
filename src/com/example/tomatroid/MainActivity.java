@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,7 +74,6 @@ public class MainActivity extends Activity {
 	ControlListener controlListener;
 	DialogManager dialogManager;
 
-	AlarmManager alarmmanager;
 	AlarmReceiver alarmreceiver;
 	
 	ArrayList<View> bars = new ArrayList<View>();
@@ -203,7 +201,7 @@ public class MainActivity extends Activity {
 			int newVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
 			
 			if((oldVersionCode != newVersionCode) && !firstStartUpTutorial){
-				showAboutDialog(getString(R.string.update_dialog_title));
+				showAboutDialog();
 				editor = settings.edit();
 				editor.putInt(KEY_APPVERSION, newVersionCode);
 				editor.commit();
@@ -486,7 +484,7 @@ public class MainActivity extends Activity {
 			controlListener.stop();
 			break;
 		case R.id.menu_about:
-			showAboutDialog(getString(R.string.about));
+			showAboutDialog();
 			break;
 		default:
 			break;
@@ -515,10 +513,8 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void showAboutDialog(String title){
-		AboutDialog about = new AboutDialog(this);
-//		about.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.btn_dialog);
-		about.setTitle(title);
+	public void showAboutDialog(){
+		AboutDialog about = new AboutDialog(this, R.raw.history, -1);
 		about.show();
 	}
 
