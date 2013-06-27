@@ -102,6 +102,7 @@ public class ThemeList extends Activity {
 			TextView tv1 = (TextView) view.findViewById(R.id.parent);
 			TextView tv2 = (TextView) view.findViewById(R.id.name);
 			ImageButton change = (ImageButton) view.findViewById(R.id.button);
+//			change.setBackgroundResource(R.drawable.circlearrows);
 			change.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
