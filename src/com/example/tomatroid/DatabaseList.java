@@ -37,7 +37,7 @@ import android.widget.TextView;
 
 public class DatabaseList extends ListActivity {
 
-	final int ACTIVITYNUMBER = 2;
+	final int ACTIVITYNUMBER = 3;
 
 	SQHelper sqHelper = new SQHelper(this);
 	LayoutInflater mInflater;
