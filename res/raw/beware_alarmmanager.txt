@@ -1,0 +1,3 @@
+<br>that if you running Android <b>4.2</b> or <b>4.2.2</b> there are some issues with the Android Alarmmanager.<br>
+<br>
+Our development team is working on a workaround, please bear with us.

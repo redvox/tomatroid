@@ -207,6 +207,9 @@ public class MainActivity extends Activity {
 				editor.commit();
 			}
 			
+			AboutDialog about = new AboutDialog(this, R.raw.beware_alarmmanager, R.drawable.beware);
+			about.show();
+			
 		} catch (NameNotFoundException e) {
 		}
 	}
