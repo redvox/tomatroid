@@ -1,0 +1,226 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="horizontal" >
+
+        <Chronometer
+            android:id="@+id/timetext"
+            style="@style/BigText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+        <include layout="@layout/vertical_line" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/pomodorosNum"
+                style="@style/BigText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/pomodoros" />
+        </LinearLayout>
+
+        <include layout="@layout/vertical_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:id="@+id/digram"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:padding="3dp" >
+        </RelativeLayout>
+
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <LinearLayout
+                android:id="@+id/control"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <include layout="@layout/horizontal_line" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:background="#FFFFFF" >
+
+                        <include layout="@layout/play_icon_template" />
+
+                        <TextView
+                            android:id="@+id/themePomodoroText"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#FFFFFF" />
+                    </RelativeLayout>
+
+                    <include layout="@layout/vertical_line" />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:background="#FFFFFF" >
+
+                        <include layout="@layout/play_icon_template" />
+
+                        <TextView
+                            android:id="@+id/themeBreakText"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#FFFFFF" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <include layout="@layout/horizontal_line" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" >
+
+                        <include layout="@layout/play_icon_template" />
+
+                        <Button
+                            android:id="@+id/pomodoroButton"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_yellow"
+                            android:text="@string/pomodoro" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" >
+
+                        <include layout="@layout/play_icon_template" />
+
+                        <Button
+                            android:id="@+id/shortbreakButton"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_green"
+                            android:text="@string/shortbreak" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" >
+
+                        <include layout="@layout/play_icon_template" />
+
+                        <Button
+                            android:id="@+id/longbreakButton"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_green"
+                            android:text="@string/longbreak" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <include layout="@layout/play_icon_template" />
+
+                        <Button
+                            android:id="@+id/trackingButton"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_purple"
+                            android:text="@string/tracking" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <include layout="@layout/play_icon_template" />
+
+                        <Button
+                            android:id="@+id/sleepButton"
+                            style="@style/ButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_gray"
+                            android:text="@string/sleep" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/newtheme"
+                    style="@style/ButtonText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_blue"
+                    android:text="@string/new_theme" />
+
+                <ListView
+                    android:id="@+id/themeList"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+                </ListView>
+            </LinearLayout>
+        </ViewFlipper>
+    </LinearLayout>
+
+</LinearLayout>

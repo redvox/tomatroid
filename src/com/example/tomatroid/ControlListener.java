@@ -35,7 +35,6 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 	LayoutInflater mInflater;
 
 	Button[] bA;
-	ArrayList<String> commands = new ArrayList<String>();
 	TextView themePomodoroText;
 	TextView themeBreakText;
 	Button newTheme;
@@ -69,89 +68,35 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		relativeLayoutForTheme.addRule(RelativeLayout.CENTER_VERTICAL);
 		relativeLayoutForTheme.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 		//######################################
-		View line1 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
-				false);
-		controlLayout.addView(line1);
 
-		themePomodoroText = new TextView(mA);
+		themePomodoroText = (TextView) mA.findViewById(R.id.themePomodoroText);
 		themePomodoroText.setClickable(true);
 		themePomodoroText.setOnClickListener(this);
 		themePomodoroText.setTextSize(20);
 		themePomodoroText.setTag(90);
 		themePomodoroText.setBackgroundColor(backgroundColor);
-		themePomodoroText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-//		controlLayout.addView(themePomodoroText);
-		
-		RelativeLayout rL1 = new RelativeLayout(mA);
-		rL1.setBackgroundColor(backgroundColor);
-		ImageView iV1 = new ImageView(rL1.getContext());
-		iV1.setBackgroundResource(android.R.drawable.ic_media_play);
-		rL1.addView(iV1, relativeLayoutForTheme);
-		rL1.addView(themePomodoroText);
-		controlLayout.addView(rL1);
-		//######################################
-		View line2 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
-				false);
-		controlLayout.addView(line2);
 
-		themeBreakText = new TextView(mA);
+		//######################################
+
+		themeBreakText = (TextView) mA.findViewById(R.id.themeBreakText);
 		themeBreakText.setClickable(true);
 		themeBreakText.setOnClickListener(this);
 		themeBreakText.setTextSize(20);
 		themeBreakText.setTag(91);
-		themeBreakText.setBackgroundColor(backgroundColor);
-		themeBreakText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-//		controlLayout.addView(themeBreakText);
 
-		RelativeLayout rL2 = new RelativeLayout(mA);
-		rL2.setBackgroundColor(backgroundColor);
-		ImageView iV2 = new ImageView(rL1.getContext());
-		iV2.setBackgroundResource(android.R.drawable.ic_media_play);
-		rL2.addView(iV2, relativeLayoutForTheme);
-		rL2.addView(themeBreakText);
-		controlLayout.addView(rL2);
-		
 		//######################################
-		View line3 = mInflater.inflate(R.layout.horizontal_line, controlLayout,
-				false);
-		controlLayout.addView(line3);
 
-		RelativeLayout.LayoutParams relativeLayoutForButtons = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
-		relativeLayoutForButtons.addRule(RelativeLayout.CENTER_VERTICAL);
-		
-		// Controlls
-		commands.add(mA.getString(R.string.pomodoro));
-		commands.add(mA.getString(R.string.shortbreak));
-		commands.add(mA.getString(R.string.longbreak));
-		commands.add(mA.getString(R.string.tracking));
-		commands.add(mA.getString(R.string.sleep));
-
-		bA = new Button[commands.size()];
+		bA = new Button[5];
+		bA[0] = (Button) mA.findViewById(R.id.pomodoroButton);
+		bA[1] = (Button) mA.findViewById(R.id.shortbreakButton);
+		bA[2] = (Button) mA.findViewById(R.id.longbreakButton);
+		bA[3] = (Button) mA.findViewById(R.id.trackingButton);
+		bA[4] = (Button) mA.findViewById(R.id.sleepButton);
+				
 		for (int i = 0; i < bA.length; i++) {
-			RelativeLayout rL = new RelativeLayout(mA);
-			ImageView iV = new ImageView(rL.getContext());
-			iV.setBackgroundResource(android.R.drawable.ic_media_play);
-			iV.setMaxWidth(50);
-//			bA[i] = new Button(mA); 
-			bA[i] = (Button) mInflater.inflate(R.layout.button_template, null);
-			bA[i].setText(commands.get(i));
 			bA[i].setTag(i);
 			bA[i].setOnClickListener(this);
-			rL.addView(iV, relativeLayoutForButtons);
-			rL.addView(bA[i]);
-			controlLayout.addView(rL);
 		}
-		
-//		Button b = (Button) getLayoutInflater().inflate(R.layout.template_button, null);
-//		b.setText(category.getName());
-		
-		bA[0].setBackgroundResource(R.drawable.button_yellow);
-		bA[1].setBackgroundResource(R.drawable.button_green);
-		bA[2].setBackgroundResource(R.drawable.button_green);
-		bA[3].setBackgroundResource(R.drawable.button_purple);
-		bA[4].setBackgroundResource(R.drawable.button_gray);
 
 		// Theme List
 		themeListAdapter = new SimpleCursorAdapter(mA,

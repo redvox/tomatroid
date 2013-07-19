@@ -14,9 +14,9 @@
         <Chronometer
             android:id="@+id/timetext"
             style="@style/BigText"
-            android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
 
         <include layout="@layout/vertical_line" />
 
@@ -50,21 +50,130 @@
             android:id="@+id/digram"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:padding="3dp"
-            android:layout_weight="50">
+            android:layout_weight="50"
+            android:padding="3dp" >
         </RelativeLayout>
 
         <ViewFlipper
             android:id="@+id/viewFlipper"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="50">
+            android:layout_weight="50" >
 
             <LinearLayout
                 android:id="@+id/control"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+
+                <include layout="@layout/horizontal_line" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF" >
+
+                    <include layout="@layout/play_icon_template" />
+
+                    <TextView
+                        android:id="@+id/themePomodoroText"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FFFFFF" />
+                </RelativeLayout>
+
+                <include layout="@layout/horizontal_line" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF" >
+
+                    <include layout="@layout/play_icon_template" />
+
+                    <TextView
+                        android:id="@+id/themeBreakText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#FFFFFF" />
+                </RelativeLayout>
+
+                <include layout="@layout/horizontal_line" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/play_icon_template" />
+
+                    <Button
+                        android:id="@+id/pomodoroButton"
+                        style="@style/ButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_yellow"
+                        android:text="@string/pomodoro" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/play_icon_template" />
+
+                    <Button
+                        android:id="@+id/shortbreakButton"
+                        style="@style/ButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_green"
+                        android:text="@string/shortbreak" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                     <include layout="@layout/play_icon_template" />
+
+                    <Button
+                        android:id="@+id/longbreakButton"
+                        style="@style/ButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_green"
+                        android:text="@string/longbreak" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/play_icon_template" />
+
+                    <Button
+                        android:id="@+id/trackingButton"
+                        style="@style/ButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_purple"
+                        android:text="@string/tracking" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <include layout="@layout/play_icon_template" />
+
+                    <Button
+                        android:id="@+id/sleepButton"
+                        style="@style/ButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_gray"
+                        android:text="@string/sleep" />
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -74,10 +183,10 @@
 
                 <Button
                     android:id="@+id/newtheme"
+                    style="@style/ButtonText"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_blue"
-                    style="@style/ButtonText"
                     android:text="@string/new_theme" />
 
                 <ListView
