@@ -23,8 +23,7 @@ public class WeeklyActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weekly);
 
-		NavigationBarManager navi = new NavigationBarManager(this,
-				ACTIVITYNUMBER);
+		new NavigationBarManager(this, ACTIVITYNUMBER);
 
 		weekday_shortcut = getResources().getStringArray(R.array.weekday_shortcut);
 		

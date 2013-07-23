@@ -126,8 +126,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		NavigationBarManager navi = new NavigationBarManager(this,
-				ACTIVITYNUMBER);
+		new NavigationBarManager(this, ACTIVITYNUMBER);
 		
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);

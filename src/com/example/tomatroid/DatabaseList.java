@@ -50,8 +50,7 @@ public class DatabaseList extends ListActivity {
 		setContentView(R.layout.activity_database_list);
 		mInflater = LayoutInflater.from(this);
 
-		NavigationBarManager navi = new NavigationBarManager(this,
-				ACTIVITYNUMBER);
+		new NavigationBarManager(this, ACTIVITYNUMBER);
 
 		Cursor cursor = sqHelper.getDatesCursor();
 		

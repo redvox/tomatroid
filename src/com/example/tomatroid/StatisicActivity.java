@@ -48,8 +48,7 @@ public class StatisicActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_statictic);
 
-		NavigationBarManager navi = new NavigationBarManager(this,
-				ACTIVITYNUMBER);
+		new NavigationBarManager(this, ACTIVITYNUMBER);
 
 		SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
 		withChrilden = settings.getBoolean(KEY_WITHCHILDREN, true);

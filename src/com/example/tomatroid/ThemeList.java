@@ -40,7 +40,7 @@ public class ThemeList extends Activity {
 		setContentView(R.layout.activity_theme_list);
 		mInflater = LayoutInflater.from(this);
 		
-		NavigationBarManager navi = new NavigationBarManager(this, ACTIVITYNUMBER);
+		new NavigationBarManager(this, ACTIVITYNUMBER);
 
 		Cursor c1 = sqHelper.getThemeCursor(0, false);
 		Cursor c2 = sqHelper.getThemeCursor(1, false);
