@@ -35,17 +35,20 @@ public class AlarmReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.e("onReceive", "receiving");
+		
+		if(Util.DEBUG){
+			Util.writeLog(context, "AlarmReceiver onReceive");
+		}
 		
 		int type = intent.getIntExtra(KEY_TYPE, -1);
 		
 		SharedPreferences settings = context.getSharedPreferences(MainActivity.PREFS_NAME, 0);
 		
-		showNotificationText(context, intent.getIntExtra(KEY_TAG, -1));
-		fireNotification(context, settings);
+		AlarmReceiver.showNotificationText(context, intent.getIntExtra(KEY_TAG, -1));
+		AlarmReceiver.fireNotification(context, settings);
 				
 		int rememberTime = settings.getInt(MainActivity.KEY_REMEMBERTIME, 10);
-		startAlarmManager(context, rememberTime*60000, type);
+		AlarmReceiver.startAlarmManager(context, rememberTime*60000, type);
 
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(KEY_ALARM, false);
@@ -72,12 +75,31 @@ public class AlarmReceiver extends BroadcastReceiver {
 		return PendingIntent.getBroadcast(context, 192837, aIndent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 	
-	public static void stopAlarmManager(Context context, int type){
+	public static void stopAlarmManager(Context context, int tag){
+		Intent aIndent = new Intent(context, AlarmReceiver.class);
+		aIndent.putExtra(KEY_TYPE, TYPE_ONLY_NOTIFICATION);
+		aIndent.putExtra(KEY_TYPE, tag);
+		
+		boolean alarmUp = (          
+				PendingIntent.getBroadcast(context, 192837, aIndent, PendingIntent.FLAG_NO_CREATE)
+		        != null);
+
+		if (alarmUp)
+		{
+		    if(Util.DEBUG){
+				Util.writeLog(context, "stopAlarmManager (Tag:"+tag+")");
+			}
+		}
+		
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(AlarmReceiver.getPendingIntent(context, type));
+		am.cancel(AlarmReceiver.getPendingIntent(context, tag));
 	}
 	
 	public static void startAlarmManager(Context context, long timeinmilliesinthefuture, int tag){
+		if(Util.DEBUG){
+			Util.writeLog(context, "startAlarmManager (Tag: "+tag+")( "+timeinmilliesinthefuture+" ms / " + Util.milliesToTimeStamp(timeinmilliesinthefuture) + ")");
+		}
+		
 		PendingIntent pIntent = getPendingIntent(context, tag);
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+timeinmilliesinthefuture, pIntent);

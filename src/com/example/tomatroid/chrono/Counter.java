@@ -1,11 +1,10 @@
 package com.example.tomatroid.chrono;
 
 import com.example.tomatroid.MainActivity;
+import com.example.tomatroid.util.Util;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.widget.TextView;
 
 public class Counter extends CountDownTimer {
@@ -21,6 +20,11 @@ public class Counter extends CountDownTimer {
 
 	public Counter(int minutes, MainActivity main, TextView timeText, int tag) {
 		super((minutes * 60) * 1000, 1000);
+		
+		if(Util.DEBUG){
+			Util.writeLog(context, "Counter Start (Tag:"+tag+") ( "+(minutes * 60) * 1000+" ms / " + Util.milliesToTimeStamp((minutes * 60) * 1000) + ")");
+		}
+		
 		this.runTime = (minutes * 60) * 1000;
 		this.timeText = timeText;
 		this.context = main;
@@ -30,6 +34,11 @@ public class Counter extends CountDownTimer {
 
 	public Counter(long millies, MainActivity main, TextView timeText, int tag) {
 		super(millies, 1000);
+		
+		if(Util.DEBUG){
+			Util.writeLog(context, "Counter Start (Tag:"+tag+") ( "+millies+" ms / " + Util.milliesToTimeStamp(millies) + ")");
+		}
+		
 		this.runTime = millies;
 		this.timeText = timeText;
 		this.context = main;
@@ -39,6 +48,10 @@ public class Counter extends CountDownTimer {
 
 	@Override
 	public void onFinish() {
+		if(Util.DEBUG){
+			Util.writeLog(context, "Counter Finish (Tag:"+tag+")");
+		}
+		
 		timeText.setText("00:00");
 		mA.counterFinish(tag);
 	}

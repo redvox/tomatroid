@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.example.tomatroid.sql.SQHelper;
 import com.example.tomatroid.util.StoredAnimation;
+import com.example.tomatroid.util.Util;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,12 +13,10 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -119,6 +118,10 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		} else if (tag == 999) {
 			showNewThemeDialog();
 		} else {
+			if(Util.DEBUG){
+				Util.writeLog(mA, "Button pressed (Tag: "+tag+")");
+			}
+			
 			start(tag);
 		}
 	}
