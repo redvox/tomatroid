@@ -166,26 +166,21 @@ public class MainActivity extends Activity {
 
 		// Calculate for Bars
 		int startPomodoroTime = sqhelper.getTodaySumOf(SQHelper.TYPE_POMODORO);
-		int startBreakTime = sqhelper.getTodaySumOf(SQHelper.TYPE_SHORTBREAK)
-				+ sqhelper.getTodaySumOf(SQHelper.TYPE_LONGBREAK);
+		int startBreakTime = sqhelper.getTodaySumOf(SQHelper.TYPE_SHORTBREAK) + sqhelper.getTodaySumOf(SQHelper.TYPE_LONGBREAK);
 		int startTrackingTime = sqhelper.getTodaySumOf(SQHelper.TYPE_TRACKING);
-		float maxStartTime = Math.max(startTrackingTime,
-				Math.max(startPomodoroTime, startBreakTime));
+		float maxStartTime = Math.max(startTrackingTime, Math.max(startPomodoroTime, startBreakTime));
 		int maxValue = (int) Math.max(60, ((maxStartTime / 100) * 125));
 
 		axis = new Axis(digram.getContext(), maxValue);
 		axisLayout.addView(axis);
 
-		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime,
-				COLOR_POMODORO, maxValue);
+		pomodoroBar = new Bar(this, digram.getContext(), startPomodoroTime, COLOR_POMODORO, maxValue);
 		digramLayout.addView(pomodoroBar, barParams);
 
-		breakBar = new Bar(this, digram.getContext(), startBreakTime,
-				COLOR_BREAK, maxValue);
+		breakBar = new Bar(this, digram.getContext(), startBreakTime, COLOR_BREAK, maxValue);
 		digramLayout.addView(breakBar, barParams);
 
-		trackBar = new Bar(this, digram.getContext(), startTrackingTime,
-				COLOR_TRACKING, maxValue);
+		trackBar = new Bar(this, digram.getContext(), startTrackingTime, COLOR_TRACKING, maxValue);
 		digramLayout.addView(trackBar, barParams);
 
 		controlListener = new ControlListener(this, sqhelper);
@@ -196,9 +191,6 @@ public class MainActivity extends Activity {
 		// Typeface tf = Typeface.createFromAsset(getAssets(), "wwDigital.ttf");
 		timeText.setTypeface(tf);
 		timeText.setTextColor(COLOR_BLUE);
-
-		controlListener.themePomodoroText.setText(pomodoroTheme);
-		controlListener.themeBreakText.setText(breakTheme);
 
 		try {
 			int oldVersionCode = settings.getInt(KEY_APPVERSION, 1);
@@ -254,22 +246,30 @@ public class MainActivity extends Activity {
 		controlListener.themeListAdapter.notifyDataSetChanged();
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
 
-		pomodoroTheme = settings.getString(KEY_POMODOROTHEME,
-				sqhelper.getTheme(1));
+		pomodoroTheme = settings.getString(KEY_POMODOROTHEME, sqhelper.getTheme(1));
 		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
 		pomodoroTime = settings.getInt(KEY_POMODOROTIME, 25);
 		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
 		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
-		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK,
-				4);
+		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK, 4);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
 		airplanemode = settings.getBoolean(KEY_AIRAIRPLANEMODE, false);
-
-		controlListener.themePomodoroText.setText(pomodoroTheme);
-		controlListener.themeBreakText.setText(breakTheme);
+		
 		int tag = settings.getInt(KEY_TAG, -1);
 		controlListener.toogle(tag);
+		
+		if(sqhelper.getTheme(pomodoroTheme) > 0){
+			controlListener.themePomodoroText.setText(pomodoroTheme);
+		} else {
+			controlListener.switchTheme(0, sqhelper.getTheme(1));
+		}
 
+		if(sqhelper.getTheme(breakTheme) > 0){
+			controlListener.themeBreakText.setText(breakTheme);
+		} else {
+			controlListener.switchTheme(1, sqhelper.getTheme(1));
+		}
+		
 		if (tag == TYPE_TRACKING) {
 			timeText.setTextColor(COLOR_TRACKING);
 		} else if (tag == TYPE_LONGBREAK || tag == TYPE_SHORTBREAK) {
