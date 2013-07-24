@@ -131,6 +131,10 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 			long arg3) {
 		viewFlipper.showNext();
 		String theme = (String) ((TextView) view).getText();
+		switchTheme(chooseThemeSwitch, theme);
+	}
+	
+	public void switchTheme(int chooseThemeSwitch, String theme){
 		switch (chooseThemeSwitch) {
 		case 0:
 			themePomodoroText.setText(theme);
@@ -248,9 +252,12 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 						int parentId = cc.getInt(cc.getColumnIndex(SQHelper.KEY_ROWID));
 						if(parentId == 1) 
 							parentId = -1;
-						sqHelper.addTheme(userInput.getText().toString(), parentId);
+						String themeName = userInput.getText().toString();
+						sqHelper.addTheme(themeName, parentId);
 						themeListAdapter.getCursor().requery();
 						themeListAdapter.notifyDataSetChanged();
+						switchTheme(chooseThemeSwitch, themeName);
+						viewFlipper.showNext();
 					}
 				})
 				.setNegativeButton(mA.getString(R.string.cancel), new DialogInterface.OnClickListener() {
