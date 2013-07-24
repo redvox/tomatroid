@@ -15,5 +15,9 @@
         android:title="@string/about"
         android:orderInCategory="80"
         android:showAsAction="never" />
+    <item android:id="@+id/menu_nightmode"
+        android:title="Switch Day/Night Mode"
+        android:orderInCategory="80"
+        android:showAsAction="never" />
 </menu>
 

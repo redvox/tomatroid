@@ -9,6 +9,7 @@ import com.example.tomatroid.digram.Bar;
 import com.example.tomatroid.sql.SQHelper;
 import com.example.tomatroid.util.AlarmReceiver;
 import com.example.tomatroid.util.NavigationBarManager;
+import com.example.tomatroid.util.Util;
 
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -42,21 +43,24 @@ public class MainActivity extends Activity {
 	public static final int TYPE_LONGBREAK = 2;
 	public static final int TYPE_TRACKING = 3;
 	public static final int TYPE_SLEEPING = 4;
-	
-	public static final String COLOR_STRING_POMODORO = "#fdf700";
+
+	public static final String COLOR_STRING_POMODORO = "#8A0808";
+	// public static final String COLOR_STRING_POMODORO = "#fdf700";
 	public static final String COLOR_STRING_BREAK = "#04B404";
 	public static final String COLOR_STRING_TRACKING = "#800080";
 	public static final String COLOR_STRING_SLEEP = "#A4A4A4";
 	public static final String COLOR_STRING_BLUE = "#6495ED";
 	public static final String COLOR_STRING_RED = "#DC143C";
-	
-	public static final int COLOR_POMODORO = Color.parseColor(COLOR_STRING_POMODORO);
-	public static final int COLOR_BREAK =Color.parseColor(COLOR_STRING_BREAK);
-	public static final int COLOR_TRACKING = Color.parseColor(COLOR_STRING_TRACKING);
+
+	public static final int COLOR_POMODORO = Color
+			.parseColor(COLOR_STRING_POMODORO);
+	public static final int COLOR_BREAK = Color.parseColor(COLOR_STRING_BREAK);
+	public static final int COLOR_TRACKING = Color
+			.parseColor(COLOR_STRING_TRACKING);
 	public static final int COLOR_SLEEP = Color.parseColor(COLOR_STRING_SLEEP);
 	public static final int COLOR_BLUE = Color.parseColor(COLOR_STRING_BLUE);
 	public static final int COLOR_RED = Color.parseColor(COLOR_STRING_RED);
-	
+
 	LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT);
 
@@ -75,7 +79,7 @@ public class MainActivity extends Activity {
 	DialogManager dialogManager;
 
 	AlarmReceiver alarmreceiver;
-	
+
 	ArrayList<View> bars = new ArrayList<View>();
 
 	int pomodoroTime;
@@ -106,7 +110,8 @@ public class MainActivity extends Activity {
 	static final String KEY_AIRAIRPLANEMODE = "airplanemode";
 	static final String KEY_APPVERSION = "appversion";
 	static final String KEY_FIRSTSTART = "firststart";
-	
+	public static final String KEY_NIGHTMODE = "nightmode";
+
 	static final String KEY_POMODOROTIME = "pomodorotime";
 	static final String KEY_SHORTBREAKTIME = "shortbreaktime";
 	static final String KEY_LONGBREAKTIME = "longbreaktime";
@@ -114,27 +119,45 @@ public class MainActivity extends Activity {
 	public static final String KEY_REMEMBERTIME = "remembertime";
 	static final String KEY_TAG = "tag";
 	static final String KEY_COUNTER = "counter";
-	static final String KEY_COUNTERPAUSETIME= "counterpausetime";
+	static final String KEY_COUNTERPAUSETIME = "counterpausetime";
 	static final String KEY_COUNTERTIMEBASE = "countertimebase";
 	static final String KEY_COUNTERTIMELEFT = "countertimeleft";
-	static final String KEY_COUNTERCOUNTUP= "countercountup";
+	static final String KEY_COUNTERCOUNTUP = "countercountup";
 
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Util.switchToNightMode(this);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
 		new NavigationBarManager(this, ACTIVITYNUMBER);
+
+		settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		if (settings.getBoolean(KEY_FIRSTSTART, true)) {
+			editor.putInt(MainActivity.KEY_POMODOROTIME, 25);
+			editor.putInt(MainActivity.KEY_SHORTBREAKTIME, 5);
+			editor.putInt(MainActivity.KEY_LONGBREAKTIME, 35);
+			editor.putInt(MainActivity.KEY_POMODORO_UNTIL_BREAK, 4);
+			editor.putInt(MainActivity.KEY_REMEMBERTIME, 5);
+			editor.putBoolean(MainActivity.KEY_VIBRATE, true);
+			editor.putBoolean(MainActivity.KEY_PLAYSOUND, true);
+			editor.putBoolean(MainActivity.KEY_AIRAIRPLANEMODE, true);
+			editor.putBoolean(KEY_FIRSTSTART, false);
+			editor.putBoolean(KEY_NIGHTMODE, false);
+			editor.commit();
+		}
+
 		
+
+		setContentView(R.layout.activity_main);
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
 		timeText = (Chronometer) findViewById(R.id.timetext);
-//		ProgressBar progress = (ProgressBar) findViewById(R.id.progressbar);
-//		progress.setIndeterminate(false);
-//		progress.setMax(100);
-//		progress.setProgress(50);
+		// ProgressBar progress = (ProgressBar) findViewById(R.id.progressbar);
+		// progress.setIndeterminate(false);
+		// progress.setMax(100);
+		// progress.setProgress(50);
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
 
 		pomodorosNum = sqhelper.getTodayCountOf(SQHelper.TYPE_POMODORO);
@@ -148,9 +171,11 @@ public class MainActivity extends Activity {
 
 		// Calculate for Bars
 		int startPomodoroTime = sqhelper.getTodaySumOf(SQHelper.TYPE_POMODORO);
-		int startBreakTime = sqhelper.getTodaySumOf(SQHelper.TYPE_SHORTBREAK) + sqhelper.getTodaySumOf(SQHelper.TYPE_LONGBREAK);
+		int startBreakTime = sqhelper.getTodaySumOf(SQHelper.TYPE_SHORTBREAK)
+				+ sqhelper.getTodaySumOf(SQHelper.TYPE_LONGBREAK);
 		int startTrackingTime = sqhelper.getTodaySumOf(SQHelper.TYPE_TRACKING);
-		float maxStartTime = Math.max(startTrackingTime, Math.max(startPomodoroTime, startBreakTime));
+		float maxStartTime = Math.max(startTrackingTime,
+				Math.max(startPomodoroTime, startBreakTime));
 		int maxValue = (int) Math.max(60, ((maxStartTime / 100) * 125));
 
 		axis = new Axis(digram.getContext(), maxValue);
@@ -179,36 +204,23 @@ public class MainActivity extends Activity {
 
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
-		
-		settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		if(settings.getBoolean(KEY_FIRSTSTART, true)){
-			editor.putInt(MainActivity.KEY_POMODOROTIME, 25);
-			editor.putInt(MainActivity.KEY_SHORTBREAKTIME, 5);
-			editor.putInt(MainActivity.KEY_LONGBREAKTIME, 35);
-			editor.putInt(MainActivity.KEY_POMODORO_UNTIL_BREAK, 4);
-			editor.putInt(MainActivity.KEY_REMEMBERTIME, 5);
-			editor.putBoolean(MainActivity.KEY_VIBRATE,   true);
-			editor.putBoolean(MainActivity.KEY_PLAYSOUND, true);
-			editor.putBoolean(MainActivity.KEY_AIRAIRPLANEMODE, true);
-			editor.putBoolean(KEY_FIRSTSTART, false);
-			editor.commit();
-		}
-		
+
 		try {
 			int oldVersionCode = settings.getInt(KEY_APPVERSION, 1);
-			int newVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-			
-			if((oldVersionCode != newVersionCode) && !firstStartUpTutorial){
+			int newVersionCode = getPackageManager().getPackageInfo(
+					getPackageName(), 0).versionCode;
+
+			if ((oldVersionCode != newVersionCode) && !firstStartUpTutorial) {
 				showAboutDialog();
 				editor = settings.edit();
 				editor.putInt(KEY_APPVERSION, newVersionCode);
 				editor.commit();
-			
-//				AboutDialog about = new AboutDialog(this, R.raw.beware_alarmmanager, R.drawable.beware);
-//				about.show();
+
+				// AboutDialog about = new AboutDialog(this,
+				// R.raw.beware_alarmmanager, R.drawable.beware);
+				// about.show();
 			}
-			
+
 		} catch (NameNotFoundException e) {
 		}
 	}
@@ -221,8 +233,8 @@ public class MainActivity extends Activity {
 		editor.putString(KEY_POMODOROTHEME, pomodoroTheme);
 		editor.putString(KEY_BREAKTHEME, breakTheme);
 		editor.putInt(KEY_TAG, controlListener.activeButton);
-		
-		if(tracking){
+
+		if (tracking) {
 			long elapsedMillis = timeText.getBase();
 			editor.putLong(KEY_CHRONOSTATE, elapsedMillis);
 		}
@@ -231,7 +243,8 @@ public class MainActivity extends Activity {
 		if (counter != null) {
 			counter.cancel();
 			saveCounterState(editor);
-			AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(), controlListener.activeButton);
+			AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(),
+					controlListener.activeButton);
 		} else {
 			editor.putBoolean(KEY_COUNTER, false);
 		}
@@ -245,62 +258,71 @@ public class MainActivity extends Activity {
 		controlListener.themeListAdapter.getCursor().requery();
 		controlListener.themeListAdapter.notifyDataSetChanged();
 		getActionBar().setSelectedNavigationItem(ACTIVITYNUMBER);
-		
-		pomodoroTheme = settings.getString(KEY_POMODOROTHEME, sqhelper.getTheme(1));
+
+		pomodoroTheme = settings.getString(KEY_POMODOROTHEME,
+				sqhelper.getTheme(1));
 		breakTheme = settings.getString(KEY_BREAKTHEME, sqhelper.getTheme(1));
 		pomodoroTime = settings.getInt(KEY_POMODOROTIME, 25);
 		shortBreakTime = settings.getInt(KEY_SHORTBREAKTIME, 5);
 		longBreakTime = settings.getInt(KEY_LONGBREAKTIME, 35);
-		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK, 4);
+		pomodorosUntilLongBreakNum = settings.getInt(KEY_POMODORO_UNTIL_BREAK,
+				4);
 		rememberTime = settings.getInt(KEY_REMEMBERTIME, 10);
 		airplanemode = settings.getBoolean(KEY_AIRAIRPLANEMODE, false);
-		
+
 		controlListener.themePomodoroText.setText(pomodoroTheme);
 		controlListener.themeBreakText.setText(breakTheme);
 		int tag = settings.getInt(KEY_TAG, -1);
 		controlListener.toogle(tag);
 
-		if(tag == TYPE_TRACKING){
+		if (tag == TYPE_TRACKING) {
 			timeText.setTextColor(COLOR_TRACKING);
-		} else if( tag == TYPE_LONGBREAK || tag == TYPE_SHORTBREAK){
+		} else if (tag == TYPE_LONGBREAK || tag == TYPE_SHORTBREAK) {
 			timeText.setTextColor(COLOR_BREAK);
-		} else if(tag == TYPE_SLEEPING){
+		} else if (tag == TYPE_SLEEPING) {
 			timeText.setTextColor(COLOR_SLEEP);
 		}
-		
+
 		tracking = settings.getBoolean(KEY_TRACKINGSTATE, false);
 		if (tracking) {
 			timeText.setBase(settings.getLong(KEY_CHRONOSTATE, 0));
 			controlListener.toogle(settings.getInt(KEY_ACTIVEBUTTON, -1));
 			timeText.start();
 		}
-		
-		if(settings.getBoolean(KEY_COUNTER, false)){
-			AlarmReceiver.stopAlarmManager(this, tag);
+
+		if (settings.getBoolean(KEY_COUNTER, false)) {
 			counter = loadCounterState(settings);
 			counter.start();
 		}
-		
-		// If the Activity was startet over notification, the counterFinish should not vibrate.
-//		vibrate = settings.getBoolean(AlarmReceiver.KEY_VIBRATE, false);
+
+		// If the Activity was startet over notification, the counterFinish
+		// should not vibrate.
+		// vibrate = settings.getBoolean(AlarmReceiver.KEY_VIBRATE, false);
+		AlarmReceiver.stopAlarmManager(this, tag);
 		AlarmReceiver.cancelNotification(this);
 	}
-	
-	public void saveCounterState(SharedPreferences.Editor editor){
+
+	public void saveCounterState(SharedPreferences.Editor editor) {
 		editor.putBoolean(KEY_COUNTER, true);
 		editor.putLong(KEY_COUNTERPAUSETIME, SystemClock.elapsedRealtime());
 		editor.putLong(KEY_COUNTERTIMELEFT, counter.getMilliesLeft());
-		editor.putLong(KEY_COUNTERTIMEBASE, counter.getMilliesRawBase()+counter.getMilliesPast());
+		editor.putLong(KEY_COUNTERTIMEBASE, counter.getMilliesRawBase()
+				+ counter.getMilliesPast());
 		editor.putBoolean(KEY_COUNTERCOUNTUP, counter.isCountUp());
 	}
-	
-	public Counter loadCounterState(SharedPreferences settings){
-		long milliesSincePause = SystemClock.elapsedRealtime() - settings.getLong(KEY_COUNTERPAUSETIME, SystemClock.elapsedRealtime());
-		
-		Counter counter = new Counter(settings.getLong(KEY_COUNTERTIMELEFT, 10000)-milliesSincePause, this, timeText, settings.getInt(KEY_TAG, 0));
-		counter.setBaseTime(settings.getLong(KEY_COUNTERTIMEBASE, 0)+milliesSincePause);
 
-		if(settings.getBoolean(KEY_COUNTERCOUNTUP, false)){
+	public Counter loadCounterState(SharedPreferences settings) {
+		long milliesSincePause = SystemClock.elapsedRealtime()
+				- settings.getLong(KEY_COUNTERPAUSETIME,
+						SystemClock.elapsedRealtime());
+
+		Counter counter = new Counter(settings.getLong(KEY_COUNTERTIMELEFT,
+				10000) - milliesSincePause, this, timeText, settings.getInt(
+				KEY_TAG, 0));
+		counter.setBaseTime(settings.getLong(KEY_COUNTERTIMEBASE, 0)
+				+ milliesSincePause);
+
+		if (settings.getBoolean(KEY_COUNTERCOUNTUP, false)) {
 			counter.toggleCountUp();
 		}
 		return counter;
@@ -326,17 +348,17 @@ public class MainActivity extends Activity {
 		newCounter.setBaseTime(milliesBase);
 		newCounter.start();
 
-		if(settings.getBoolean(AlarmReceiver.KEY_ALARM, true)){
+		if (settings.getBoolean(AlarmReceiver.KEY_ALARM, true)) {
 			AlarmReceiver.fireNotification(this, settings);
 		} else {
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(AlarmReceiver.KEY_ALARM, true);
 			editor.commit();
 		}
-		
-		
+
 		counter = newCounter;
-//		AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(), controlListener.activeButton);
+		// AlarmReceiver.startAlarmManager(this, counter.getMilliesLeft(),
+		// controlListener.activeButton);
 		dialogManager.show(tag, checkOnLongBreak());
 	}
 
@@ -369,7 +391,7 @@ public class MainActivity extends Activity {
 			timeText.start();
 			timeText.setTextColor(COLOR_SLEEP);
 			tracking = true;
-			if(airplanemode)
+			if (airplanemode)
 				airplanemode(true);
 			break;
 		}
@@ -396,14 +418,14 @@ public class MainActivity extends Activity {
 		resetTimeText();
 
 		if (tag == TYPE_SLEEPING) {
-			if(airplanemode)
+			if (airplanemode)
 				airplanemode(false);
 		}
-		
+
 		// #######
-//		 minutes = 10;
+		// minutes = 10;
 		// #######
-		
+
 		if (minutes > 0) {
 			if (tag == TYPE_POMODORO) {
 				pomodorosNum++;
@@ -488,6 +510,13 @@ public class MainActivity extends Activity {
 		case R.id.menu_about:
 			showAboutDialog();
 			break;
+		case R.id.menu_nightmode:
+			boolean bool = settings.getBoolean(KEY_NIGHTMODE, false);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(KEY_NIGHTMODE, !bool);
+			editor.commit();
+			recreate();
+			break;
 		default:
 			break;
 		}
@@ -502,20 +531,22 @@ public class MainActivity extends Activity {
 			return true;
 		return false;
 	}
-	
-	public void airplanemode(boolean bool){
-		boolean isEnabled = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;
-		
-		if(bool != isEnabled){
+
+	public void airplanemode(boolean bool) {
+		boolean isEnabled = Settings.System.getInt(getContentResolver(),
+				Settings.System.AIRPLANE_MODE_ON, 0) == 1;
+
+		if (bool != isEnabled) {
 			Log.e("MainActiviry", "toogle airplanemode");
-			Settings.System.putInt(getBaseContext().getContentResolver(), Settings.System.AIRPLANE_MODE_ON, bool ? 1 : 0); 
+			Settings.System.putInt(getBaseContext().getContentResolver(),
+					Settings.System.AIRPLANE_MODE_ON, bool ? 1 : 0);
 			Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
 			intent.putExtra("state", bool ? 1 : 0);
 			sendBroadcast(intent);
 		}
 	}
-	
-	public void showAboutDialog(){
+
+	public void showAboutDialog() {
 		AboutDialog about = new AboutDialog(this, R.raw.history, -1);
 		about.show();
 	}

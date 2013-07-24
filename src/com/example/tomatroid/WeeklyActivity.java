@@ -20,6 +20,7 @@ public class WeeklyActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Util.switchToNightMode(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weekly);
 

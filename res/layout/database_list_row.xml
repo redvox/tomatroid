@@ -13,7 +13,8 @@
             android:id="@+id/date"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            style="?android:attr/listSeparatorTextViewStyle"/>
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textColor="?attr/myattr_titletextcolor"/>
         
     </LinearLayout>
 
@@ -37,17 +38,20 @@
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="?attr/myattr_textcolor"/>
 
             <TextView
                 android:id="@+id/duration"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="?attr/myattr_textcolor"/>
 
             <TextView
                 android:id="@+id/theme"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="?attr/myattr_textcolor"/>
         </LinearLayout>
     </LinearLayout>
 

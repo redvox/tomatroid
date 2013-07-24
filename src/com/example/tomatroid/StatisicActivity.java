@@ -45,9 +45,9 @@ public class StatisicActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Util.switchToNightMode(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_statictic);
-
 		new NavigationBarManager(this, ACTIVITYNUMBER);
 
 		SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);

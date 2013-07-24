@@ -36,7 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/pomodoros" />
+                android:text="@string/pomodoros" 
+                android:textColor="?attr/myattr_linecolor"/>
         </LinearLayout>
 
         <include layout="@layout/vertical_line" />

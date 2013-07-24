@@ -14,14 +14,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#000000" />
+            android:textColor="?attr/myattr_titletextcolor"/>
 
         <TextView
             android:id="@+id/themeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#000000" />
+            android:textColor="?attr/myattr_titletextcolor" />
     </LinearLayout>
 
     <LinearLayout
@@ -34,7 +34,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:textColor="#000000" />
+            android:textColor="?attr/myattr_textcolor"/>
 
         <com.example.tomatroid.digram.PieChart
             xmlns:android="http://schemas.android.com/apk/res/android"

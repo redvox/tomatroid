@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/show" />
+        android:text="@string/show"
+        android:textColor="?attr/myattr_titletextcolor"/>
 
     <include layout="@layout/horizontal_line" />
 
@@ -26,7 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/hide" />
+        android:text="@string/hide"
+        android:textColor="?attr/myattr_titletextcolor"/>
 
     <include layout="@layout/horizontal_line" />
 

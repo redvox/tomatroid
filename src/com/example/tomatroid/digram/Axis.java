@@ -2,22 +2,19 @@ package com.example.tomatroid.digram;
 
 import java.util.ArrayList;
 
-import org.joda.time.Interval;
-
-import com.example.tomatroid.util.StoredAnimation;
+import com.example.tomatroid.R;
 
 import android.content.Context;
+import android.content.res.Resources.Theme;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
-import android.graphics.RectF;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 
 public class Axis extends View {
 
@@ -41,11 +38,16 @@ public class Axis extends View {
 		this.context = context;
 		this.maxValue = maxValue;
 
+		Theme t = context.getTheme();
+		TypedValue typedvalueattr = new TypedValue();
+		t.resolveAttribute(R.attr.myattr_textcolor, typedvalueattr, true);
 		color = new Paint();
+		color.setColor(typedvalueattr.data);
 		color.setStrokeWidth(2);
 		color.setAlpha(100);
 
 		text = new Paint();
+		text.setColor(typedvalueattr.data);
 		text.setTextSize(20);
 		// text.setTextAlign(Align.LEFT);
 	}

@@ -2,6 +2,8 @@ package com.example.tomatroid;
 
 import java.util.ArrayList;
 
+import com.example.tomatroid.util.Util;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,6 +21,7 @@ public class SettingsActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Util.switchToNightMode(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 

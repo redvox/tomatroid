@@ -31,7 +31,8 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:text="@string/pomodoros"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge" 
+                android:textColor="?attr/myattr_titletextcolor"/>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -52,7 +53,8 @@
                     android:id="@+id/statistic_pomodoroInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:textColor="?attr/myattr_textcolor"/>
             </RelativeLayout>
 
             <TextView
@@ -61,7 +63,8 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:text="@string/breaks"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge" 
+                android:textColor="?attr/myattr_titletextcolor"/>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -81,7 +84,8 @@
                     android:id="@+id/statistic_breakInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:textColor="?attr/myattr_textcolor"/>
             </RelativeLayout>
 
             <TextView
@@ -90,13 +94,15 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="left"
                 android:text="@string/sleep"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="?attr/myattr_titletextcolor"/>
 
             <TextView
                 android:id="@+id/statistic_sleepInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right" />
+                android:layout_gravity="right"
+                android:textColor="?attr/myattr_textcolor"/>
 
             <CheckBox
                 android:id="@+id/checkbox"
@@ -105,7 +111,8 @@
                 android:layout_margin="7dp"
                 android:layout_gravity="right"
                 android:onClick="onCheckboxClicked"
-                android:text="@string/calculate_with_children" />
+                android:text="@string/calculate_with_children"
+                android:textColor="?attr/myattr_textcolor"/>
         </LinearLayout>
 
         <include layout="@layout/vertical_line" />

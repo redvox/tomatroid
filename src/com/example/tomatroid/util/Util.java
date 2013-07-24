@@ -12,16 +12,44 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 
 import com.example.tomatroid.MainActivity;
+import com.example.tomatroid.R;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Environment;
 import android.text.GetChars;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Util {
 	
 	public static boolean DEBUG = true;
+	
+	static public void switchToNightMode(Activity activity){
+		SharedPreferences settings = activity.getSharedPreferences(MainActivity.PREFS_NAME, 0);
+		boolean bool = settings.getBoolean(MainActivity.KEY_NIGHTMODE, false);
+		if (!bool) {
+			activity.setTheme(R.style.nightTheme);
+
+			ActionBar bar = activity.getActionBar();
+			bar.setBackgroundDrawable(activity.getResources().getDrawable(
+					R.drawable.actionbar));
+
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) activity.findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.RED);
+				}
+			}
+		}
+	}
 
 	static public String generateTimeText(float rawMinutes) {
 		int minutes = (int) rawMinutes % 60;

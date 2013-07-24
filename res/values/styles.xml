@@ -1,6 +1,32 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:custom="http://schemas.android.com/apk/res/com.example.tomatroid" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="android:Theme.Light" />
+    <!-- xmlns:custom="http://schemas.android.com/apk/res/com.custom.project" -->
+    <!-- xmlns:android="http://schemas.android.com/apk/res/android" -->
+
+    <style name="dayTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarSize">50dip</item>
+        <item name="myattr_linecolor">#000000</item>
+        <item name="myattr_titletextcolor">#000000</item>
+        <item name="myattr_textcolor">#000000</item>
+    </style>
+
+    <style name="nightTheme" parent="android:Theme.Holo">
+        <item name="android:actionBarSize">50dip</item>
+        <item name="android:background">#2E2E2E</item>
+        <item name="myattr_linecolor">#FFFFFF</item>
+        <item name="myattr_titletextcolor">#FFFFFF</item>
+        <item name="myattr_textcolor">#D8D8D8</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="myDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">?attr/myattr_titletextcolor</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 
     <style name="BigText">
         <item name="android:layout_width">fill_parent</item>
@@ -8,9 +34,9 @@
         <item name="android:textColor">#F0F8FF</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">1dp</item>
-        <item name="android:textSize">50dp</item>
+        <item name="android:textSize">50sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowColor">?attr/myattr_linecolor</item>
         <item name="android:shadowDx">2</item>
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">2</item>

@@ -2,6 +2,7 @@ package com.example.tomatroid;
 
 import com.example.tomatroid.sql.SQHelper;
 import com.example.tomatroid.util.NavigationBarManager;
+import com.example.tomatroid.util.Util;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -9,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -36,6 +38,7 @@ public class ThemeList extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Util.switchToNightMode(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_theme_list);
 		mInflater = LayoutInflater.from(this);
@@ -138,7 +141,7 @@ public class ThemeList extends Activity {
 
 	private void showChangeThemeDialog(final int id, final String name, final int parent) {
 		View dialogView = mInflater.inflate(R.layout.dialog_newtheme, null);
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
 		alertDialogBuilder.setView(dialogView);
 		alertDialogBuilder.setTitle(getString(R.string.change_theme));
 
@@ -189,7 +192,7 @@ public class ThemeList extends Activity {
 	
 	private void showDeleteThemeDialog(final int id, final String name, final int parent) {
 		View dialogView = mInflater.inflate(R.layout.dialog_deletetheme, null);
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
 		alertDialogBuilder.setView(dialogView);
 		alertDialogBuilder.setTitle(getString(R.string.delete_theme));
 		

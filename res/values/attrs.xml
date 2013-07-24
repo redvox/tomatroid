@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MyCustomElement">
+        <attr name="distanceExample" format="integer" />
+    </declare-styleable>
+
+    
+    <attr name="myattr_linecolor" format="color" />
+    <attr name="myattr_titletextcolor" format="color" />
+    <attr name="myattr_textcolor" format="color" />
+</resources>

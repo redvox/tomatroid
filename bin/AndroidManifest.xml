@@ -15,38 +15,23 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/dayTheme" >
+        <!-- @style/AppTheme @android:style/Theme.Holo.Light @android:style/Theme.Holo -->
         <activity
             android:name="com.example.tomatroid.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.tomatroid.ThemeList"
-            android:theme="@android:style/Theme.Holo.Light" >
-        </activity>
-        <activity
-            android:name="com.example.tomatroid.StatisicActivity"
-            android:theme="@android:style/Theme.Holo.Light" >
-        </activity>
-        <activity
-            android:name="com.example.tomatroid.DatabaseList"
-            android:theme="@android:style/Theme.Holo.Light" >
-        </activity>
+        <activity android:name="com.example.tomatroid.ThemeList" />
+        <activity android:name="com.example.tomatroid.StatisicActivity" />
+        <activity android:name="com.example.tomatroid.DatabaseList" />
+        <activity android:name="com.example.tomatroid.SettingsActivity" />
+        <activity android:name="com.example.tomatroid.WeeklyActivity" />
 
         <receiver android:name="com.example.tomatroid.util.AlarmReceiver" />
-
-        <activity android:name="com.example.tomatroid.SettingsActivity" >
-        </activity>
-        <activity
-            android:name="com.example.tomatroid.WeeklyActivity"
-            android:theme="@android:style/Theme.Holo.Light" >
-        </activity>
     </application>
 
 </manifest>

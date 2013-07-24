@@ -6,12 +6,12 @@
     android:orientation="vertical"
     android:padding="10dp" >
 
-    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/theme_parent"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?attr/myattr_titletextcolor"/>
     
     <Spinner
         android:id="@+id/parentspinner"
@@ -22,7 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/theme_name"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?attr/myattr_titletextcolor"/>
  
     <EditText
         android:id="@+id/editTextDialogUserInput"

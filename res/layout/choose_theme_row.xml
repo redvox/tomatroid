@@ -6,4 +6,4 @@
     android:layout_margin="5dp"
     android:gravity="center_horizontal"
     android:padding="10dp"
-    android:textColor="#000000" />
+    android:textColor="?attr/myattr_textcolor" />

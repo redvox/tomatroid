@@ -4,14 +4,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="10dp" >
+    android:padding="10dp">
 
-    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/type"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?attr/myattr_titletextcolor"/>
     
     <Spinner
         android:id="@+id/typespinner"
@@ -23,13 +23,14 @@
         android:layout_height="wrap_content"
         android:text="@string/sleep_shortbreak_will_ignore_type"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#cccccc"/>
+        android:textColor="?attr/myattr_textcolor"/>
     
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/theme_name"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?attr/myattr_titletextcolor"/>
     
     <Spinner
         android:id="@+id/themespinner"

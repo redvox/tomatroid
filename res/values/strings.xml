@@ -24,9 +24,9 @@
     <string name="show">Shown</string>
     <string name="name">Name</string>
     <string name="parent">Parent</string>
-    <string name="save">Save</string>
+    <string name="save">Back &amp; Save</string>
     <string name="dataSaves">Your settings are saved</string>
-    <string name="back">Back (no saving)</string>
+    <string name="back">Back &amp; Discard</string>
     <string name="insert">Insert</string>
     <string name="change">Change</string>
     <string name="cancel">Cancel</string>

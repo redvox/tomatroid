@@ -20,6 +20,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -46,10 +47,10 @@ public class DatabaseList extends ListActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Util.switchToNightMode(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_database_list);
 		mInflater = LayoutInflater.from(this);
-
 		new NavigationBarManager(this, ACTIVITYNUMBER);
 
 		Cursor cursor = sqHelper.getDatesCursor();
@@ -216,10 +217,11 @@ public class DatabaseList extends ListActivity {
 	private void showChangeEntryDialog(final int rowId, final int type,
 			final int themeId) {
 		View dialogView = mInflater.inflate(R.layout.dialog_change_entry, null);
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
 		alertDialogBuilder.setView(dialogView);
 		alertDialogBuilder.setTitle(getString(R.string.change));
-
+		
 		// Type
 		ArrayList<String> typeList = new ArrayList<String>();
 		typeList.add(getString(R.string.pomodoro));

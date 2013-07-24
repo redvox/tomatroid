@@ -28,7 +28,8 @@
                 android:layout_height="300dp"
                 android:layout_gravity="left"
                 android:layout_margin="8dp"
-                android:gravity="left" />
+                android:gravity="left"
+                android:textColor="?attr/myattr_textcolor"/>
         </ScrollView>
     </TableRow>
 
@@ -42,7 +43,7 @@
             android:layout_span="2"
             android:textColor="#cccccc"
             android:textSize="10dip"
-            android:textStyle="italic" />
+            android:textStyle="italic"/>
     </TableRow>
 
 </TableLayout>

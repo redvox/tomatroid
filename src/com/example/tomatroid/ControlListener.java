@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -229,8 +230,9 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 
 	public void showNewThemeDialog() {
 		View dialogView = mInflater.inflate(R.layout.dialog_newtheme, null);
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mA);
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(mA, R.style.myDialog));
 		alertDialogBuilder.setView(dialogView);
+		alertDialogBuilder.setTitle(mA.getString(R.string.new_theme));
 
 		final EditText userInput = (EditText) dialogView
 				.findViewById(R.id.editTextDialogUserInput);
