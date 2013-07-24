@@ -6,22 +6,32 @@
 
     <style name="dayTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarSize">50dip</item>
+        
         <item name="myattr_linecolor">#000000</item>
         <item name="myattr_titletextcolor">#000000</item>
         <item name="myattr_textcolor">#000000</item>
         <item name="myattr_backgroundcolor">#E6E6E6</item>
+        
+<!--         <item name="android:itemBackground">@drawable/button_blue</item> -->
+    	<item name="android:itemTextAppearance">@style/SmallText</item>
+    	<item name="android:titleTextStyle">@style/SmallText</item>
     </style>
 
     <style name="nightTheme" parent="android:Theme.Holo">
         <item name="android:actionBarSize">50dip</item>
         <item name="android:background">#2E2E2E</item>
         <item name="android:textColor">#000000</item>
+        
         <item name="myattr_linecolor">#FFFFFF</item>
         <item name="myattr_titletextcolor">#FFFFFF</item>
         <item name="myattr_textcolor">#D8D8D8</item>
         <item name="myattr_backgroundcolor">#2E2E2E</item>
+        
+<!--         <item name="android:itemBackground">@drawable/button_blue</item> -->
+    	<item name="android:itemTextAppearance">@style/SmallText</item>
+    	<item name="android:titleTextStyle">@style/SmallText</item>
     </style>
-
+    
     <style name="myDialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:background">@android:color/transparent</item>
@@ -47,12 +57,12 @@
     <style name="SmallText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#F0F8FF</item>
+        <item name="android:textColor">?attr/myattr_titletextcolor</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">3dp</item>
-        <item name="android:textSize">60dp</item>
+        <item name="android:textSize">20dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowColor">?attr/myattr_linecolor</item>
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">2</item>

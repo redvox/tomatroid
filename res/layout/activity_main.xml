@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="@string/pomodoros" 
-                android:textColor="?attr/myattr_linecolor"/>
+                android:textColor="?attr/myattr_textcolor"/>
         </LinearLayout>
 
         <include layout="@layout/vertical_line" />
@@ -65,14 +65,13 @@
                 android:id="@+id/control"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <include layout="@layout/horizontal_line" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF" >
+                    android:layout_height="wrap_content">
 
                     <include layout="@layout/play_icon_template" />
 
@@ -80,23 +79,24 @@
                         android:id="@+id/themePomodoroText"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FFFFFF" />
+                        android:background="?attr/myattr_backgroundcolor"
+                        android:textColor="?attr/myattr_titletextcolor"/>
                 </RelativeLayout>
 
                 <include layout="@layout/horizontal_line" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF" >
+                    android:layout_height="wrap_content">
 
                     <include layout="@layout/play_icon_template" />
 
                     <TextView
                         android:id="@+id/themeBreakText"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FFFFFF" />
+                        android:background="?attr/myattr_backgroundcolor"
+                        android:textColor="?attr/myattr_titletextcolor"/>
                 </RelativeLayout>
 
                 <include layout="@layout/horizontal_line" />
@@ -112,7 +112,7 @@
                         style="@style/ButtonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/button_yellow"
+                        android:background="@drawable/button_red"
                         android:text="@string/pomodoro" />
                 </RelativeLayout>
 
