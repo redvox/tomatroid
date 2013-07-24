@@ -9,15 +9,17 @@
         <item name="myattr_linecolor">#000000</item>
         <item name="myattr_titletextcolor">#000000</item>
         <item name="myattr_textcolor">#000000</item>
+        <item name="myattr_backgroundcolor">#E6E6E6</item>
     </style>
 
     <style name="nightTheme" parent="android:Theme.Holo">
         <item name="android:actionBarSize">50dip</item>
         <item name="android:background">#2E2E2E</item>
+        <item name="android:textColor">#000000</item>
         <item name="myattr_linecolor">#FFFFFF</item>
         <item name="myattr_titletextcolor">#FFFFFF</item>
         <item name="myattr_textcolor">#D8D8D8</item>
-        <item name="android:textColor">#000000</item>
+        <item name="myattr_backgroundcolor">#2E2E2E</item>
     </style>
 
     <style name="myDialog">

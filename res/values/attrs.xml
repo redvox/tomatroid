@@ -9,4 +9,5 @@
     <attr name="myattr_linecolor" format="color" />
     <attr name="myattr_titletextcolor" format="color" />
     <attr name="myattr_textcolor" format="color" />
+    <attr name="myattr_backgroundcolor" format="color" />
 </resources>

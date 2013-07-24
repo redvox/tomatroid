@@ -74,7 +74,6 @@ public class ControlListener implements OnClickListener, OnItemClickListener {
 		themePomodoroText.setOnClickListener(this);
 		themePomodoroText.setTextSize(20);
 		themePomodoroText.setTag(90);
-		themePomodoroText.setBackgroundColor(backgroundColor);
 
 		//######################################
 

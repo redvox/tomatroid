@@ -52,11 +52,9 @@ public class MainActivity extends Activity {
 	public static final String COLOR_STRING_BLUE = "#6495ED";
 	public static final String COLOR_STRING_RED = "#DC143C";
 
-	public static final int COLOR_POMODORO = Color
-			.parseColor(COLOR_STRING_POMODORO);
+	public static final int COLOR_POMODORO = Color.parseColor(COLOR_STRING_POMODORO);
 	public static final int COLOR_BREAK = Color.parseColor(COLOR_STRING_BREAK);
-	public static final int COLOR_TRACKING = Color
-			.parseColor(COLOR_STRING_TRACKING);
+	public static final int COLOR_TRACKING = Color.parseColor(COLOR_STRING_TRACKING);
 	public static final int COLOR_SLEEP = Color.parseColor(COLOR_STRING_SLEEP);
 	public static final int COLOR_BLUE = Color.parseColor(COLOR_STRING_BLUE);
 	public static final int COLOR_RED = Color.parseColor(COLOR_STRING_RED);
@@ -148,8 +146,6 @@ public class MainActivity extends Activity {
 			editor.commit();
 		}
 
-		
-
 		setContentView(R.layout.activity_main);
 		digram = (RelativeLayout) findViewById(R.id.digram);
 		headline = (LinearLayout) findViewById(R.id.headline);
@@ -159,7 +155,6 @@ public class MainActivity extends Activity {
 		// progress.setMax(100);
 		// progress.setProgress(50);
 		pomodorosNumText = (TextView) findViewById(R.id.pomodorosNum);
-
 		pomodorosNum = sqhelper.getTodayCountOf(SQHelper.TYPE_POMODORO);
 		pomodorosNumText.setTextColor(COLOR_POMODORO);
 		pomodorosNumText.setText("" + pomodorosNum);
