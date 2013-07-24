@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 
 public class DialogManager implements OnClickListener {
 
@@ -26,7 +27,7 @@ public class DialogManager implements OnClickListener {
 		this.tag = tag;
 		this.longBreak = longBreak;
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(mA);
+		AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mA, R.style.myDialog));
 		builder.setNegativeButton("Stop", this);
 		builder.setNeutralButton("Skip!", this);
 		
@@ -59,7 +60,6 @@ public class DialogManager implements OnClickListener {
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		Log.e("Dialog", "Which " + which);
 		switch (which) {
 		
 		// Stop
